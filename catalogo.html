@@ -49,9 +49,14 @@
     </div>
 
     <!-- Filters -->
-    <div class="catalog-filters" id="filtersContainer">
-      <button class="filter-btn active" data-category="all">Todos</button>
-      <!-- Dynamic categories added by JS -->
+    <div class="catalog-filters-wrap">
+      <div class="catalog-filters" id="filtersContainer">
+        <button class="filter-btn active" id="allFilterBtn" data-category="all">Todos</button>
+        <button class="btn-categories-toggle" id="btnCategoriesToggle">
+          <span class="categories-icon">🗂️</span> Ver categorías <span class="categories-arrow">▾</span>
+        </button>
+      </div>
+      <div class="category-panel" id="categoryPanel"></div>
     </div>
 
     <!-- Product grid -->

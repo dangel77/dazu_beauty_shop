@@ -55,9 +55,9 @@ var imgPlaceholder    = document.getElementById('imgPlaceholder');
 var imgPreviewWrap    = document.getElementById('imgPreviewWrap');
 var imgPreview        = document.getElementById('imgPreview');
 var btnRemoveImg      = document.getElementById('btnRemoveImg');
-var productName       = document.getElementById('productName');
-var productCategory   = document.getElementById('productCategory');
-var productPrice      = document.getElementById('productPrice');
+var productName               = document.getElementById('productName');
+var productCategoriesSelect   = document.getElementById('productCategoriesSelect');
+var productPrice              = document.getElementById('productPrice');
 var productDesc       = document.getElementById('productDesc');
 var productAvailable  = document.getElementById('productAvailable');
 var availableLabel    = document.getElementById('availableLabel');
@@ -82,6 +82,40 @@ var editCatModalClose = document.getElementById('editCatModalClose');
 var editCategoryInput = document.getElementById('editCategoryInput');
 var editCatCancelBtn  = document.getElementById('editCatCancelBtn');
 var editCatConfirmBtn = document.getElementById('editCatConfirmBtn');
+
+// ===== HELPERS =====
+function getProductCategories(product) {
+  if (Array.isArray(product.categories)) return product.categories;
+  if (product.category) return [product.category];
+  return [];
+}
+
+function renderCategoryCheckboxes(selectedCats) {
+  if (!productCategoriesSelect) return;
+  productCategoriesSelect.innerHTML = '';
+  var cats = settings.categories || [];
+  if (cats.length === 0) {
+    productCategoriesSelect.innerHTML = '<p style="font-size:0.82rem;color:var(--text-light);">No hay categorías. Agrega categorías en Configuración.</p>';
+    return;
+  }
+  cats.forEach(function (cat) {
+    var checked = selectedCats && selectedCats.indexOf(cat) !== -1;
+    var label = document.createElement('label');
+    label.className = 'cat-checkbox-label';
+    label.innerHTML =
+      '<input type="checkbox" value="' + escapeAttr(cat) + '"' + (checked ? ' checked' : '') + ' />' +
+      '<span>' + escapeHtml(cat) + '</span>';
+    productCategoriesSelect.appendChild(label);
+  });
+}
+
+function getSelectedCategories() {
+  if (!productCategoriesSelect) return [];
+  var boxes = productCategoriesSelect.querySelectorAll('input[type="checkbox"]:checked');
+  var result = [];
+  boxes.forEach(function (b) { result.push(b.value); });
+  return result;
+}
 
 // ===== GITHUB API HELPERS =====
 function ghApi(path, options) {
@@ -282,15 +316,12 @@ function renderCategoriesList() {
 }
 
 function updateCategoryDatalist() {
-  var datalist = document.getElementById('categoryList');
-  if (!datalist) return;
-  datalist.innerHTML = '';
-  var cats = settings.categories || [];
-  cats.forEach(function (cat) {
-    var opt = document.createElement('option');
-    opt.value = cat;
-    datalist.appendChild(opt);
-  });
+  // Update the product form checkboxes with current categories
+  // (re-render preserving current selection if form is open)
+  if (productFormModal && productFormModal.classList.contains('open')) {
+    var selected = getSelectedCategories();
+    renderCategoryCheckboxes(selected);
+  }
 }
 
 function addCategory() {
@@ -372,7 +403,13 @@ function saveEditCategory() {
 
   // Update all products with the old category name
   products.forEach(function (p) {
-    if (p.category === oldName) p.category = newName;
+    var cats = getProductCategories(p);
+    var idx2 = cats.indexOf(oldName);
+    if (idx2 !== -1) {
+      cats[idx2] = newName;
+      p.categories = cats;
+      delete p.category;
+    }
   });
 
   editCatConfirmBtn.disabled = true;
@@ -390,7 +427,15 @@ function saveEditCategory() {
       showToast('Error: ' + err.message, 'error');
       // Revert
       if (idx !== -1) cats[idx] = oldName;
-      products.forEach(function (p) { if (p.category === newName) p.category = oldName; });
+      products.forEach(function (p) {
+        var pCats = getProductCategories(p);
+        var idx2 = pCats.indexOf(newName);
+        if (idx2 !== -1) {
+          pCats[idx2] = oldName;
+          p.categories = pCats;
+          delete p.category;
+        }
+      });
       loadAdminData();
     })
     .finally(function () {
@@ -439,16 +484,18 @@ function buildAdminCard(product) {
   card.dataset.id = product.id;
 
   var imgSrc = product.image ? 'data/images/' + encodeURIComponent(product.image) : '';
+  var firstCat = getProductCategories(product)[0] || '';
   var imgContent = imgSrc
     ? '<img src="' + escapeAttr(imgSrc) + '" alt="' + escapeAttr(product.name) + '" loading="lazy" />'
-    : '<div class="product-placeholder">' + getCategoryEmoji(product.category) + '</div>';
+    : '<div class="product-placeholder">' + getCategoryEmoji(firstCat) + '</div>';
 
   var badgeHtml = product.available
     ? '<span class="badge-available">Disponible</span>'
     : '<span class="badge-unavailable">Sin stock</span>';
 
-  var catHtml = product.category
-    ? '<p class="product-category">' + escapeHtml(product.category) + '</p>'
+  var productCats = getProductCategories(product);
+  var catHtml = productCats.length > 0
+    ? '<p class="product-category">' + productCats.map(escapeHtml).join(' · ') + '</p>'
     : '';
 
   var descHtml = product.description
@@ -485,7 +532,7 @@ function openProductForm(id) {
     if (!product) return;
     productFormTitle.textContent = 'Editar producto';
     productName.value        = product.name;
-    productCategory.value    = product.category || '';
+    renderCategoryCheckboxes(getProductCategories(product));
     productPrice.value       = product.price;
     productDesc.value        = product.description || '';
     productAvailable.checked = product.available;
@@ -497,7 +544,7 @@ function openProductForm(id) {
   } else {
     productFormTitle.textContent = 'Agregar producto';
     productName.value        = '';
-    productCategory.value    = '';
+    renderCategoryCheckboxes([]);
     productPrice.value       = '';
     productDesc.value        = '';
     productAvailable.checked = true;
@@ -562,7 +609,7 @@ function saveProduct() {
       var productData = {
         id: id,
         name: name,
-        category: productCategory.value.trim(),
+        categories: getSelectedCategories(),
         price: price,
         description: productDesc.value.trim(),
         available: productAvailable.checked,

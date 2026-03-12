@@ -119,20 +119,10 @@
           <input type="text" id="productName" placeholder="Ej: Shampoo Argan 400ml" />
         </div>
         <div class="form-group">
-          <label for="productCategory">Categoria</label>
-          <input type="text" id="productCategory" placeholder="Ej: Shampoo, Crema, Jabon..." list="categoryList" />
-          <datalist id="categoryList">
-            <option value="Shampoo" />
-            <option value="Crema" />
-            <option value="Jabon" />
-            <option value="Acondicionador" />
-            <option value="Aceite" />
-            <option value="Mascarilla" />
-            <option value="Perfume" />
-            <option value="Maquillaje" />
-            <option value="Cuidado facial" />
-            <option value="Cuidado corporal" />
-          </datalist>
+          <label>Categorias</label>
+          <div class="product-categories-select" id="productCategoriesSelect">
+            <!-- Checkboxes rendered by JS -->
+          </div>
         </div>
         <div class="form-group">
           <label for="productPrice">Precio *</label>
