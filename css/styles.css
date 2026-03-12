@@ -961,109 +961,6 @@ button {
   gap: 1.2rem;
 }
 
-.admin-product-card {
-  background: #fff;
-  border-radius: var(--radius);
-  overflow: hidden;
-  border: 1px solid #e0e0e0;
-  box-shadow: 0 1px 8px rgba(0,0,0,0.05);
-  transition: box-shadow var(--transition);
-}
-
-.admin-product-card:hover {
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-}
-
-.admin-card-img {
-  height: 150px;
-  background: linear-gradient(135deg, #fce4ec, #f8bbd0);
-  overflow: hidden;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 3rem;
-  color: var(--primary-light);
-}
-
-.admin-card-img img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-}
-
-.admin-card-info {
-  padding: 0.9rem 1rem 0.5rem;
-}
-
-.admin-card-name {
-  font-weight: 700;
-  font-size: 0.95rem;
-  color: var(--text);
-  margin-bottom: 0.2rem;
-}
-
-.admin-card-price {
-  color: var(--primary-dark);
-  font-weight: 700;
-  font-size: 1rem;
-}
-
-.admin-card-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-size: 0.7rem;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 20px;
-  margin-top: 0.4rem;
-}
-
-.status-available {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.status-unavailable {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-.admin-card-actions {
-  padding: 0.7rem 1rem;
-  display: flex;
-  gap: 0.5rem;
-  border-top: 1px solid #f0f0f0;
-}
-
-.btn-edit, .btn-delete {
-  flex: 1;
-  padding: 0.45rem;
-  border-radius: var(--radius-sm);
-  font-size: 0.8rem;
-  font-weight: 600;
-  font-family: var(--font);
-  cursor: pointer;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.3rem;
-  transition: opacity var(--transition);
-}
-
-.btn-edit {
-  background: #e8f4fd;
-  color: #1976d2;
-}
-
-.btn-delete {
-  background: #fce8e8;
-  color: #d32f2f;
-}
-
-.btn-edit:hover, .btn-delete:hover { opacity: 0.8; }
-
 /* ===== PASSWORD SCREEN ===== */
 .password-screen {
   min-height: 100vh;
@@ -1142,6 +1039,31 @@ button {
 }
 
 .password-error.show { display: block; }
+
+/* ===== SETUP HELP (token instructions) ===== */
+.setup-help {
+  margin-top: 1rem;
+  text-align: left;
+}
+
+.setup-help details {
+  font-size: 0.8rem;
+  color: var(--text-light);
+}
+
+.setup-help summary {
+  cursor: pointer;
+  color: var(--primary);
+  font-weight: 500;
+  font-size: 0.82rem;
+}
+
+.setup-help ol {
+  margin-top: 0.5rem;
+  padding-left: 1.2rem;
+  line-height: 1.8;
+  list-style: decimal;
+}
 
 /* ===== ADMIN SETTINGS SECTION ===== */
 .admin-settings {
@@ -1414,6 +1336,41 @@ button {
   from { opacity: 1; transform: translateY(0); }
   to { opacity: 0; transform: translateY(10px); }
 }
+
+/* ===== ADMIN PRODUCT CARD BUTTONS (catalog-style) ===== */
+.admin-card-btns {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.7rem;
+}
+
+.btn-edit-card, .btn-delete-card {
+  flex: 1;
+  padding: 0.5rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  transition: opacity var(--transition);
+}
+
+.btn-edit-card {
+  background: #e8f4fd;
+  color: #1976d2;
+}
+
+.btn-delete-card {
+  background: #fce8e8;
+  color: #d32f2f;
+}
+
+.btn-edit-card:hover, .btn-delete-card:hover { opacity: 0.75; }
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 600px) {

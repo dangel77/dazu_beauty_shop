@@ -1,283 +1,304 @@
 /* =====================================================================
    admin.js  –  Dazu Beauty Shop
-   Handles: authentication, product CRUD, image upload, settings
+   Admin panel using GitHub API for product CRUD.
+   Products stored in data/products.json, images in data/images/
    ===================================================================== */
 
 'use strict';
 
-// ===== CONSTANTS =====
-const STORAGE_KEY_PRODUCTS  = 'dazu_products';
-const STORAGE_KEY_WA        = 'dazu_wa_number';
-const STORAGE_KEY_PASSWORD  = 'dazu_admin_password';
-const DEFAULT_PASSWORD      = 'dazu2024';  // Default password – change via settings panel
+// ===== GITHUB CONFIG (stored in admin's localStorage) =====
+var GH_OWNER = 'dangel77';
+var GH_REPO  = 'dazu_beauty_shop';
+var GH_TOKEN_KEY = 'dazu_gh_token';
 
-// ===== LOAD / SAVE =====
-function loadProducts() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY_PRODUCTS);
-    if (raw) return JSON.parse(raw);
-    // On first load, save the sample products so catalog also shows them
-    const samples = getSampleProducts();
-    saveProducts(samples);
-    return samples;
-  } catch {
-    return [];
-  }
+function getGhToken() {
+  return localStorage.getItem(GH_TOKEN_KEY) || '';
 }
 
-function saveProducts(products) {
-  localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(products));
-}
-
-function getSampleProducts() {
-  return [
-    {
-      id: generateId(),
-      name: 'Shampoo Argan Premium',
-      category: 'Shampoo',
-      price: 3200,
-      description: 'Shampoo nutritivo con aceite de argán. Ideal para cabello seco y dañado. 400ml.',
-      available: true,
-      image: ''
-    },
-    {
-      id: generateId(),
-      name: 'Crema Hidratante Corporal',
-      category: 'Crema',
-      price: 2800,
-      description: 'Crema de uso diario con manteca de karité. Piel suave y nutrida todo el día.',
-      available: true,
-      image: ''
-    },
-    {
-      id: generateId(),
-      name: 'Jabón Artesanal Lavanda',
-      category: 'Jabón',
-      price: 1500,
-      description: 'Jabón artesanal con esencia de lavanda y aceites naturales. 100g.',
-      available: true,
-      image: ''
-    },
-    {
-      id: generateId(),
-      name: 'Acondicionador Reparador',
-      category: 'Acondicionador',
-      price: 2900,
-      description: 'Acondicionador con proteínas de seda para cabello maltratado. 350ml.',
-      available: false,
-      image: ''
-    },
-    {
-      id: generateId(),
-      name: 'Aceite Capilar Coconut',
-      category: 'Aceite',
-      price: 1800,
-      description: 'Aceite de coco para brillo y nutrición del cabello. Uso en puntas.',
-      available: true,
-      image: ''
-    },
-    {
-      id: generateId(),
-      name: 'Mascarilla Capilar Intensiva',
-      category: 'Mascarilla',
-      price: 3500,
-      description: 'Tratamiento intensivo semanal para cabello seco. Con keratina y vitamina E.',
-      available: true,
-      image: ''
-    }
-  ];
-}
-
-function getPassword() {
-  return localStorage.getItem(STORAGE_KEY_PASSWORD) || DEFAULT_PASSWORD;
-}
-
-function savePassword(pwd) {
-  localStorage.setItem(STORAGE_KEY_PASSWORD, pwd);
-}
-
-function getWaNumber() {
-  return localStorage.getItem(STORAGE_KEY_WA) || '';
-}
-
-function saveWaNumber(num) {
-  localStorage.setItem(STORAGE_KEY_WA, num);
-}
-
-// ===== ID GENERATION =====
-function generateId() {
-  return 'prod_' + Math.random().toString(36).slice(2, 11) + '_' + Date.now();
-}
-
-// ===== FORMAT PRICE =====
-const formatPrice = (n) =>
-  '$' + Number(n).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-
-// ===== ESCAPE =====
-function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-}
-
-function escapeAttr(str) {
-  return String(str).replace(/"/g, '&quot;');
-}
-
-function getCategoryEmoji(category) {
-  const map = {
-    'shampoo': '🧴',
-    'crema': '🧴',
-    'jabón': '🧼',
-    'acondicionador': '💆',
-    'aceite': '🫙',
-    'mascarilla': '💆',
-    'perfume': '🌹',
-    'maquillaje': '💄',
-    'cuidado facial': '✨',
-    'cuidado corporal': '🌿'
-  };
-  const key = (category || '').toLowerCase();
-  return map[key] || '✨';
+function saveGhToken(token) {
+  localStorage.setItem(GH_TOKEN_KEY, token);
 }
 
 // ===== STATE =====
-let products = [];
-let editingId = null;
-let pendingDeleteId = null;
-let currentImageBase64 = '';
+var products = [];
+var settings = { wa_number: '' };
+var jsonSha = '';            // SHA of products.json (needed for GitHub API updates)
+var editingId = null;
+var pendingDeleteId = null;
+var selectedImageFile = null;
+var currentImageName = '';   // current image filename in data/images/
 
-// ===== DOM =====
-const passwordScreen     = document.getElementById('passwordScreen');
-const adminPanel         = document.getElementById('adminPanel');
-const passwordInput      = document.getElementById('passwordInput');
-const passwordBtn        = document.getElementById('passwordBtn');
-const passwordError      = document.getElementById('passwordError');
-const btnLogout          = document.getElementById('btnLogout');
-const adminProductGrid   = document.getElementById('adminProductGrid');
-const btnAddProduct      = document.getElementById('btnAddProduct');
+// ===== DOM REFS =====
+var setupScreen       = document.getElementById('setupScreen');
+var adminPanel        = document.getElementById('adminPanel');
+var setupToken        = document.getElementById('setupToken');
+var setupBtn          = document.getElementById('setupBtn');
+var setupError        = document.getElementById('setupError');
+var adminProductGrid  = document.getElementById('adminProductGrid');
+var btnAddProduct     = document.getElementById('btnAddProduct');
+var btnLogout         = document.getElementById('btnLogout');
 
 // Product form modal
-const productFormModal   = document.getElementById('productFormModal');
-const productFormTitle   = document.getElementById('productFormTitle');
-const productFormClose   = document.getElementById('productFormClose');
-const productFormCancel  = document.getElementById('productFormCancel');
-const productFormSave    = document.getElementById('productFormSave');
-const imgFileInput       = document.getElementById('imgFileInput');
-const imgPlaceholder     = document.getElementById('imgPlaceholder');
-const imgPreviewWrap     = document.getElementById('imgPreviewWrap');
-const imgPreview         = document.getElementById('imgPreview');
-const btnRemoveImg       = document.getElementById('btnRemoveImg');
-const productName        = document.getElementById('productName');
-const productCategory    = document.getElementById('productCategory');
-const productPrice       = document.getElementById('productPrice');
-const productDesc        = document.getElementById('productDesc');
-const productAvailable   = document.getElementById('productAvailable');
-const availableLabel     = document.getElementById('availableLabel');
+var productFormModal  = document.getElementById('productFormModal');
+var productFormTitle  = document.getElementById('productFormTitle');
+var productFormClose  = document.getElementById('productFormClose');
+var productFormCancel = document.getElementById('productFormCancel');
+var productFormSave   = document.getElementById('productFormSave');
+var imgFileInput      = document.getElementById('imgFileInput');
+var imgPlaceholder    = document.getElementById('imgPlaceholder');
+var imgPreviewWrap    = document.getElementById('imgPreviewWrap');
+var imgPreview        = document.getElementById('imgPreview');
+var btnRemoveImg      = document.getElementById('btnRemoveImg');
+var productName       = document.getElementById('productName');
+var productCategory   = document.getElementById('productCategory');
+var productPrice      = document.getElementById('productPrice');
+var productDesc       = document.getElementById('productDesc');
+var productAvailable  = document.getElementById('productAvailable');
+var availableLabel    = document.getElementById('availableLabel');
 
 // Delete modal
-const deleteModal        = document.getElementById('deleteModal');
-const deleteModalClose   = document.getElementById('deleteModalClose');
-const deleteProductName  = document.getElementById('deleteProductName');
-const deleteCancelBtn    = document.getElementById('deleteCancelBtn');
-const deleteConfirmBtn   = document.getElementById('deleteConfirmBtn');
+var deleteModal       = document.getElementById('deleteModal');
+var deleteModalClose  = document.getElementById('deleteModalClose');
+var deleteProductName = document.getElementById('deleteProductName');
+var deleteCancelBtn   = document.getElementById('deleteCancelBtn');
+var deleteConfirmBtn  = document.getElementById('deleteConfirmBtn');
 
 // Settings
-const waNumberInput      = document.getElementById('waNumberInput');
-const btnSaveWaNumber    = document.getElementById('btnSaveWaNumber');
-const newPasswordInput   = document.getElementById('newPasswordInput');
-const confirmPasswordInput = document.getElementById('confirmPasswordInput');
-const btnSavePassword    = document.getElementById('btnSavePassword');
+var waNumberInput     = document.getElementById('waNumberInput');
+var btnSaveWaNumber   = document.getElementById('btnSaveWaNumber');
 
-// Toast
-const toastContainer     = document.getElementById('toastContainer');
+// ===== GITHUB API HELPERS =====
+function ghApi(path, options) {
+  var token = getGhToken();
+  if (!token) throw new Error('No configurado');
 
-// ===== AUTHENTICATION =====
-function login() {
-  const entered = passwordInput.value;
-  if (entered === getPassword()) {
-    passwordScreen.style.display = 'none';
-    adminPanel.style.display = 'block';
-    passwordError.classList.remove('show');
-    loadAdminPanel();
-  } else {
-    passwordError.classList.add('show');
-    passwordInput.value = '';
-    passwordInput.focus();
+  var url = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + path;
+  var headers = {
+    'Authorization': 'Bearer ' + token,
+    'Accept': 'application/vnd.github.v3+json',
+    'Content-Type': 'application/json'
+  };
+
+  var opts = Object.assign({}, options || {}, { headers: headers });
+  return fetch(url, opts).then(function (res) {
+    if (res.status === 404) return null;
+    if (!res.ok) {
+      return res.json().then(function (body) {
+        throw new Error(body.message || 'GitHub API error ' + res.status);
+      });
+    }
+    return res.status === 204 ? null : res.json();
+  });
+}
+
+// Load products.json from GitHub API (always fresh, returns latest SHA)
+function loadJsonFromGitHub() {
+  return ghApi('data/products.json').then(function (data) {
+    if (!data) {
+      // File doesn't exist yet — should not happen if setup was correct
+      jsonSha = '';
+      return { settings: { wa_number: '' }, products: [] };
+    }
+    jsonSha = data.sha;
+    var decoded = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
+    return JSON.parse(decoded);
+  });
+}
+
+// Save products.json to GitHub  (creates a commit)
+function saveJsonToGitHub(jsonData) {
+  var content = btoa(unescape(encodeURIComponent(JSON.stringify(jsonData, null, 2))));
+  var body = {
+    message: 'Actualizar productos',
+    content: content
+  };
+  if (jsonSha) body.sha = jsonSha;
+
+  return ghApi('data/products.json', {
+    method: 'PUT',
+    body: JSON.stringify(body)
+  }).then(function (res) {
+    if (res && res.content) jsonSha = res.content.sha;
+    return res;
+  });
+}
+
+// Upload image to data/images/{filename}
+function uploadImageToGitHub(base64Content, filename) {
+  // First check if file already exists to get its SHA
+  return ghApi('data/images/' + filename).then(function (existing) {
+    var body = {
+      message: 'Agregar imagen: ' + filename,
+      content: base64Content
+    };
+    if (existing && existing.sha) body.sha = existing.sha;
+
+    return ghApi('data/images/' + filename, {
+      method: 'PUT',
+      body: JSON.stringify(body)
+    });
+  });
+}
+
+// Delete image from data/images/{filename}
+function deleteImageFromGitHub(filename) {
+  if (!filename) return Promise.resolve();
+
+  return ghApi('data/images/' + filename).then(function (data) {
+    if (!data) return; // File doesn't exist, nothing to delete
+    return ghApi('data/images/' + filename, {
+      method: 'DELETE',
+      body: JSON.stringify({
+        message: 'Eliminar imagen: ' + filename,
+        sha: data.sha
+      })
+    });
+  });
+}
+
+// ===== SETUP / LOGIN =====
+function handleSetup() {
+  var token = setupToken.value.trim();
+
+  if (!token) {
+    setupError.textContent = 'Ingresa el token de acceso.';
+    setupError.classList.add('show');
+    return;
+  }
+
+  setupBtn.disabled = true;
+  setupBtn.textContent = 'Verificando...';
+  setupError.classList.remove('show');
+
+  saveGhToken(token);
+
+  // Test the connection by trying to read products.json
+  loadJsonFromGitHub()
+    .then(function () {
+      showAdminPanel();
+    })
+    .catch(function (err) {
+      setupError.textContent = 'Token invalido o sin permisos.';
+      setupError.classList.add('show');
+      localStorage.removeItem(GH_TOKEN_KEY);
+    })
+    .finally(function () {
+      setupBtn.disabled = false;
+      setupBtn.textContent = 'Entrar';
+    });
+}
+
+function showAdminPanel() {
+  setupScreen.style.display = 'none';
+  adminPanel.style.display  = 'block';
+  loadAdminData();
+}
+
+function handleLogout() {
+  localStorage.removeItem(GH_TOKEN_KEY);
+  adminPanel.style.display  = 'none';
+  setupScreen.style.display = 'flex';
+  setupToken.value = '';
+  setupError.classList.remove('show');
+}
+
+function checkExistingConfig() {
+  var token = getGhToken();
+  if (token) {
+    // Try to verify the token still works
+    loadJsonFromGitHub()
+      .then(function (data) {
+        products = data.products || [];
+        settings = data.settings || { wa_number: '61000133' };
+        showAdminPanel();
+      })
+      .catch(function () {
+        // Token invalid — show setup screen
+        localStorage.removeItem(GH_TOKEN_KEY);
+      });
   }
 }
 
-function logout() {
-  adminPanel.style.display = 'none';
-  passwordScreen.style.display = 'flex';
-  passwordInput.value = '';
-  passwordError.classList.remove('show');
-}
-
-// ===== LOAD ADMIN PANEL =====
-function loadAdminPanel() {
-  products = loadProducts();
-  renderAdminGrid();
-  waNumberInput.value = getWaNumber();
+// ===== LOAD DATA =====
+function loadAdminData() {
+  loadJsonFromGitHub()
+    .then(function (data) {
+      products = data.products || [];
+      settings = data.settings || { wa_number: '61000133' };
+      waNumberInput.value = settings.wa_number || '';
+      renderAdminGrid();
+    })
+    .catch(function (err) {
+      showToast('Error cargando datos: ' + err.message, 'error');
+    });
 }
 
 // ===== RENDER ADMIN PRODUCT GRID =====
 function renderAdminGrid() {
   if (products.length === 0) {
-    adminProductGrid.innerHTML = `
-      <div style="grid-column:1/-1;text-align:center;padding:3rem;color:#aaa;">
-        <div style="font-size:3rem;margin-bottom:0.8rem">📦</div>
-        <p>No hay productos aún. ¡Agregá el primero!</p>
-      </div>`;
+    adminProductGrid.innerHTML =
+      '<div class="empty-catalog">' +
+        '<span>📦</span>' +
+        '<p>No hay productos aun. Agrega el primero!</p>' +
+      '</div>';
     return;
   }
 
   adminProductGrid.innerHTML = '';
-  products.forEach(product => {
-    const card = buildAdminCard(product);
-    adminProductGrid.appendChild(card);
+  products.forEach(function (product) {
+    adminProductGrid.appendChild(buildAdminCard(product));
   });
 }
 
 function buildAdminCard(product) {
-  const card = document.createElement('article');
-  card.className = 'admin-product-card fade-in';
+  var card = document.createElement('article');
+  card.className = 'product-card fade-in';
   card.dataset.id = product.id;
 
-  const imgContent = product.image
-    ? `<img src="${escapeAttr(product.image)}" alt="${escapeAttr(product.name)}" />`
-    : getCategoryEmoji(product.category);
+  var imgSrc = product.image ? 'data/images/' + encodeURIComponent(product.image) : '';
+  var imgContent = imgSrc
+    ? '<img src="' + escapeAttr(imgSrc) + '" alt="' + escapeAttr(product.name) + '" loading="lazy" />'
+    : '<div class="product-placeholder">' + getCategoryEmoji(product.category) + '</div>';
 
-  const statusCls  = product.available ? 'status-available' : 'status-unavailable';
-  const statusText = product.available ? '● Disponible' : '● Sin stock';
+  var badgeHtml = product.available
+    ? '<span class="badge-available">Disponible</span>'
+    : '<span class="badge-unavailable">Sin stock</span>';
 
-  card.innerHTML = `
-    <div class="admin-card-img">${imgContent}</div>
-    <div class="admin-card-info">
-      <div class="admin-card-name">${escapeHtml(product.name)}</div>
-      <div class="admin-card-price">${formatPrice(product.price)}</div>
-      <span class="admin-card-status ${statusCls}">${statusText}</span>
-    </div>
-    <div class="admin-card-actions">
-      <button class="btn-edit" data-id="${escapeAttr(product.id)}">✏️ Editar</button>
-      <button class="btn-delete" data-id="${escapeAttr(product.id)}" data-name="${escapeAttr(product.name)}">🗑 Eliminar</button>
-    </div>
-  `;
+  var catHtml = product.category
+    ? '<p class="product-category">' + escapeHtml(product.category) + '</p>'
+    : '';
+
+  var descHtml = product.description
+    ? '<p class="product-desc">' + escapeHtml(product.description) + '</p>'
+    : '';
+
+  card.innerHTML =
+    '<div class="product-img-wrap">' +
+      imgContent + badgeHtml +
+    '</div>' +
+    '<div class="product-body">' +
+      catHtml +
+      '<h3 class="product-name">' + escapeHtml(product.name) + '</h3>' +
+      descHtml +
+      '<p class="product-price">' + formatPrice(product.price) + '</p>' +
+      '<div class="admin-card-btns">' +
+        '<button class="btn-edit-card" data-id="' + escapeAttr(product.id) + '">✏️ Editar</button>' +
+        '<button class="btn-delete-card" data-id="' + escapeAttr(product.id) + '" data-name="' + escapeAttr(product.name) + '">🗑️ Eliminar</button>' +
+      '</div>' +
+    '</div>';
 
   return card;
 }
 
 // ===== PRODUCT FORM MODAL =====
-function openProductForm(id = null) {
-  editingId = id;
-  currentImageBase64 = '';
+function openProductForm(id) {
+  editingId = id || null;
+  selectedImageFile = null;
+  currentImageName = '';
   resetImageUpload();
 
-  if (id) {
-    const product = products.find(p => p.id === id);
+  if (editingId) {
+    var product = products.find(function (p) { return p.id === editingId; });
     if (!product) return;
     productFormTitle.textContent = 'Editar producto';
     productName.value        = product.name;
@@ -287,8 +308,8 @@ function openProductForm(id = null) {
     productAvailable.checked = product.available;
     availableLabel.textContent = product.available ? 'Disponible' : 'Sin stock';
     if (product.image) {
-      currentImageBase64 = product.image;
-      showImagePreview(product.image);
+      currentImageName = product.image;
+      showImagePreview('data/images/' + encodeURIComponent(product.image));
     }
   } else {
     productFormTitle.textContent = 'Agregar producto';
@@ -307,55 +328,97 @@ function openProductForm(id = null) {
 function closeProductForm() {
   productFormModal.classList.remove('open');
   editingId = null;
-  currentImageBase64 = '';
+  selectedImageFile = null;
+  currentImageName = '';
 }
 
+// ===== SAVE PRODUCT =====
 function saveProduct() {
-  const name  = productName.value.trim();
-  const price = parseFloat(productPrice.value);
+  var name  = productName.value.trim();
+  var price = parseFloat(productPrice.value);
 
   if (!name) {
-    showToast('El nombre del producto es obligatorio.', 'error');
+    showToast('El nombre es obligatorio.', 'error');
     productName.focus();
     return;
   }
   if (isNaN(price) || price < 0) {
-    showToast('Ingresá un precio válido.', 'error');
+    showToast('Ingresa un precio valido.', 'error');
     productPrice.focus();
     return;
   }
 
-  const productData = {
-    id:          editingId || generateId(),
-    name,
-    category:    productCategory.value.trim(),
-    price,
-    description: productDesc.value.trim(),
-    available:   productAvailable.checked,
-    image:       currentImageBase64
-  };
+  productFormSave.disabled = true;
+  productFormSave.textContent = 'Guardando...';
 
-  if (editingId) {
-    const idx = products.findIndex(p => p.id === editingId);
-    if (idx !== -1) products[idx] = productData;
-    showToast('Producto actualizado ✅');
+  var imageName = currentImageName;
+  var id = editingId || generateId();
+
+  // Determine if we need to upload an image
+  var imagePromise;
+  if (selectedImageFile) {
+    imageName = id + '.jpg';
+    imagePromise = compressImage(selectedImageFile)
+      .then(function (blob) { return blobToBase64Raw(blob); })
+      .then(function (base64) { return uploadImageToGitHub(base64, imageName); });
   } else {
-    products.push(productData);
-    showToast('Producto agregado ✅');
+    imagePromise = Promise.resolve();
   }
 
-  saveProducts(products);
-  renderAdminGrid();
-  closeProductForm();
+  imagePromise
+    .then(function () {
+      // If editing and image was removed (no selectedFile + no currentImageName)
+      if (editingId && !selectedImageFile && !currentImageName) {
+        var oldProduct = products.find(function (p) { return p.id === editingId; });
+        if (oldProduct && oldProduct.image) {
+          return deleteImageFromGitHub(oldProduct.image);
+        }
+      }
+    })
+    .then(function () {
+      var productData = {
+        id: id,
+        name: name,
+        category: productCategory.value.trim(),
+        price: price,
+        description: productDesc.value.trim(),
+        available: productAvailable.checked,
+        image: imageName,
+        created_at: editingId
+          ? (products.find(function (p) { return p.id === editingId; }) || {}).created_at || new Date().toISOString()
+          : new Date().toISOString()
+      };
+
+      if (editingId) {
+        var idx = products.findIndex(function (p) { return p.id === editingId; });
+        if (idx !== -1) products[idx] = productData;
+      } else {
+        products.unshift(productData);
+      }
+
+      return saveJsonToGitHub({ settings: settings, products: products });
+    })
+    .then(function () {
+      showToast(editingId ? 'Producto actualizado' : 'Producto agregado', 'success');
+      closeProductForm();
+      renderAdminGrid();
+    })
+    .catch(function (err) {
+      showToast('Error: ' + err.message, 'error');
+      // Reload to get fresh state after partial failure
+      loadAdminData();
+    })
+    .finally(function () {
+      productFormSave.disabled = false;
+      productFormSave.textContent = '💾 Guardar';
+    });
 }
 
-// ===== IMAGE UPLOAD =====
+// ===== IMAGE HANDLING =====
 function handleImageFile(file) {
   if (!file) return;
-
-  const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
-  if (file.size > MAX_SIZE) {
-    showToast('La imagen es muy grande. Máximo 5 MB.', 'error');
+  if (file.size > 5 * 1024 * 1024) {
+    showToast('La imagen es muy grande. Maximo 5 MB.', 'error');
     return;
   }
   if (!file.type.startsWith('image/')) {
@@ -363,30 +426,28 @@ function handleImageFile(file) {
     return;
   }
 
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    currentImageBase64 = e.target.result;
-    showImagePreview(currentImageBase64);
-  };
+  selectedImageFile = file;
+  var reader = new FileReader();
+  reader.onload = function (e) { showImagePreview(e.target.result); };
   reader.readAsDataURL(file);
 }
 
 function showImagePreview(src) {
   imgPreview.src = src;
-  imgPlaceholder.style.display = 'none';
-  imgPreviewWrap.style.display = 'block';
-  btnRemoveImg.style.display   = 'block';
+  imgPlaceholder.style.display  = 'none';
+  imgPreviewWrap.style.display  = 'block';
+  btnRemoveImg.style.display    = 'block';
 }
 
 function resetImageUpload() {
-  imgPreview.src                 = '';
-  imgPlaceholder.style.display   = 'block';
-  imgPreviewWrap.style.display   = 'none';
-  btnRemoveImg.style.display     = 'none';
-  imgFileInput.value             = '';
+  imgPreview.src                = '';
+  imgPlaceholder.style.display  = 'block';
+  imgPreviewWrap.style.display  = 'none';
+  btnRemoveImg.style.display    = 'none';
+  imgFileInput.value            = '';
 }
 
-// ===== DELETE =====
+// ===== DELETE PRODUCT =====
 function openDeleteModal(id, name) {
   pendingDeleteId = id;
   deleteProductName.textContent = name;
@@ -400,113 +461,120 @@ function closeDeleteModal() {
 
 function confirmDelete() {
   if (!pendingDeleteId) return;
-  products = products.filter(p => p.id !== pendingDeleteId);
-  saveProducts(products);
-  renderAdminGrid();
-  closeDeleteModal();
-  showToast('Producto eliminado.', 'error');
+
+  deleteConfirmBtn.disabled = true;
+  deleteConfirmBtn.textContent = 'Eliminando...';
+
+  var product = products.find(function (p) { return p.id === pendingDeleteId; });
+  var imageDeletePromise = (product && product.image)
+    ? deleteImageFromGitHub(product.image)
+    : Promise.resolve();
+
+  imageDeletePromise
+    .then(function () {
+      products = products.filter(function (p) { return p.id !== pendingDeleteId; });
+      return saveJsonToGitHub({ settings: settings, products: products });
+    })
+    .then(function () {
+      showToast('Producto eliminado.', 'error');
+      closeDeleteModal();
+      renderAdminGrid();
+    })
+    .catch(function (err) {
+      showToast('Error eliminando: ' + err.message, 'error');
+      loadAdminData();
+    })
+    .finally(function () {
+      deleteConfirmBtn.disabled = false;
+      deleteConfirmBtn.textContent = '🗑 Eliminar';
+    });
 }
 
 // ===== SETTINGS =====
 function saveWaNumberSetting() {
-  const num = waNumberInput.value.replace(/\D/g, '');
+  var num = waNumberInput.value.replace(/\D/g, '');
   if (!num) {
-    showToast('Ingresá un número válido.', 'error');
+    showToast('Ingresa un numero valido.', 'error');
     return;
   }
-  saveWaNumber(num);
+
+  btnSaveWaNumber.disabled = true;
+  btnSaveWaNumber.textContent = 'Guardando...';
+
+  settings.wa_number = num;
   waNumberInput.value = num;
-  showToast('Número de WhatsApp guardado ✅');
-}
 
-function savePasswordSetting() {
-  const newPwd  = newPasswordInput.value;
-  const confirm = confirmPasswordInput.value;
-  if (!newPwd || newPwd.length < 4) {
-    showToast('La contraseña debe tener al menos 4 caracteres.', 'error');
-    return;
-  }
-  if (newPwd !== confirm) {
-    showToast('Las contraseñas no coinciden.', 'error');
-    return;
-  }
-  savePassword(newPwd);
-  newPasswordInput.value     = '';
-  confirmPasswordInput.value = '';
-  showToast('Contraseña actualizada ✅');
-}
-
-// ===== TOAST =====
-function showToast(message, type = '') {
-  const toast = document.createElement('div');
-  toast.className = `toast ${type}`;
-  toast.textContent = message;
-  toastContainer.appendChild(toast);
-  setTimeout(() => toast.remove(), 2600);
+  saveJsonToGitHub({ settings: settings, products: products })
+    .then(function () {
+      showToast('Numero de WhatsApp guardado', 'success');
+    })
+    .catch(function (err) {
+      showToast('Error: ' + err.message, 'error');
+    })
+    .finally(function () {
+      btnSaveWaNumber.disabled = false;
+      btnSaveWaNumber.textContent = 'Guardar';
+    });
 }
 
 // ===== EVENT LISTENERS =====
 
-// Auth
-passwordBtn.addEventListener('click', login);
-passwordInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') login();
-});
-btnLogout.addEventListener('click', logout);
+// Setup
+setupBtn.addEventListener('click', handleSetup);
+setupToken.addEventListener('keydown', function (e) { if (e.key === 'Enter') handleSetup(); });
+btnLogout.addEventListener('click', handleLogout);
 
-// Product grid actions (edit / delete)
-adminProductGrid.addEventListener('click', (e) => {
-  const editBtn = e.target.closest('.btn-edit');
+// Product grid actions (event delegation)
+adminProductGrid.addEventListener('click', function (e) {
+  var editBtn = e.target.closest('.btn-edit-card');
   if (editBtn) {
     openProductForm(editBtn.dataset.id);
     return;
   }
-  const delBtn = e.target.closest('.btn-delete');
+  var delBtn = e.target.closest('.btn-delete-card');
   if (delBtn) {
     openDeleteModal(delBtn.dataset.id, delBtn.dataset.name);
   }
 });
 
 // Add product
-btnAddProduct.addEventListener('click', () => openProductForm());
+btnAddProduct.addEventListener('click', function () { openProductForm(); });
 
 // Product form
 productFormClose.addEventListener('click', closeProductForm);
 productFormCancel.addEventListener('click', closeProductForm);
 productFormSave.addEventListener('click', saveProduct);
-
-productFormModal.addEventListener('click', (e) => {
+productFormModal.addEventListener('click', function (e) {
   if (e.target === productFormModal) closeProductForm();
 });
 
-// Availability toggle label
-productAvailable.addEventListener('change', () => {
+// Availability toggle
+productAvailable.addEventListener('change', function () {
   availableLabel.textContent = productAvailable.checked ? 'Disponible' : 'Sin stock';
 });
 
 // Image upload
-imgFileInput.addEventListener('change', (e) => {
+imgFileInput.addEventListener('change', function (e) {
   handleImageFile(e.target.files[0]);
 });
 
-// Drag & drop on upload area
-const imgUploadArea = document.getElementById('imgUploadArea');
-imgUploadArea.addEventListener('dragover', (e) => {
+var imgUploadArea = document.getElementById('imgUploadArea');
+imgUploadArea.addEventListener('dragover', function (e) {
   e.preventDefault();
   imgUploadArea.style.borderColor = 'var(--primary)';
 });
-imgUploadArea.addEventListener('dragleave', () => {
+imgUploadArea.addEventListener('dragleave', function () {
   imgUploadArea.style.borderColor = '';
 });
-imgUploadArea.addEventListener('drop', (e) => {
+imgUploadArea.addEventListener('drop', function (e) {
   e.preventDefault();
   imgUploadArea.style.borderColor = '';
-  const file = e.dataTransfer.files[0];
-  if (file) handleImageFile(file);
+  if (e.dataTransfer.files[0]) handleImageFile(e.dataTransfer.files[0]);
 });
 
-btnRemoveImg.addEventListener('click', () => {
-  currentImageBase64 = '';
+btnRemoveImg.addEventListener('click', function () {
+  selectedImageFile = null;
+  currentImageName = '';
   resetImageUpload();
 });
 
@@ -514,16 +582,15 @@ btnRemoveImg.addEventListener('click', () => {
 deleteModalClose.addEventListener('click', closeDeleteModal);
 deleteCancelBtn.addEventListener('click', closeDeleteModal);
 deleteConfirmBtn.addEventListener('click', confirmDelete);
-deleteModal.addEventListener('click', (e) => {
+deleteModal.addEventListener('click', function (e) {
   if (e.target === deleteModal) closeDeleteModal();
 });
 
 // Settings
 btnSaveWaNumber.addEventListener('click', saveWaNumberSetting);
-btnSavePassword.addEventListener('click', savePasswordSetting);
 
-// Escape key closes modals
-document.addEventListener('keydown', (e) => {
+// Escape closes modals
+document.addEventListener('keydown', function (e) {
   if (e.key === 'Escape') {
     closeProductForm();
     closeDeleteModal();
@@ -531,5 +598,4 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ===== INIT =====
-// Check if already "logged in" via session (simple flag; not security-critical)
-// Admin panel starts hidden by default (password screen is shown)
+checkExistingConfig();

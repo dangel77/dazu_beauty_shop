@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Panel de administracion - Dazu Beauty Shop" />
   <title>Admin – Dazu Beauty Shop</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -11,80 +12,63 @@
 </head>
 <body class="admin-page">
 
-  <!-- ===== PASSWORD SCREEN ===== -->
-  <div id="passwordScreen" class="password-screen">
+  <!-- ===== SETUP SCREEN (solo pide token, una sola vez) ===== -->
+  <div id="setupScreen" class="password-screen">
     <div class="password-card">
-      <div class="password-icon">🔐</div>
-      <h2>Área de administración</h2>
-      <p>Ingresá la contraseña para continuar</p>
+      <div class="password-icon">🌸</div>
+      <h2>Dazu Beauty Shop</h2>
+      <p>Ingresa tu clave de acceso para administrar la tienda.</p>
       <div class="password-input-wrap">
-        <input type="password" id="passwordInput" placeholder="Contraseña" autocomplete="current-password" />
-        <button class="btn-unlock" id="passwordBtn">→</button>
+        <input type="password" id="setupToken" placeholder="Clave de acceso" autocomplete="off" />
+        <button class="btn-unlock" id="setupBtn">Entrar</button>
       </div>
-      <p class="password-error" id="passwordError">Contraseña incorrecta. Intentá de nuevo.</p>
+      <p class="password-error" id="setupError"></p>
       <a href="index.html" style="display:block;margin-top:1.2rem;font-size:0.8rem;color:#aaa;">← Volver al inicio</a>
     </div>
   </div>
 
-  <!-- ===== ADMIN PANEL (hidden until authenticated) ===== -->
+  <!-- ===== ADMIN PANEL (hidden until connected) ===== -->
   <div id="adminPanel" style="display:none">
 
-    <!-- Top bar -->
     <header class="admin-topbar">
       <div class="admin-topbar-brand">
         <span>🌸</span>
         <span>Dazu Beauty – Admin</span>
       </div>
       <div class="admin-topbar-actions">
-        <a href="catalogo.html" class="btn-view-catalog">👁 Ver catálogo</a>
-        <button class="btn-logout" id="btnLogout">🔒 Salir</button>
+        <a href="catalogo.html" class="btn-view-catalog">👁 Ver catalogo</a>
+        <button class="btn-logout" id="btnLogout">🔒 Desconectar</button>
       </div>
     </header>
 
-    <!-- Main admin area -->
-    <main class="admin-main">
+    <main class="catalog-main">
 
-      <!-- Products section -->
       <div class="admin-section-header">
-        <h2>📦 Productos</h2>
+        <h2>📦 Mis Productos</h2>
         <button class="btn-add-product" id="btnAddProduct">＋ Agregar producto</button>
       </div>
 
-      <div class="admin-product-grid" id="adminProductGrid">
-        <!-- Products rendered by JS -->
-      </div>
+      <div class="product-grid" id="adminProductGrid"></div>
 
-      <!-- Settings section -->
       <div class="admin-settings">
-        <h3>⚙️ Configuración</h3>
-
+        <h3>⚙️ Configuracion</h3>
         <div class="settings-row">
           <div class="form-group">
-            <label for="waNumberInput">📱 Número de WhatsApp (con código de país)</label>
+            <label for="waNumberInput">📱 Numero de WhatsApp (con codigo de pais)</label>
             <input type="tel" id="waNumberInput" placeholder="Ej: 5491122334455" />
           </div>
           <button class="btn-save" id="btnSaveWaNumber" style="flex:0.5;padding:0.65rem 1rem;margin-bottom:0">
             Guardar
           </button>
         </div>
-
         <div class="wa-config-notice">
           <span>ℹ️</span>
-          Ingresá tu número de WhatsApp sin espacios ni signos. Ejemplo para Argentina: <strong>5491122334455</strong>
-          (549 + código de área sin 0 + número sin 15).
+          Ingresa tu numero sin espacios ni signos. Ejemplo para Argentina: <strong>5491122334455</strong>
+          (549 + codigo de area sin 0 + numero sin 15).
         </div>
-
-        <div class="settings-row" style="margin-top:1.2rem">
-          <div class="form-group">
-            <label for="newPasswordInput">🔑 Cambiar contraseña de admin</label>
-            <input type="password" id="newPasswordInput" placeholder="Nueva contraseña" />
-          </div>
-          <div class="form-group">
-            <input type="password" id="confirmPasswordInput" placeholder="Confirmar contraseña" style="margin-top:auto" />
-          </div>
-          <button class="btn-save" id="btnSavePassword" style="flex:0.5;padding:0.65rem 1rem;margin-bottom:0">
-            Guardar
-          </button>
+        <div class="wa-config-notice" style="margin-top:0.6rem;background:#fff8e1;border-color:#ffe082;color:#7d6608;">
+          <span>⏳</span>
+          Los cambios pueden tardar unos minutos en aparecer para los clientes (cache de GitHub Pages).
         </div>
       </div>
 
@@ -99,15 +83,13 @@
         <button class="modal-close" id="productFormClose" aria-label="Cerrar">✕</button>
       </div>
       <div class="admin-modal-body">
-
-        <!-- Image upload -->
         <div class="form-group">
           <label>Foto del producto</label>
           <div id="imgUploadArea" class="img-upload-area">
-            <input type="file" id="imgFileInput" accept="image/*" aria-label="Subir imagen del producto" />
+            <input type="file" id="imgFileInput" accept="image/*" aria-label="Subir imagen" />
             <div id="imgPlaceholder">
               <div class="img-upload-icon">📷</div>
-              <p class="img-upload-text">Hacé clic o arrastrá una imagen aquí<br><small>JPG, PNG, WEBP – máx. 5 MB</small></p>
+              <p class="img-upload-text">Hace clic o arrastra una imagen aqui<br><small>JPG, PNG, WEBP – max. 5 MB</small></p>
             </div>
             <div id="imgPreviewWrap" class="img-preview-wrap" style="display:none">
               <img id="imgPreview" class="img-preview" src="" alt="Vista previa" />
@@ -117,19 +99,17 @@
             🗑 Quitar imagen
           </button>
         </div>
-
         <div class="form-group">
           <label for="productName">Nombre del producto *</label>
           <input type="text" id="productName" placeholder="Ej: Shampoo Argan 400ml" />
         </div>
-
         <div class="form-group">
-          <label for="productCategory">Categoría</label>
-          <input type="text" id="productCategory" placeholder="Ej: Shampoo, Crema, Jabón..." list="categoryList" />
+          <label for="productCategory">Categoria</label>
+          <input type="text" id="productCategory" placeholder="Ej: Shampoo, Crema, Jabon..." list="categoryList" />
           <datalist id="categoryList">
             <option value="Shampoo" />
             <option value="Crema" />
-            <option value="Jabón" />
+            <option value="Jabon" />
             <option value="Acondicionador" />
             <option value="Aceite" />
             <option value="Mascarilla" />
@@ -139,17 +119,14 @@
             <option value="Cuidado corporal" />
           </datalist>
         </div>
-
         <div class="form-group">
           <label for="productPrice">Precio *</label>
           <input type="number" id="productPrice" placeholder="Ej: 3500" min="0" step="1" />
         </div>
-
         <div class="form-group">
-          <label for="productDesc">Descripción (opcional)</label>
-          <textarea id="productDesc" placeholder="Describí brevemente el producto..."></textarea>
+          <label for="productDesc">Descripcion (opcional)</label>
+          <textarea id="productDesc" placeholder="Describe brevemente el producto..."></textarea>
         </div>
-
         <div class="form-group">
           <label>Disponibilidad</label>
           <div class="toggle-wrap">
@@ -160,7 +137,6 @@
             <span class="toggle-label" id="availableLabel">Disponible</span>
           </div>
         </div>
-
       </div>
       <div class="admin-modal-footer">
         <button class="btn-cancel" id="productFormCancel">Cancelar</button>
@@ -178,20 +154,20 @@
       </div>
       <div class="admin-modal-body">
         <p style="font-size:0.92rem;color:var(--text)">
-          ¿Confirmás que querés eliminar <strong id="deleteProductName"></strong>?
-          Esta acción no se puede deshacer.
+          Confirmas que queres eliminar <strong id="deleteProductName"></strong>?
+          Esta accion no se puede deshacer.
         </p>
       </div>
       <div class="admin-modal-footer">
         <button class="btn-cancel" id="deleteCancelBtn">Cancelar</button>
-        <button class="btn-delete" id="deleteConfirmBtn" style="flex:2;border-radius:6px;padding:0.7rem">🗑 Eliminar</button>
+        <button class="btn-delete-card" id="deleteConfirmBtn" style="flex:2;border-radius:6px;padding:0.7rem">🗑 Eliminar</button>
       </div>
     </div>
   </div>
 
-  <!-- ===== TOAST CONTAINER ===== -->
   <div class="toast-container" id="toastContainer"></div>
 
+  <script src="js/shared.js"></script>
   <script src="js/admin.js"></script>
 </body>
 </html>
