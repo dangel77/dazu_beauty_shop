@@ -916,12 +916,6 @@ button {
 
 .btn-logout:hover { background: rgba(220,38,38,0.25); }
 
-.admin-main {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-}
-
 .admin-section-header {
   display: flex;
   align-items: center;
@@ -954,12 +948,6 @@ button {
 }
 
 .btn-add-product:hover { opacity: 0.9; }
-
-.admin-product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1.2rem;
-}
 
 /* ===== PASSWORD SCREEN ===== */
 .password-screen {
@@ -1039,31 +1027,6 @@ button {
 }
 
 .password-error.show { display: block; }
-
-/* ===== SETUP HELP (token instructions) ===== */
-.setup-help {
-  margin-top: 1rem;
-  text-align: left;
-}
-
-.setup-help details {
-  font-size: 0.8rem;
-  color: var(--text-light);
-}
-
-.setup-help summary {
-  cursor: pointer;
-  color: var(--primary);
-  font-weight: 500;
-  font-size: 0.82rem;
-}
-
-.setup-help ol {
-  margin-top: 0.5rem;
-  padding-left: 1.2rem;
-  line-height: 1.8;
-  list-style: decimal;
-}
 
 /* ===== ADMIN SETTINGS SECTION ===== */
 .admin-settings {
@@ -1223,21 +1186,6 @@ button {
   object-fit: cover;
   border-radius: var(--radius-sm);
   border: 2px solid var(--border);
-}
-
-.img-preview-remove {
-  position: absolute;
-  top: -8px; right: -8px;
-  width: 26px; height: 26px;
-  background: #e53e3e;
-  color: #fff;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-  font-size: 0.8rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 /* ===== TOGGLE SWITCH ===== */
