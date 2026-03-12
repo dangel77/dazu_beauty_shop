@@ -1306,7 +1306,9 @@ button {
   border-radius: var(--radius);
   width: min(560px, 100%);
   max-height: 90vh;
-  overflow-y: auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.5) inset;
   transform: scale(0.9) translateY(20px);
   transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -1339,6 +1341,8 @@ button {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  overflow-y: auto;
+  flex: 1;
 }
 
 .admin-modal-footer {
@@ -1346,6 +1350,8 @@ button {
   display: flex;
   gap: 0.8rem;
   border-top: 1px solid #f0f0f0;
+  flex-shrink: 0;
+  background: #fff;
 }
 
 .btn-save {
@@ -1907,6 +1913,13 @@ button {
     font-size: 0.75rem;
     padding: 0.6rem 0.8rem;
   }
+
+  /* Admin modal mobile */
+  .admin-modal-overlay { padding: 0.5rem; }
+  .admin-modal { max-height: 92vh; }
+  .admin-modal-body { padding: 1rem; }
+  .admin-modal-header { padding: 1rem 1.2rem; }
+  .admin-modal-footer { padding: 0.8rem 1rem 1rem; }
 }
 
 /* --- Small phones --- */
