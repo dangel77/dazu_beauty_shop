@@ -854,7 +854,8 @@ button {
   align-items: flex-start;
 }
 
-.notice-box span { font-size: 1rem; flex-shrink: 0; }
+.notice-box span:first-child { font-size: 1rem; flex-shrink: 0; }
+.notice-box span:last-child { flex: 1; min-width: 0; word-wrap: break-word; }
 
 .modal-footer {
   padding: 1rem 1.5rem 1.5rem;
@@ -1037,13 +1038,6 @@ button {
   height: auto;
   border-radius: 12px;
   margin-bottom: 1rem;
-}
-
-.password-card h2 {
-  font-size: 1.3rem;
-  font-weight: 700;
-  margin-bottom: 0.3rem;
-  color: var(--text);
 }
 
 .password-card p {
@@ -1346,12 +1340,6 @@ button {
   100% { background-position: 0% 50%; }
 }
 
-@keyframes gradientText {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
 @keyframes staggerIn {
   from { opacity: 0; transform: translateY(24px) scale(0.96); }
   to { opacity: 1; transform: translateY(0) scale(1); }
@@ -1520,7 +1508,6 @@ button {
 /* --- Very small phones --- */
 @media (max-width: 340px) {
   .product-grid { grid-template-columns: 1fr; }
-  .landing-title { font-size: 2rem; }
   .btn-catalog { font-size: 0.95rem; padding: 0.8rem 1.8rem; }
 }
 
