@@ -78,12 +78,20 @@ function renderFilters() {
   existing.forEach(function (el) { el.remove(); });
 
   getCategories().forEach(function (cat) {
+    var count = allProducts.filter(function (p) { return p.category === cat && p.available; }).length;
     var btn = document.createElement('button');
     btn.className = 'filter-btn';
     btn.dataset.category = cat;
-    btn.textContent = cat;
+    btn.textContent = cat + (count > 0 ? ' (' + count + ')' : '');
     filtersContainer.appendChild(btn);
   });
+
+  // Update "Todos" button count too
+  var allBtn = filtersContainer.querySelector('[data-category="all"]');
+  if (allBtn) {
+    var totalAvailable = allProducts.filter(function (p) { return p.available; }).length;
+    allBtn.textContent = 'Todos' + (totalAvailable > 0 ? ' (' + totalAvailable + ')' : '');
+  }
 }
 
 // ===== PRODUCT RENDERING =====
@@ -101,6 +109,9 @@ function buildProductCard(product) {
     ? '<span class="badge-available">Disponible</span>'
     : '<span class="badge-unavailable">Sin stock</span>';
 
+  var isNew = product.created_at && (Date.now() - new Date(product.created_at).getTime() < 14 * 24 * 60 * 60 * 1000);
+  var newBadgeHtml = isNew ? '<span class="badge-new">✨ Nuevo</span>' : '';
+
   var catHtml = product.category
     ? '<p class="product-category">' + escapeHtml(product.category) + '</p>'
     : '';
@@ -114,7 +125,7 @@ function buildProductCard(product) {
     : '<button class="btn-add" disabled>Sin stock</button>';
 
   card.innerHTML =
-    '<div class="product-img-wrap">' + imgContent + badgeHtml + '</div>' +
+    '<div class="product-img-wrap">' + imgContent + badgeHtml + newBadgeHtml + '</div>' +
     '<div class="product-body">' +
       catHtml +
       '<h3 class="product-name">' + escapeHtml(product.name) + '</h3>' +

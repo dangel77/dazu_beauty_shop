@@ -1,6 +1,18 @@
 {
   "settings": {
-    "wa_number": "50661000133"
+    "wa_number": "50661000133",
+    "categories": [
+      "Shampoo",
+      "Crema",
+      "Jabon",
+      "Acondicionador",
+      "Aceite",
+      "Mascarilla",
+      "Perfume",
+      "Maquillaje",
+      "Cuidado facial",
+      "Cuidado corporal"
+    ]
   },
   "products": [
     {
@@ -21,7 +33,7 @@
       "description": "rico olor",
       "available": true,
       "image": "mmn9jlnkseaapa.jpg",
-      "created_at": "2026-03-12T09:26:15.827Z"
+      "created_at": "2026-03-12T09:26:15.511Z"
     }
   ]
 }

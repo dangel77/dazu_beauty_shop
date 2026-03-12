@@ -21,12 +21,18 @@ function saveGhToken(token) {
 
 // ===== STATE =====
 var products = [];
-var settings = { wa_number: '' };
+var settings = { wa_number: '', categories: [] };
 var jsonSha = '';            // SHA of products.json (needed for GitHub API updates)
 var editingId = null;
 var pendingDeleteId = null;
 var selectedImageFile = null;
 var currentImageName = '';   // current image filename in data/images/
+var editingCategory = null;  // original name of the category being edited
+
+var DEFAULT_CATEGORIES = [
+  'Shampoo', 'Crema', 'Jabon', 'Acondicionador', 'Aceite',
+  'Mascarilla', 'Perfume', 'Maquillaje', 'Cuidado facial', 'Cuidado corporal'
+];
 
 // ===== DOM REFS =====
 var setupScreen       = document.getElementById('setupScreen');
@@ -66,6 +72,16 @@ var deleteConfirmBtn  = document.getElementById('deleteConfirmBtn');
 // Settings
 var waNumberInput     = document.getElementById('waNumberInput');
 var btnSaveWaNumber   = document.getElementById('btnSaveWaNumber');
+
+// Categories
+var categoriesList    = document.getElementById('categoriesList');
+var newCategoryInput  = document.getElementById('newCategoryInput');
+var btnAddCategory    = document.getElementById('btnAddCategory');
+var editCategoryModal = document.getElementById('editCategoryModal');
+var editCatModalClose = document.getElementById('editCatModalClose');
+var editCategoryInput = document.getElementById('editCategoryInput');
+var editCatCancelBtn  = document.getElementById('editCatCancelBtn');
+var editCatConfirmBtn = document.getElementById('editCatConfirmBtn');
 
 // ===== GITHUB API HELPERS =====
 function ghApi(path, options) {
@@ -209,7 +225,10 @@ function checkExistingConfig() {
     loadJsonFromGitHub()
       .then(function (data) {
         products = data.products || [];
-        settings = data.settings || { wa_number: '' };
+        settings = data.settings || { wa_number: '', categories: [] };
+        if (!Array.isArray(settings.categories) || settings.categories.length === 0) {
+          settings.categories = DEFAULT_CATEGORIES.slice();
+        }
         showAdminPanel();
       })
       .catch(function () {
@@ -224,13 +243,176 @@ function loadAdminData() {
   loadJsonFromGitHub()
     .then(function (data) {
       products = data.products || [];
-      settings = data.settings || { wa_number: '' };
+      settings = data.settings || { wa_number: '', categories: [] };
+      if (!Array.isArray(settings.categories) || settings.categories.length === 0) {
+        settings.categories = DEFAULT_CATEGORIES.slice();
+      }
       var displayNum = (settings.wa_number || '').replace(/^506/, '');
       waNumberInput.value = displayNum;
       renderAdminGrid();
+      renderCategoriesList();
+      updateCategoryDatalist();
     })
     .catch(function (err) {
       showToast('Error cargando datos: ' + err.message, 'error');
+    });
+}
+
+// ===== CATEGORIES =====
+
+function renderCategoriesList() {
+  var cats = settings.categories || [];
+  if (cats.length === 0) {
+    categoriesList.innerHTML = '<p style="font-size:0.82rem;color:var(--text-light);">No hay categorías aun. Agregá la primera.</p>';
+    return;
+  }
+
+  categoriesList.innerHTML = '';
+  cats.forEach(function (cat) {
+    var item = document.createElement('div');
+    item.className = 'category-item';
+    item.innerHTML =
+      '<span class="category-item-name" title="' + escapeAttr(cat) + '">' + escapeHtml(cat) + '</span>' +
+      '<span class="category-item-btns">' +
+        '<button class="btn-cat-edit" data-cat="' + escapeAttr(cat) + '" title="Editar">✏️</button>' +
+        '<button class="btn-cat-delete" data-cat="' + escapeAttr(cat) + '" title="Eliminar">🗑</button>' +
+      '</span>';
+    categoriesList.appendChild(item);
+  });
+}
+
+function updateCategoryDatalist() {
+  var datalist = document.getElementById('categoryList');
+  if (!datalist) return;
+  datalist.innerHTML = '';
+  var cats = settings.categories || [];
+  cats.forEach(function (cat) {
+    var opt = document.createElement('option');
+    opt.value = cat;
+    datalist.appendChild(opt);
+  });
+}
+
+function addCategory() {
+  var name = newCategoryInput.value.trim();
+  if (!name) {
+    showToast('Escribí el nombre de la categoría.', 'error');
+    newCategoryInput.focus();
+    return;
+  }
+
+  var cats = settings.categories || [];
+  var exists = cats.some(function (c) { return c.toLowerCase() === name.toLowerCase(); });
+  if (exists) {
+    showToast('Esa categoría ya existe.', 'error');
+    return;
+  }
+
+  cats.push(name);
+  settings.categories = cats;
+  newCategoryInput.value = '';
+
+  btnAddCategory.disabled = true;
+  btnAddCategory.textContent = 'Guardando...';
+
+  saveJsonToGitHub({ settings: settings, products: products })
+    .then(function () {
+      showToast('Categoría "' + name + '" agregada', 'success');
+      renderCategoriesList();
+      updateCategoryDatalist();
+    })
+    .catch(function (err) {
+      showToast('Error: ' + err.message, 'error');
+      // Revert
+      settings.categories = cats.filter(function (c) { return c !== name; });
+    })
+    .finally(function () {
+      btnAddCategory.disabled = false;
+      btnAddCategory.textContent = '＋ Agregar';
+    });
+}
+
+function openEditCategory(catName) {
+  editingCategory = catName;
+  editCategoryInput.value = catName;
+  editCategoryModal.classList.add('open');
+  editCategoryInput.focus();
+}
+
+function closeEditCategory() {
+  editCategoryModal.classList.remove('open');
+  editingCategory = null;
+}
+
+function saveEditCategory() {
+  var oldName = editingCategory;
+  var newName = editCategoryInput.value.trim();
+
+  if (!newName) {
+    showToast('El nombre no puede estar vacío.', 'error');
+    editCategoryInput.focus();
+    return;
+  }
+
+  if (newName === oldName) {
+    closeEditCategory();
+    return;
+  }
+
+  var cats = settings.categories || [];
+  var exists = cats.some(function (c) { return c !== oldName && c.toLowerCase() === newName.toLowerCase(); });
+  if (exists) {
+    showToast('Ya existe una categoría con ese nombre.', 'error');
+    return;
+  }
+
+  // Rename in categories list
+  var idx = cats.indexOf(oldName);
+  if (idx !== -1) cats[idx] = newName;
+
+  // Update all products with the old category name
+  products.forEach(function (p) {
+    if (p.category === oldName) p.category = newName;
+  });
+
+  editCatConfirmBtn.disabled = true;
+  editCatConfirmBtn.textContent = 'Guardando...';
+
+  saveJsonToGitHub({ settings: settings, products: products })
+    .then(function () {
+      showToast('Categoría renombrada a "' + newName + '"', 'success');
+      closeEditCategory();
+      renderCategoriesList();
+      updateCategoryDatalist();
+      renderAdminGrid();
+    })
+    .catch(function (err) {
+      showToast('Error: ' + err.message, 'error');
+      // Revert
+      if (idx !== -1) cats[idx] = oldName;
+      products.forEach(function (p) { if (p.category === newName) p.category = oldName; });
+      loadAdminData();
+    })
+    .finally(function () {
+      editCatConfirmBtn.disabled = false;
+      editCatConfirmBtn.textContent = '💾 Guardar';
+    });
+}
+
+function deleteCategory(catName) {
+  var cats = settings.categories || [];
+  settings.categories = cats.filter(function (c) { return c !== catName; });
+
+  saveJsonToGitHub({ settings: settings, products: products })
+    .then(function () {
+      showToast('Categoría "' + catName + '" eliminada', 'success');
+      renderCategoriesList();
+      updateCategoryDatalist();
+    })
+    .catch(function (err) {
+      showToast('Error: ' + err.message, 'error');
+      settings.categories = cats;
+      renderCategoriesList();
     });
 }
 
@@ -590,11 +772,36 @@ deleteModal.addEventListener('click', function (e) {
 // Settings
 btnSaveWaNumber.addEventListener('click', saveWaNumberSetting);
 
+// Categories
+btnAddCategory.addEventListener('click', addCategory);
+newCategoryInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') addCategory(); });
+
+categoriesList.addEventListener('click', function (e) {
+  var editBtn = e.target.closest('.btn-cat-edit');
+  if (editBtn) {
+    openEditCategory(editBtn.dataset.cat);
+    return;
+  }
+  var delBtn = e.target.closest('.btn-cat-delete');
+  if (delBtn) {
+    deleteCategory(delBtn.dataset.cat);
+  }
+});
+
+editCatModalClose.addEventListener('click', closeEditCategory);
+editCatCancelBtn.addEventListener('click', closeEditCategory);
+editCatConfirmBtn.addEventListener('click', saveEditCategory);
+editCategoryModal.addEventListener('click', function (e) {
+  if (e.target === editCategoryModal) closeEditCategory();
+});
+editCategoryInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') saveEditCategory(); });
+
 // Escape closes modals
 document.addEventListener('keydown', function (e) {
   if (e.key === 'Escape') {
     closeProductForm();
     closeDeleteModal();
+    closeEditCategory();
   }
 });
 

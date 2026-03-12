@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Panel de administracion - Dazu Beauty Shop" />
   <title>Admin – Dazu Beauty Shop</title>
+  <link rel="icon" type="image/jpeg" href="assets/logo-rosa.jpeg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -70,6 +71,19 @@
         <div class="wa-config-notice" style="margin-top:0.6rem;background:#fff8e1;border-color:#ffe082;color:#7d6608;">
           <span>⏳</span>
           Los cambios pueden tardar unos minutos en aparecer para los clientes (cache de GitHub Pages).
+        </div>
+      </div>
+
+      <!-- ===== CATEGORIES MANAGEMENT ===== -->
+      <div class="admin-categories" id="adminCategoriesSection">
+        <div class="admin-categories-header">
+          <h3>🏷️ Categorías</h3>
+          <p class="admin-categories-hint">Gestioná las categorías disponibles para tus productos.</p>
+        </div>
+        <div class="categories-list" id="categoriesList"></div>
+        <div class="add-category-row">
+          <input type="text" id="newCategoryInput" placeholder="Nueva categoría..." maxlength="40" />
+          <button class="btn-add-category" id="btnAddCategory">＋ Agregar</button>
         </div>
       </div>
 
@@ -162,6 +176,29 @@
       <div class="admin-modal-footer">
         <button class="btn-cancel" id="deleteCancelBtn">Cancelar</button>
         <button class="btn-delete-card" id="deleteConfirmBtn" style="flex:2;border-radius:6px;padding:0.7rem">🗑 Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CATEGORY EDIT MODAL ===== -->
+  <div class="admin-modal-overlay" id="editCategoryModal">
+    <div class="admin-modal" style="max-width:400px">
+      <div class="admin-modal-header">
+        <h2>✏️ Editar categoría</h2>
+        <button class="modal-close" id="editCatModalClose" aria-label="Cerrar">✕</button>
+      </div>
+      <div class="admin-modal-body">
+        <div class="form-group">
+          <label for="editCategoryInput">Nombre de la categoría *</label>
+          <input type="text" id="editCategoryInput" placeholder="Ej: Shampoo" maxlength="40" />
+        </div>
+        <p style="font-size:0.82rem;color:var(--text-light);line-height:1.5;">
+          Al cambiar el nombre, los productos con esta categoría se actualizarán automáticamente.
+        </p>
+      </div>
+      <div class="admin-modal-footer">
+        <button class="btn-cancel" id="editCatCancelBtn">Cancelar</button>
+        <button class="btn-save" id="editCatConfirmBtn">💾 Guardar</button>
       </div>
     </div>
   </div>
