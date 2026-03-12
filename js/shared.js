@@ -37,7 +37,7 @@ function getCategoryEmoji(category) {
 }
 
 function formatPrice(n) {
-  return '$' + Number(n).toLocaleString('es-AR', {
+  return '₡' + Number(n).toLocaleString('es-CR', {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0
   });

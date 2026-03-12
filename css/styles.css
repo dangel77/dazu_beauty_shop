@@ -340,8 +340,8 @@ button {
 
 .product-img-wrap {
   position: relative;
-  padding-top: 75%;
-  background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+  padding-top: 100%;
+  background: #fff;
   overflow: hidden;
 }
 
@@ -350,7 +350,8 @@ button {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  padding: 0.5rem;
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
