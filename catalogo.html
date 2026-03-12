@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catálogo – Dazu Beauty Shop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="catalog-header">
+    <a href="index.html" class="header-brand">
+      <div class="header-brand-icon">🌸</div>
+      <span class="header-brand-name">Dazu Beauty</span>
+    </a>
+    <div class="header-actions">
+      <button class="cart-btn" id="cartToggleBtn" aria-label="Ver carrito">
+        🛒 <span id="cartBtnLabel">Carrito</span>
+        <span class="cart-count" id="cartCount" style="display:none">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== MAIN ===== -->
+  <main class="catalog-main">
+    <div class="catalog-hero">
+      <h1>Nuestro Catálogo</h1>
+      <p>Elegí los productos que más te gustan 💖</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="catalog-filters" id="filtersContainer">
+      <button class="filter-btn active" data-category="all">Todos</button>
+      <!-- Dynamic categories added by JS -->
+    </div>
+
+    <!-- Product grid -->
+    <div class="product-grid" id="productGrid">
+      <!-- Products rendered by JS -->
+    </div>
+  </main>
+
+  <!-- ===== CART OVERLAY & SIDEBAR ===== -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+
+  <aside class="cart-sidebar" id="cartSidebar" aria-label="Carrito de compras">
+    <div class="cart-header">
+      <h2>🛒 Tu carrito</h2>
+      <button class="cart-close" id="cartCloseBtn" aria-label="Cerrar carrito">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <div class="cart-empty">
+        <span>🛍️</span>
+        <p>Tu carrito está vacío</p>
+      </div>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total-row">
+        <span class="cart-total-label">Total:</span>
+        <span class="cart-total-value" id="cartTotal">$0</span>
+      </div>
+      <button class="btn-whatsapp" id="btnWhatsapp" disabled>
+        <span>📲</span> Enviar pedido por WhatsApp
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===== WHATSAPP CHECKOUT MODAL ===== -->
+  <div class="modal-overlay" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="checkoutTitle">📋 Datos del pedido</h2>
+        <button class="modal-close" id="checkoutClose" aria-label="Cerrar">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="buyerName">Tu nombre *</label>
+          <input type="text" id="buyerName" placeholder="Ej: María García" autocomplete="name" />
+        </div>
+        <div class="form-group">
+          <label for="paymentType">Forma de pago *</label>
+          <select id="paymentType">
+            <option value="">-- Seleccioná una opción --</option>
+            <option value="Efectivo">💵 Efectivo</option>
+            <option value="Transferencia">🏦 Transferencia bancaria</option>
+            <option value="Mercado Pago">📱 Mercado Pago</option>
+            <option value="Otro">💳 Otro</option>
+          </select>
+        </div>
+        <div class="notice-box">
+          <span>⚠️</span>
+          <span>
+            <strong>Importante:</strong> El pago se realiza <strong>antes</strong> de recibir los productos.
+            Una vez confirmado el pedido, te enviaremos los detalles para concretar el pago.
+          </span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" id="checkoutCancel">Cancelar</button>
+        <button class="btn-send-wa" id="btnSendWhatsapp">
+          <span>📲</span> Enviar por WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TOAST CONTAINER ===== -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="js/catalogo.js"></script>
+</body>
+</html>
