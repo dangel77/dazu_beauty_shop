@@ -135,15 +135,27 @@ button {
 
 .landing-admin-link {
   position: absolute;
-  bottom: 1.5rem;
-  right: 1.5rem;
-  font-size: 0.7rem;
-  color: rgba(120,120,120,0.4);
-  transition: color var(--transition);
+  bottom: 1.2rem;
+  right: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(100,100,100,0.55);
+  background: rgba(255,255,255,0.6);
+  border: 1px solid rgba(180,180,180,0.35);
+  border-radius: 20px;
+  padding: 0.35rem 0.75rem 0.35rem 0.6rem;
+  transition: color var(--transition), background var(--transition), border-color var(--transition);
+  white-space: nowrap;
+  letter-spacing: 0.2px;
 }
 
 .landing-admin-link:hover {
-  color: rgba(120,120,120,0.8);
+  color: rgba(60,60,60,0.9);
+  background: rgba(255,255,255,0.9);
+  border-color: rgba(150,150,150,0.6);
 }
 
 /* ===== CATALOG HEADER ===== */
