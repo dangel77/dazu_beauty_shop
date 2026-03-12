@@ -367,11 +367,13 @@ function openEditCategory(catName) {
   editingCategory = catName;
   editCategoryInput.value = catName;
   editCategoryModal.classList.add('open');
+  document.body.classList.add('modal-open');
   editCategoryInput.focus();
 }
 
 function closeEditCategory() {
   editCategoryModal.classList.remove('open');
+  document.body.classList.remove('modal-open');
   editingCategory = null;
 }
 
@@ -552,11 +554,13 @@ function openProductForm(id) {
   }
 
   productFormModal.classList.add('open');
+  document.body.classList.add('modal-open');
   productName.focus();
 }
 
 function closeProductForm() {
   productFormModal.classList.remove('open');
+  document.body.classList.remove('modal-open');
   editingId = null;
   selectedImageFile = null;
   currentImageName = '';
@@ -682,10 +686,12 @@ function openDeleteModal(id, name) {
   pendingDeleteId = id;
   deleteProductName.textContent = name;
   deleteModal.classList.add('open');
+  document.body.classList.add('modal-open');
 }
 
 function closeDeleteModal() {
   deleteModal.classList.remove('open');
+  document.body.classList.remove('modal-open');
   pendingDeleteId = null;
 }
 
