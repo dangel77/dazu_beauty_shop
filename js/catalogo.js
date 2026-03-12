@@ -41,6 +41,19 @@ var btnSendWhatsapp  = document.getElementById('btnSendWhatsapp');
 var buyerNameInput   = document.getElementById('buyerName');
 var paymentTypeInput = document.getElementById('paymentType');
 
+// Product detail modal
+var productDetailModal       = document.getElementById('productDetailModal');
+var productDetailClose       = document.getElementById('productDetailClose');
+var productDetailImg         = document.getElementById('productDetailImg');
+var productDetailPlaceholder = document.getElementById('productDetailPlaceholder');
+var productDetailCategory    = document.getElementById('productDetailCategory');
+var productDetailName        = document.getElementById('productDetailName');
+var productDetailDesc        = document.getElementById('productDetailDesc');
+var productDetailPrice       = document.getElementById('productDetailPrice');
+var productDetailBadges      = document.getElementById('productDetailBadges');
+var productDetailAdd         = document.getElementById('productDetailAdd');
+var currentDetailProductId   = null;
+
 // ===== LOAD PRODUCTS FROM JSON =====
 function loadProducts() {
   productGrid.innerHTML =
@@ -280,6 +293,52 @@ function closeCheckoutModal() {
   checkoutModal.classList.remove('open');
 }
 
+// ===== PRODUCT DETAIL MODAL =====
+function openProductDetail(product) {
+  var imgSrc = product.image ? 'data/images/' + encodeURIComponent(product.image) : '';
+
+  if (imgSrc) {
+    productDetailImg.src = imgSrc;
+    productDetailImg.alt = escapeAttr(product.name);
+    productDetailImg.style.display = 'block';
+    productDetailPlaceholder.style.display = 'none';
+  } else {
+    productDetailImg.style.display = 'none';
+    productDetailPlaceholder.textContent = getCategoryEmoji(product.category);
+    productDetailPlaceholder.style.display = 'flex';
+  }
+
+  productDetailCategory.textContent = product.category || '';
+  productDetailName.textContent = product.name;
+  productDetailDesc.textContent = product.description || '';
+  productDetailPrice.textContent = formatPrice(product.price);
+
+  var badgesHtml = product.available
+    ? '<span class="badge-available">Disponible</span>'
+    : '<span class="badge-unavailable">Sin stock</span>';
+  var isNew = product.created_at && (Date.now() - new Date(product.created_at).getTime() < 14 * 24 * 60 * 60 * 1000);
+  if (isNew) badgesHtml += '<span class="badge-new">✨ Nuevo</span>';
+  productDetailBadges.innerHTML = badgesHtml;
+
+  if (product.available) {
+    productDetailAdd.disabled = false;
+    productDetailAdd.innerHTML = '<span>🛒</span> Agregar al carrito';
+  } else {
+    productDetailAdd.disabled = true;
+    productDetailAdd.textContent = 'Sin stock';
+  }
+
+  currentDetailProductId = product.id;
+  productDetailModal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeProductDetail() {
+  productDetailModal.classList.remove('open');
+  document.body.style.overflow = '';
+  currentDetailProductId = null;
+}
+
 function buildWhatsAppMessage(name, payment) {
   var msg = 'Hola! Quisiera hacer un pedido:\n\n*Mi pedido:*\n';
   var grandTotal = 0;
@@ -346,11 +405,18 @@ filtersContainer.addEventListener('click', function (e) {
   renderProducts(activeFilter);
 });
 
-// Add to cart
+// Add to cart (btn-add click)
 productGrid.addEventListener('click', function (e) {
   var btn = e.target.closest('.btn-add');
-  if (!btn || btn.disabled) return;
-  addToCart(btn.dataset.id);
+  if (btn) {
+    if (!btn.disabled) addToCart(btn.dataset.id);
+    return;
+  }
+  // Any other click on the card → open detail modal
+  var card = e.target.closest('.product-card');
+  if (!card) return;
+  var product = allProducts.find(function (p) { return p.id === card.dataset.id; });
+  if (product) openProductDetail(product);
 });
 
 // Cart
@@ -377,11 +443,24 @@ checkoutModal.addEventListener('click', function (e) {
 });
 btnSendWhatsapp.addEventListener('click', sendWhatsApp);
 
+// Product detail modal
+productDetailClose.addEventListener('click', closeProductDetail);
+productDetailModal.addEventListener('click', function (e) {
+  if (e.target === productDetailModal) closeProductDetail();
+});
+productDetailAdd.addEventListener('click', function () {
+  if (currentDetailProductId) {
+    addToCart(currentDetailProductId);
+    closeProductDetail();
+  }
+});
+
 // Escape
 document.addEventListener('keydown', function (e) {
   if (e.key === 'Escape') {
     closeCart();
     closeCheckoutModal();
+    closeProductDetail();
   }
 });
 

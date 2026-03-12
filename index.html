@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Dazu Beauty Shop - Tu tienda de belleza. Catalogo de cremas, shampoos y productos de cuidado personal." />
+  <meta name="description" content="Dazu Beauty Shop - Tu tienda de belleza. Catálogo de cremas, shampoos y productos de cuidado personal. Envío a todo el país." />
   <title>Dazu Beauty Shop</title>
-  <link rel="icon" type="image/jpeg" href="assets/logo-rosa.jpeg" />
+  <link rel="icon" type="image/jpeg" href="assets/logo2.jpeg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -24,11 +24,48 @@
     .f4 { bottom: 10%; right: 10%; --rot: -20deg; transform: rotate(-20deg); animation-delay: 2.1s; }
     .f5 { top: 45%; left: 2%; --rot: 0deg; font-size: 1.2rem; animation-delay: 0.5s; }
     .f6 { top: 55%; right: 3%; --rot: 30deg; font-size: 1.3rem; transform: rotate(30deg); animation-delay: 1.8s; }
+
+    /* Landing feature chips */
+    .landing-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+      margin: 1.6rem 0 2rem;
+    }
+    .landing-feature-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(255,255,255,0.75);
+      border: 1px solid rgba(233,30,140,0.18);
+      border-radius: 50px;
+      padding: 0.4rem 0.9rem;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--primary-dark);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      box-shadow: 0 2px 8px rgba(233,30,140,0.08);
+    }
+
+    /* Landing tagline */
+    .landing-tagline {
+      font-size: clamp(1.5rem, 5vw, 2.2rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+      line-height: 1.25;
+      letter-spacing: -0.5px;
+    }
   </style>
 </head>
 <body>
   <main class="landing">
-    <!-- Decorative flowers -->
+    <!-- Decorative elements -->
     <div class="landing-flowers f1">🌸</div>
     <div class="landing-flowers f2">✨</div>
     <div class="landing-flowers f3">💫</div>
@@ -37,11 +74,23 @@
     <div class="landing-flowers f6">💎</div>
 
     <div class="landing-content">
+      <!-- Logo -->
       <div class="landing-hero-logo">
-        <img src="assets/logo-rosa.jpeg" alt="Dazu Beauty Shop" class="landing-logo-img" />
+        <img src="assets/logo2.jpeg" alt="Dazu Beauty Shop" class="landing-logo-img"
+             onerror="this.src='assets/logo-rosadofondo.jpeg'" />
       </div>
 
-      <p class="landing-subtitle">Tu tienda de belleza</p>
+      <!-- Tagline -->
+      <p class="landing-tagline">Belleza que enamora ✨</p>
+      <p class="landing-subtitle">Los mejores productos de cuidado personal, directo a tu puerta</p>
+
+      <!-- Feature chips -->
+      <div class="landing-features">
+        <span class="landing-feature-chip">🚚 Envío a todo el país</span>
+        <span class="landing-feature-chip">💄 Maquillaje & skincare</span>
+        <span class="landing-feature-chip">📲 Pedí por WhatsApp</span>
+        <span class="landing-feature-chip">💸 Precios increíbles</span>
+      </div>
 
       <a href="catalogo.html" class="btn-catalog">
         <span>🛍️</span>
