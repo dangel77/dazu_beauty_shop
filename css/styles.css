@@ -1261,7 +1261,7 @@ button {
 .img-preview {
   width: 100%;
   max-height: 200px;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: var(--radius-sm);
   border: 2px solid var(--border);
 }
