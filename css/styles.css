@@ -213,10 +213,16 @@ button {
   letter-spacing: -0.3px;
 }
 
+.header-spacer {
+  flex: 1;
+}
+
 .header-actions {
   display: flex;
   align-items: center;
   gap: 1rem;
+  flex: 1;
+  justify-content: flex-end;
 }
 
 /* ===== CART BUTTON ===== */
@@ -365,11 +371,11 @@ button {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-  animation: fadeInUp 0.2s ease;
 }
 
 .category-panel.open {
   display: flex;
+  animation: fadeInUp 0.2s ease;
 }
 
 .category-panel-btn {
@@ -2156,4 +2162,18 @@ button {
   .admin-categories { padding: 1rem; }
   .add-category-row { flex-direction: column; }
   .btn-add-category { width: 100%; justify-content: center; }
+}
+
+/* ===== DESKTOP: show categories inline, hide toggle ===== */
+@media (min-width: 601px) {
+  .btn-categories-toggle {
+    display: none;
+  }
+  .category-panel {
+    display: flex;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+  }
 }
