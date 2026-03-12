@@ -15,8 +15,7 @@
   <!-- ===== SETUP SCREEN (solo pide token, una sola vez) ===== -->
   <div id="setupScreen" class="password-screen">
     <div class="password-card">
-      <div class="password-icon">🌸</div>
-      <h2>Dazu Beauty Shop</h2>
+      <img src="assets/logo-blanco.jpeg" alt="Dazu Beauty Shop" class="password-logo" />
       <p>Ingresa tu clave de acceso para administrar la tienda.</p>
       <div class="password-input-wrap">
         <input type="password" id="setupToken" placeholder="Clave de acceso" autocomplete="off" />
@@ -32,8 +31,8 @@
 
     <header class="admin-topbar">
       <div class="admin-topbar-brand">
-        <span>🌸</span>
-        <span>Dazu Beauty – Admin</span>
+        <img src="assets/logo-negro.jpeg" alt="Dazu" class="admin-topbar-logo" />
+        <span>Admin</span>
       </div>
       <div class="admin-topbar-actions">
         <a href="catalogo.html" class="btn-view-catalog">👁 Ver catalogo</a>
@@ -54,8 +53,11 @@
         <h3>⚙️ Configuracion</h3>
         <div class="settings-row">
           <div class="form-group">
-            <label for="waNumberInput">📱 Numero de WhatsApp (con codigo de pais)</label>
-            <input type="tel" id="waNumberInput" placeholder="Ej: 5491122334455" />
+            <label for="waNumberInput">📱 Numero de WhatsApp</label>
+            <div style="display:flex;align-items:center;gap:0.5rem">
+              <span style="font-weight:600;font-size:1rem;color:var(--text);white-space:nowrap">+506</span>
+              <input type="tel" id="waNumberInput" placeholder="Ej: 61234567" />
+            </div>
           </div>
           <button class="btn-save" id="btnSaveWaNumber" style="flex:0.5;padding:0.65rem 1rem;margin-bottom:0">
             Guardar
@@ -63,8 +65,7 @@
         </div>
         <div class="wa-config-notice">
           <span>ℹ️</span>
-          Ingresa tu numero sin espacios ni signos. Ejemplo para Argentina: <strong>5491122334455</strong>
-          (549 + codigo de area sin 0 + numero sin 15).
+          Ingresa solo tu numero sin espacios ni signos. Ejemplo: <strong>61234567</strong>
         </div>
         <div class="wa-config-notice" style="margin-top:0.6rem;background:#fff8e1;border-color:#ffe082;color:#7d6608;">
           <span>⏳</span>

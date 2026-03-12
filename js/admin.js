@@ -209,7 +209,7 @@ function checkExistingConfig() {
     loadJsonFromGitHub()
       .then(function (data) {
         products = data.products || [];
-        settings = data.settings || { wa_number: '61000133' };
+        settings = data.settings || { wa_number: '' };
         showAdminPanel();
       })
       .catch(function () {
@@ -224,8 +224,9 @@ function loadAdminData() {
   loadJsonFromGitHub()
     .then(function (data) {
       products = data.products || [];
-      settings = data.settings || { wa_number: '61000133' };
-      waNumberInput.value = settings.wa_number || '';
+      settings = data.settings || { wa_number: '' };
+      var displayNum = (settings.wa_number || '').replace(/^506/, '');
+      waNumberInput.value = displayNum;
       renderAdminGrid();
     })
     .catch(function (err) {
@@ -501,7 +502,7 @@ function saveWaNumberSetting() {
   btnSaveWaNumber.disabled = true;
   btnSaveWaNumber.textContent = 'Guardando...';
 
-  settings.wa_number = num;
+  settings.wa_number = '506' + num;
   waNumberInput.value = num;
 
   saveJsonToGitHub({ settings: settings, products: products })

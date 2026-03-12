@@ -139,8 +139,10 @@ function renderProducts(filter) {
     return;
   }
 
-  filtered.forEach(function (product) {
-    productGrid.appendChild(buildProductCard(product));
+  filtered.forEach(function (product, index) {
+    var card = buildProductCard(product);
+    card.style.animationDelay = (index * 0.08) + 's';
+    productGrid.appendChild(card);
   });
 }
 
@@ -185,7 +187,12 @@ function removeFromCart(productId) {
 function changeQty(productId, delta) {
   var item = cart.find(function (i) { return i.id === productId; });
   if (!item) return;
-  item.qty = Math.max(1, item.qty + delta);
+  var newQty = item.qty + delta;
+  if (newQty <= 0) {
+    removeFromCart(productId);
+    return;
+  }
+  item.qty = newQty;
   saveCart(cart);
   updateCartUI();
   renderCartItems();
