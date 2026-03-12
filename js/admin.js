@@ -28,11 +28,25 @@ var pendingDeleteId = null;
 var selectedImageFile = null;
 var currentImageName = '';   // current image filename in data/images/
 var editingCategory = null;  // original name of the category being edited
+var _savedScrollY = 0;       // scroll position saved when a modal is opened (iOS fix)
 
 var DEFAULT_CATEGORIES = [
   'Shampoo', 'Crema', 'Jabon', 'Acondicionador', 'Aceite',
   'Mascarilla', 'Perfume', 'Maquillaje', 'Cuidado facial', 'Cuidado corporal'
 ];
+
+// ===== SCROLL LOCK (iOS Safari compatible) =====
+function lockBodyScroll() {
+  _savedScrollY = window.scrollY;
+  document.body.style.top = '-' + _savedScrollY + 'px';
+  document.body.classList.add('modal-open');
+}
+
+function unlockBodyScroll() {
+  document.body.classList.remove('modal-open');
+  document.body.style.top = '';
+  window.scrollTo(0, _savedScrollY);
+}
 
 // ===== DOM REFS =====
 var setupScreen       = document.getElementById('setupScreen');
@@ -367,13 +381,13 @@ function openEditCategory(catName) {
   editingCategory = catName;
   editCategoryInput.value = catName;
   editCategoryModal.classList.add('open');
-  document.body.classList.add('modal-open');
+  lockBodyScroll();
   editCategoryInput.focus();
 }
 
 function closeEditCategory() {
   editCategoryModal.classList.remove('open');
-  document.body.classList.remove('modal-open');
+  unlockBodyScroll();
   editingCategory = null;
 }
 
@@ -554,13 +568,13 @@ function openProductForm(id) {
   }
 
   productFormModal.classList.add('open');
-  document.body.classList.add('modal-open');
+  lockBodyScroll();
   productName.focus();
 }
 
 function closeProductForm() {
   productFormModal.classList.remove('open');
-  document.body.classList.remove('modal-open');
+  unlockBodyScroll();
   editingId = null;
   selectedImageFile = null;
   currentImageName = '';
@@ -686,12 +700,12 @@ function openDeleteModal(id, name) {
   pendingDeleteId = id;
   deleteProductName.textContent = name;
   deleteModal.classList.add('open');
-  document.body.classList.add('modal-open');
+  lockBodyScroll();
 }
 
 function closeDeleteModal() {
   deleteModal.classList.remove('open');
-  document.body.classList.remove('modal-open');
+  unlockBodyScroll();
   pendingDeleteId = null;
 }
 
