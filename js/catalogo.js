@@ -29,16 +29,49 @@ var currentDetailVariant   = null;
 var _catalogScrollY       = 0;   // saved scroll position for iOS scroll lock
 
 // ===== SCROLL LOCK (iOS Safari compatible) =====
+function _preventCatalogBgScroll(e) {
+  var target = e.target;
+  if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT')) {
+    return;
+  }
+  var scrollableParent = target
+    ? (target.closest('.modal-body') || target.closest('.cart-items') || target.closest('.product-detail-content'))
+    : null;
+  if (!scrollableParent) {
+    e.preventDefault();
+    return;
+  }
+  var atTop    = scrollableParent.scrollTop <= 0;
+  var atBottom = scrollableParent.scrollTop + scrollableParent.clientHeight >= scrollableParent.scrollHeight - 1;
+  if (e.touches && e.touches[0]) {
+    var dy = e.touches[0].clientY - (scrollableParent._lastTouchY || e.touches[0].clientY);
+    if ((atTop && dy > 0) || (atBottom && dy < 0)) {
+      e.preventDefault();
+    }
+  }
+}
+
+function _trackCatalogTouchStart(e) {
+  var scrollable = e.target.closest('.modal-body') || e.target.closest('.cart-items') || e.target.closest('.product-detail-content');
+  if (scrollable && e.touches && e.touches[0]) {
+    scrollable._lastTouchY = e.touches[0].clientY;
+  }
+}
+
 function lockCatalogBodyScroll() {
   _catalogScrollY = window.scrollY;
   document.body.style.top = '-' + _catalogScrollY + 'px';
   document.body.classList.add('modal-open');
+  document.addEventListener('touchstart', _trackCatalogTouchStart, { passive: true });
+  document.addEventListener('touchmove', _preventCatalogBgScroll, { passive: false });
 }
 
 function unlockCatalogBodyScroll() {
   document.body.classList.remove('modal-open');
   document.body.style.top = '';
   window.scrollTo(0, _catalogScrollY);
+  document.removeEventListener('touchstart', _trackCatalogTouchStart);
+  document.removeEventListener('touchmove', _preventCatalogBgScroll);
 }
 
 // ===== CONSTANTS =====
@@ -81,6 +114,9 @@ var paymentTypeInput = document.getElementById('paymentType');
 var searchInput    = document.getElementById('searchInput');
 var searchClearBtn = document.getElementById('searchClearBtn');
 
+// Scroll-to-top button
+var scrollTopBtn = document.getElementById('scrollTopBtn');
+
 // Product detail modal
 var productDetailModal       = document.getElementById('productDetailModal');
 var productDetailClose       = document.getElementById('productDetailClose');
@@ -97,8 +133,21 @@ var variantsList             = document.getElementById('variantsList');
 
 // ===== LOAD PRODUCTS FROM JSON =====
 function loadProducts() {
-  productGrid.innerHTML =
-    '<div class="empty-catalog"><span>⏳</span><p>Cargando productos...</p></div>';
+  // Show skeleton loaders while fetching
+  var skeletonHtml = '';
+  for (var i = 0; i < 6; i++) {
+    skeletonHtml +=
+      '<div class="product-card skeleton-card">' +
+        '<div class="skeleton-img"></div>' +
+        '<div class="skeleton-body">' +
+          '<div class="skeleton-line short"></div>' +
+          '<div class="skeleton-line"></div>' +
+          '<div class="skeleton-line medium"></div>' +
+          '<div class="skeleton-line short"></div>' +
+        '</div>' +
+      '</div>';
+  }
+  productGrid.innerHTML = skeletonHtml;
 
   return fetch('data/products.json?v=' + Date.now())
     .then(function (res) {
@@ -232,12 +281,30 @@ function renderProducts(filter) {
   productGrid.innerHTML = '';
 
   if (filtered.length === 0) {
-    var emptyIcon = searchQuery ? '🔍' : '🛍️';
-    var emptyMsg  = searchQuery
-      ? 'No encontramos productos con ese nombre 🔍'
-      : 'No hay productos en esta categoria todavia.';
+    var emptyIcon, emptyMsg, emptySub;
+    if (searchQuery) {
+      emptyIcon = '🔍';
+      emptyMsg  = 'No encontramos "' + escapeHtml(searchQuery) + '"';
+      emptySub  = '¿Probás con otro nombre o categoría?';
+    } else if (filter === '__new__') {
+      emptyIcon = '✨';
+      emptyMsg  = 'No hay productos nuevos por ahora';
+      emptySub  = 'Volvé pronto, ¡siempre llegan novedades!';
+    } else if (filter !== 'all') {
+      emptyIcon = '🏷️';
+      emptyMsg  = 'No hay productos en esta categoría todavía';
+      emptySub  = 'Mirá las otras categorías o explorá todo el catálogo.';
+    } else {
+      emptyIcon = '🛍️';
+      emptyMsg  = 'No hay productos disponibles';
+      emptySub  = '';
+    }
     productGrid.innerHTML =
-      '<div class="empty-catalog"><span>' + emptyIcon + '</span><p>' + escapeHtml(emptyMsg) + '</p></div>';
+      '<div class="empty-catalog">' +
+        '<span>' + emptyIcon + '</span>' +
+        '<p>' + emptyMsg + '</p>' +
+        (emptySub ? '<p class="empty-catalog-sub">' + escapeHtml(emptySub) + '</p>' : '') +
+      '</div>';
     return;
   }
 
@@ -387,7 +454,7 @@ function openCheckoutModal() {
   cartSidebar.classList.remove('open');
   cartOverlay.classList.remove('open');
   checkoutModal.classList.add('open');
-  buyerNameInput.value = '';
+  buyerNameInput.value = localStorage.getItem('dazu_buyer_name') || '';
   paymentTypeInput.value = '';
   buyerNameInput.focus();
 }
@@ -514,6 +581,12 @@ function buildWhatsAppMessage(name, payment) {
   msg += '\n*Forma de pago: ' + payment + '*';
   msg += '\n*Nombre: ' + name + '*';
   msg += '\n\n_Recorda que el pago se realiza ANTES de recibir los productos._';
+
+  var origin = window.location.origin;
+  if (origin && origin !== 'null') {
+    msg += '\n\n📎 Catálogo: ' + origin + '/catalogo.html';
+  }
+
   return msg;
 }
 
@@ -535,6 +608,8 @@ function sendWhatsApp() {
     showToast('El numero de WhatsApp aun no fue configurado.', 'error');
     return;
   }
+
+  localStorage.setItem('dazu_buyer_name', name);
 
   var message = buildWhatsAppMessage(name, payment);
   var url = 'https://wa.me/' + waNumber + '?text=' + encodeURIComponent(message);
@@ -713,6 +788,20 @@ document.addEventListener('keydown', function (e) {
     closeProductDetail();
   }
 });
+
+// ===== SCROLL-TO-TOP =====
+if (scrollTopBtn) {
+  window.addEventListener('scroll', function () {
+    if (window.scrollY > 400) {
+      scrollTopBtn.classList.add('visible');
+    } else {
+      scrollTopBtn.classList.remove('visible');
+    }
+  });
+  scrollTopBtn.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
 
 // ===== INIT =====
 loadProducts();
