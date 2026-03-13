@@ -36,16 +36,45 @@ var DEFAULT_CATEGORIES = [
 ];
 
 // ===== SCROLL LOCK (iOS Safari compatible) =====
+function _preventBgScroll(e) {
+  // Allow scrolling inside modal body, block everything else
+  var modalBody = e.target.closest('.admin-modal-body');
+  if (!modalBody) {
+    e.preventDefault();
+    return;
+  }
+  // If modal body is at scroll boundary, prevent overscroll from leaking
+  var atTop = modalBody.scrollTop <= 0;
+  var atBottom = modalBody.scrollTop + modalBody.clientHeight >= modalBody.scrollHeight - 1;
+  if (e.touches && e.touches[0]) {
+    var dy = e.touches[0].clientY - (modalBody._lastTouchY || e.touches[0].clientY);
+    if ((atTop && dy > 0) || (atBottom && dy < 0)) {
+      e.preventDefault();
+    }
+  }
+}
+
+function _trackTouchStart(e) {
+  var modalBody = e.target.closest('.admin-modal-body');
+  if (modalBody && e.touches && e.touches[0]) {
+    modalBody._lastTouchY = e.touches[0].clientY;
+  }
+}
+
 function lockBodyScroll() {
   _savedScrollY = window.scrollY;
   document.body.style.top = '-' + _savedScrollY + 'px';
   document.body.classList.add('modal-open');
+  document.addEventListener('touchstart', _trackTouchStart, { passive: true });
+  document.addEventListener('touchmove', _preventBgScroll, { passive: false });
 }
 
 function unlockBodyScroll() {
   document.body.classList.remove('modal-open');
   document.body.style.top = '';
   window.scrollTo(0, _savedScrollY);
+  document.removeEventListener('touchstart', _trackTouchStart);
+  document.removeEventListener('touchmove', _preventBgScroll);
 }
 
 // ===== DOM REFS =====
