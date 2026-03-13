@@ -17,6 +17,18 @@
   },
   "products": [
     {
+      "id": "mmnwkk3v7rt6tb",
+      "name": "labial 1",
+      "categories": [
+        "labial"
+      ],
+      "price": 2000,
+      "description": "rosa",
+      "available": true,
+      "image": "mmnwkk3v7rt6tb.jpg",
+      "created_at": "2026-03-12T20:10:51.511Z"
+    },
+    {
       "id": "mmpcvj3tlnww1y",
       "name": "brillo",
       "categories": [],
@@ -39,18 +51,6 @@
           "available": true
         }
       ]
-    },
-    {
-      "id": "mmnwkk3v7rt6tb",
-      "name": "labial 1",
-      "categories": [
-        "labial"
-      ],
-      "price": 2000,
-      "description": "rosa",
-      "available": true,
-      "image": "mmnwkk3v7rt6tb.jpg",
-      "created_at": "2026-03-12T20:10:51.511Z"
     },
     {
       "id": "mmn9jlnkseaapa",
