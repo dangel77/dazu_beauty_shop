@@ -108,3 +108,49 @@ function blobToBase64Raw(blob) {
 function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 }
+
+// ===== DARK MODE =====
+var DARK_MODE_KEY = 'dazu_dark_mode';
+
+function initDarkMode() {
+  var stored = localStorage.getItem(DARK_MODE_KEY);
+  var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var isDark = stored !== null ? stored === 'true' : prefersDark;
+  if (isDark) {
+    document.body.classList.add('dark-mode');
+  }
+  _updateDarkModeIcons(isDark);
+}
+
+function toggleDarkMode() {
+  var isDark = document.body.classList.toggle('dark-mode');
+  localStorage.setItem(DARK_MODE_KEY, isDark ? 'true' : 'false');
+  _updateDarkModeIcons(isDark);
+}
+
+function _updateDarkModeIcons(isDark) {
+  var icon = isDark ? '☀️' : '🌙';
+  var btns = document.querySelectorAll('.dark-mode-btn');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].textContent = icon;
+  }
+}
+
+// Init dark mode immediately so there's no flash
+initDarkMode();
+
+// Attach toggle listeners once DOM is ready
+(function () {
+  function _attachDarkModeListeners() {
+    var ids = ['darkModeToggle', 'darkModeToggleLanding'];
+    for (var i = 0; i < ids.length; i++) {
+      var btn = document.getElementById(ids[i]);
+      if (btn) btn.addEventListener('click', toggleDarkMode);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', _attachDarkModeListeners);
+  } else {
+    _attachDarkModeListeners();
+  }
+}());
