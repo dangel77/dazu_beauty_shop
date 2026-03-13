@@ -86,8 +86,6 @@ function unlockBodyScroll() {
 }
 
 // Force modal body max-height via JS so footer is always visible
-var _visualViewportResizeHandler = null;
-
 function fixModalBodyHeight(modalEl) {
   if (window.innerWidth > 600) return; // only on mobile
   var header = modalEl.querySelector('.admin-modal-header');
@@ -95,47 +93,25 @@ function fixModalBodyHeight(modalEl) {
   var body   = modalEl.querySelector('.admin-modal-body');
   if (!header || !footer || !body) return;
 
-  function compute() {
-    // visualViewport.height is accurate on mobile: excludes on-screen keyboard, browser chrome
-    var vh = (window.visualViewport ? window.visualViewport.height : window.innerHeight);
-    var modalMaxH = vh * 0.90;
-    var headerH = header.offsetHeight;
-    var footerH = footer.offsetHeight;
-    var bodyMaxH = modalMaxH - headerH - footerH;
-    // Ensure minimum viable modal body height before applying
-    if (bodyMaxH > 60) {
-      body.style.maxHeight = Math.floor(bodyMaxH) + 'px';
-    }
+  // Capture innerHeight once at modal-open time (keyboard is not yet open at this point).
+  // Using innerHeight rather than screen.height or visualViewport.height ensures we get
+  // the real available viewport (accounting for browser chrome/nav bars) while remaining
+  // stable – the keyboard has not appeared yet so it has not shrunk the viewport.
+  var vh = window.innerHeight;
+  var modalMaxH = vh * 0.90;
+  var headerH = header.offsetHeight;
+  var footerH = footer.offsetHeight;
+  var bodyMaxH = modalMaxH - headerH - footerH;
+  if (bodyMaxH > 60) {
+    body.style.maxHeight = Math.floor(bodyMaxH) + 'px';
   }
-
-  // Compute immediately so the modal is correctly sized on open
-  compute();
-
-  // Re-compute whenever the viewport changes (e.g. keyboard shows/hides).
-  // Debounced at 150ms: iOS/Android keyboard animation typically completes in 250-400ms,
-  // but the viewport resize fires at the start. 150ms delay lets the animation settle
-  // enough for accurate height measurements without feeling sluggish.
-  if (window.visualViewport) {
-    // Clean up any previous handler on this modal element
-    if (modalEl._vvHandler) {
-      window.visualViewport.removeEventListener('resize', modalEl._vvHandler);
-    }
-    var debounceTimer = null;
-    modalEl._vvHandler = function () {
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(compute, 150);
-    };
-    window.visualViewport.addEventListener('resize', modalEl._vvHandler);
-  }
+  // Do NOT attach a visualViewport resize listener – the keyboard should overlay
+  // the modal without resizing it, avoiding the visual jump when typing.
 }
 
 function clearModalBodyHeight(modalEl) {
   var body = modalEl.querySelector('.admin-modal-body');
   if (body) body.style.maxHeight = '';
-  if (modalEl._vvHandler && window.visualViewport) {
-    window.visualViewport.removeEventListener('resize', modalEl._vvHandler);
-    modalEl._vvHandler = null;
-  }
 }
 
 // ===== DOM REFS =====
