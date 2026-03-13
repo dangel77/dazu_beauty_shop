@@ -29,6 +29,9 @@ var selectedImageFile = null;
 var currentImageName = '';   // current image filename in data/images/
 var editingCategory = null;  // original name of the category being edited
 var _savedScrollY = 0;       // scroll position saved when a modal is opened (iOS fix)
+var reorderMode = false;     // whether reorder mode is active
+var originalOrder = [];      // copy of products array before reorder, to allow cancel
+var _dragSrcCard = null;     // currently dragged card element
 
 var DEFAULT_CATEGORIES = [
   'Shampoo', 'Crema', 'Jabon', 'Acondicionador', 'Aceite',
@@ -172,6 +175,17 @@ var editCategoryInput = document.getElementById('editCategoryInput');
 var editCatCancelBtn  = document.getElementById('editCatCancelBtn');
 var editCatConfirmBtn = document.getElementById('editCatConfirmBtn');
 
+// Variants
+var variantsListAdmin  = document.getElementById('variantsListAdmin');
+var btnAddVariant      = document.getElementById('btnAddVariant');
+var variantsEmptyHint  = document.getElementById('variantsEmptyHint');
+
+// Reorder
+var btnReorderProducts = document.getElementById('btnReorderProducts');
+var reorderActions     = document.getElementById('reorderActions');
+var btnSaveOrder       = document.getElementById('btnSaveOrder');
+var btnCancelOrder     = document.getElementById('btnCancelOrder');
+
 // ===== HELPERS =====
 function getProductCategories(product) {
   if (Array.isArray(product.categories)) return product.categories;
@@ -204,6 +218,67 @@ function getSelectedCategories() {
   var result = [];
   boxes.forEach(function (b) { result.push(b.value); });
   return result;
+}
+
+// ===== VARIANTS FORM =====
+function updateVariantsEmptyHint() {
+  var rows = variantsListAdmin.querySelectorAll('.variant-row');
+  if (variantsEmptyHint) {
+    variantsEmptyHint.style.display = rows.length === 0 ? 'block' : 'none';
+  }
+}
+
+function addVariantRow(name, available) {
+  if (variantsEmptyHint) variantsEmptyHint.style.display = 'none';
+
+  var row = document.createElement('div');
+  row.className = 'variant-row';
+
+  var isAvail = (available === undefined) ? true : !!available;
+
+  row.innerHTML =
+    '<input type="text" class="variant-row-input" placeholder="Ej: Rosa Clásico" maxlength="60" value="' + escapeAttr(name || '') + '" />' +
+    '<label class="variant-row-available">' +
+      '<input type="checkbox" ' + (isAvail ? 'checked' : '') + ' />' +
+      'Disp.' +
+    '</label>' +
+    '<button type="button" class="btn-remove-variant" title="Eliminar variante">✕</button>';
+
+  row.querySelector('.btn-remove-variant').addEventListener('click', function () {
+    row.remove();
+    updateVariantsEmptyHint();
+  });
+
+  variantsListAdmin.appendChild(row);
+}
+
+function getVariantsFromForm() {
+  var rows = variantsListAdmin.querySelectorAll('.variant-row');
+  var variants = [];
+  rows.forEach(function (row) {
+    var nameInput = row.querySelector('.variant-row-input');
+    var availCheck = row.querySelector('input[type="checkbox"]');
+    var name = nameInput ? nameInput.value.trim() : '';
+    if (name) {
+      variants.push({ name: name, available: availCheck ? availCheck.checked : true });
+    }
+  });
+  return variants;
+}
+
+function clearVariantsForm() {
+  variantsListAdmin.querySelectorAll('.variant-row').forEach(function (r) { r.remove(); });
+  updateVariantsEmptyHint();
+}
+
+function renderVariantsForm(variants) {
+  clearVariantsForm();
+  if (variants && variants.length > 0) {
+    variants.forEach(function (v) {
+      addVariantRow(v.name, v.available);
+    });
+  }
+  updateVariantsEmptyHint();
 }
 
 // ===== GITHUB API HELPERS =====
@@ -566,9 +641,15 @@ function renderAdminGrid() {
   }
 
   adminProductGrid.innerHTML = '';
-  products.forEach(function (product) {
-    adminProductGrid.appendChild(buildAdminCard(product));
-  });
+  if (reorderMode) {
+    products.forEach(function (product, index) {
+      adminProductGrid.appendChild(buildAdminCardReorder(product, index));
+    });
+  } else {
+    products.forEach(function (product) {
+      adminProductGrid.appendChild(buildAdminCard(product));
+    });
+  }
 }
 
 function buildAdminCard(product) {
@@ -630,6 +711,7 @@ function openProductForm(id) {
     productDesc.value        = product.description || '';
     productAvailable.checked = product.available;
     availableLabel.textContent = product.available ? 'Disponible' : 'Sin stock';
+    renderVariantsForm(product.variants || []);
     if (product.image) {
       currentImageName = product.image;
       showImagePreview('data/images/' + encodeURIComponent(product.image));
@@ -642,6 +724,7 @@ function openProductForm(id) {
     productDesc.value        = '';
     productAvailable.checked = true;
     availableLabel.textContent = 'Disponible';
+    clearVariantsForm();
   }
 
   productFormModal.classList.add('open');
@@ -715,6 +798,11 @@ function saveProduct() {
           ? (products.find(function (p) { return p.id === editingId; }) || {}).created_at || new Date().toISOString()
           : new Date().toISOString()
       };
+
+      var variants = getVariantsFromForm();
+      if (variants.length > 0) {
+        productData.variants = variants;
+      }
 
       if (editingId) {
         var idx = products.findIndex(function (p) { return p.id === editingId; });
@@ -821,6 +909,140 @@ function confirmDelete() {
     });
 }
 
+// ===== REORDER MODE =====
+function enterReorderMode() {
+  reorderMode = true;
+  originalOrder = products.slice(); // save copy for cancel
+
+  reorderActions.classList.add('visible');
+  btnReorderProducts.style.display = 'none';
+  btnAddProduct.style.display = 'none';
+
+  // Rebuild the grid in reorder mode
+  renderAdminGrid();
+}
+
+function exitReorderMode(revert) {
+  reorderMode = false;
+  if (revert) {
+    products = originalOrder.slice();
+  }
+  originalOrder = [];
+  _dragSrcCard = null;
+
+  reorderActions.classList.remove('visible');
+  btnReorderProducts.style.display = '';
+  btnAddProduct.style.display = '';
+
+  renderAdminGrid();
+}
+
+function buildAdminCardReorder(product, index) {
+  var card = document.createElement('article');
+  card.className = 'product-card fade-in reorder-enabled';
+  card.dataset.id = product.id;
+  card.dataset.index = index;
+  card.draggable = true;
+
+  var imgSrc = product.image ? 'data/images/' + encodeURIComponent(product.image) : '';
+  var firstCat = getProductCategories(product)[0] || '';
+  var imgContent = imgSrc
+    ? '<img src="' + escapeAttr(imgSrc) + '" alt="' + escapeAttr(product.name) + '" loading="lazy" />'
+    : '<div class="product-placeholder">' + getCategoryEmoji(firstCat) + '</div>';
+
+  var badgeHtml = product.available
+    ? '<span class="badge-available">Disponible</span>'
+    : '<span class="badge-unavailable">Sin stock</span>';
+
+  var productCats = getProductCategories(product);
+  var catHtml = productCats.length > 0
+    ? '<p class="product-category">' + productCats.map(escapeHtml).join(' · ') + '</p>'
+    : '';
+
+  card.innerHTML =
+    '<div class="drag-handle" aria-hidden="true">☰</div>' +
+    '<div class="product-img-wrap">' + imgContent + badgeHtml + '</div>' +
+    '<div class="product-body">' +
+      catHtml +
+      '<h3 class="product-name">' + escapeHtml(product.name) + '</h3>' +
+      '<p class="product-price">' + formatPrice(product.price) + '</p>' +
+      '<div class="reorder-move-btns">' +
+        '<button class="btn-move-up" data-index="' + index + '" title="Subir">▲</button>' +
+        '<button class="btn-move-down" data-index="' + index + '" title="Bajar">▼</button>' +
+      '</div>' +
+    '</div>';
+
+  // Drag & drop events (desktop)
+  card.addEventListener('dragstart', function (e) {
+    _dragSrcCard = card;
+    card.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', index);
+  });
+
+  card.addEventListener('dragend', function () {
+    card.classList.remove('dragging');
+    adminProductGrid.querySelectorAll('.product-card').forEach(function (c) {
+      c.classList.remove('drag-over');
+    });
+    _dragSrcCard = null;
+  });
+
+  card.addEventListener('dragover', function (e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (_dragSrcCard && _dragSrcCard !== card) {
+      adminProductGrid.querySelectorAll('.product-card').forEach(function (c) {
+        c.classList.remove('drag-over');
+      });
+      card.classList.add('drag-over');
+    }
+  });
+
+  card.addEventListener('dragleave', function () {
+    card.classList.remove('drag-over');
+  });
+
+  card.addEventListener('drop', function (e) {
+    e.preventDefault();
+    card.classList.remove('drag-over');
+    if (!_dragSrcCard || _dragSrcCard === card) return;
+
+    var fromIdx = parseInt(_dragSrcCard.dataset.index, 10);
+    var toIdx   = parseInt(card.dataset.index, 10);
+
+    if (isNaN(fromIdx) || isNaN(toIdx) || fromIdx === toIdx) return;
+
+    // Reorder products array
+    var moved = products.splice(fromIdx, 1)[0];
+    products.splice(toIdx, 0, moved);
+
+    renderAdminGrid();
+  });
+
+  return card;
+}
+
+function saveReorderMode() {
+  btnSaveOrder.disabled = true;
+  btnSaveOrder.textContent = 'Guardando...';
+
+  saveJsonToGitHub({ settings: settings, products: products })
+    .then(function () {
+      showToast('Orden guardado correctamente', 'success');
+      exitReorderMode(false);
+    })
+    .catch(function (err) {
+      showToast('Error guardando: ' + err.message, 'error');
+      loadAdminData();
+      exitReorderMode(true);
+    })
+    .finally(function () {
+      btnSaveOrder.disabled = false;
+      btnSaveOrder.textContent = '💾 Guardar orden';
+    });
+}
+
 // ===== SETTINGS =====
 function saveWaNumberSetting() {
   var num = waNumberInput.value.replace(/\D/g, '');
@@ -857,6 +1079,33 @@ btnLogout.addEventListener('click', handleLogout);
 
 // Product grid actions (event delegation)
 adminProductGrid.addEventListener('click', function (e) {
+  // Ignore clicks when in reorder mode (only ▲/▼ buttons should work)
+  if (reorderMode) {
+    var upBtn = e.target.closest('.btn-move-up');
+    if (upBtn) {
+      var idx = parseInt(upBtn.dataset.index, 10);
+      if (idx > 0) {
+        var tmp = products[idx];
+        products[idx] = products[idx - 1];
+        products[idx - 1] = tmp;
+        renderAdminGrid();
+      }
+      return;
+    }
+    var downBtn = e.target.closest('.btn-move-down');
+    if (downBtn) {
+      var dIdx = parseInt(downBtn.dataset.index, 10);
+      if (dIdx < products.length - 1) {
+        var dtmp = products[dIdx];
+        products[dIdx] = products[dIdx + 1];
+        products[dIdx + 1] = dtmp;
+        renderAdminGrid();
+      }
+      return;
+    }
+    return; // block all other clicks in reorder mode
+  }
+
   var editBtn = e.target.closest('.btn-edit-card');
   if (editBtn) {
     openProductForm(editBtn.dataset.id);
@@ -871,6 +1120,11 @@ adminProductGrid.addEventListener('click', function (e) {
 // Add product
 btnAddProduct.addEventListener('click', function () { openProductForm(); });
 
+// Reorder mode
+btnReorderProducts.addEventListener('click', enterReorderMode);
+btnSaveOrder.addEventListener('click', saveReorderMode);
+btnCancelOrder.addEventListener('click', function () { exitReorderMode(true); });
+
 // Product form
 productFormClose.addEventListener('click', closeProductForm);
 productFormCancel.addEventListener('click', closeProductForm);
@@ -883,6 +1137,9 @@ productFormModal.addEventListener('click', function (e) {
 productAvailable.addEventListener('change', function () {
   availableLabel.textContent = productAvailable.checked ? 'Disponible' : 'Sin stock';
 });
+
+// Variants
+btnAddVariant.addEventListener('click', function () { addVariantRow('', true); });
 
 // Image upload
 imgFileInput.addEventListener('change', function (e) {
