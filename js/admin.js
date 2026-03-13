@@ -41,7 +41,12 @@ var DEFAULT_CATEGORIES = [
 // ===== SCROLL LOCK (iOS Safari compatible) =====
 function _preventBgScroll(e) {
   // Allow scrolling inside modal body, block everything else
-  var modalBody = e.target.closest('.admin-modal-body');
+  // Also allow when touch target is a form input (lets browser scroll input into view on keyboard open)
+  var target = e.target;
+  if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT')) {
+    return;
+  }
+  var modalBody = target ? target.closest('.admin-modal-body') : null;
   if (!modalBody) {
     e.preventDefault();
     return;
@@ -103,26 +108,33 @@ function fixModalBodyHeight(modalEl) {
     }
   }
 
-  // 100ms delay: enough for layout to settle after CSS transitions begin (transition is 0.35s,
-  // but header/footer dimensions are stable well before the animation completes)
-  setTimeout(compute, 100);
+  // Compute immediately so the modal is correctly sized on open
+  compute();
 
-  // Re-compute whenever the viewport changes (e.g. keyboard shows/hides)
+  // Re-compute whenever the viewport changes (e.g. keyboard shows/hides).
+  // Debounced at 150ms: iOS/Android keyboard animation typically completes in 250-400ms,
+  // but the viewport resize fires at the start. 150ms delay lets the animation settle
+  // enough for accurate height measurements without feeling sluggish.
   if (window.visualViewport) {
-    if (_visualViewportResizeHandler) {
-      window.visualViewport.removeEventListener('resize', _visualViewportResizeHandler);
+    // Clean up any previous handler on this modal element
+    if (modalEl._vvHandler) {
+      window.visualViewport.removeEventListener('resize', modalEl._vvHandler);
     }
-    _visualViewportResizeHandler = compute;
-    window.visualViewport.addEventListener('resize', _visualViewportResizeHandler);
+    var debounceTimer = null;
+    modalEl._vvHandler = function () {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(compute, 150);
+    };
+    window.visualViewport.addEventListener('resize', modalEl._vvHandler);
   }
 }
 
 function clearModalBodyHeight(modalEl) {
   var body = modalEl.querySelector('.admin-modal-body');
   if (body) body.style.maxHeight = '';
-  if (_visualViewportResizeHandler && window.visualViewport) {
-    window.visualViewport.removeEventListener('resize', _visualViewportResizeHandler);
-    _visualViewportResizeHandler = null;
+  if (modalEl._vvHandler && window.visualViewport) {
+    window.visualViewport.removeEventListener('resize', modalEl._vvHandler);
+    modalEl._vvHandler = null;
   }
 }
 
@@ -1019,6 +1031,52 @@ function buildAdminCardReorder(product, index) {
 
     renderAdminGrid();
   });
+
+  // Touch drag-and-drop (mobile)
+  var dragHandle = card.querySelector('.drag-handle');
+  if (dragHandle) {
+    dragHandle.addEventListener('touchstart', function (e) {
+      _dragSrcCard = card;
+      card.classList.add('dragging');
+      e.preventDefault();
+    }, { passive: false });
+
+    dragHandle.addEventListener('touchmove', function (e) {
+      if (!_dragSrcCard) return;
+      e.preventDefault();
+      var touch = e.touches[0];
+      // Temporarily hide the dragging card so elementFromPoint finds the card below
+      card.style.visibility = 'hidden';
+      var target = document.elementFromPoint(touch.clientX, touch.clientY);
+      card.style.visibility = '';
+      var overCard = target ? target.closest('.product-card.reorder-enabled') : null;
+      adminProductGrid.querySelectorAll('.product-card').forEach(function (c) {
+        c.classList.remove('drag-over');
+      });
+      if (overCard && overCard !== card) {
+        overCard.classList.add('drag-over');
+      }
+    }, { passive: false });
+
+    dragHandle.addEventListener('touchend', function () {
+      if (!_dragSrcCard) return;
+      card.classList.remove('dragging');
+      var overCard = adminProductGrid.querySelector('.product-card.drag-over');
+      adminProductGrid.querySelectorAll('.product-card').forEach(function (c) {
+        c.classList.remove('drag-over');
+      });
+      if (overCard && overCard !== card) {
+        var fromIdx = parseInt(card.dataset.index, 10);
+        var toIdx   = parseInt(overCard.dataset.index, 10);
+        if (!isNaN(fromIdx) && !isNaN(toIdx) && fromIdx !== toIdx) {
+          var moved = products.splice(fromIdx, 1)[0];
+          products.splice(toIdx, 0, moved);
+          renderAdminGrid();
+        }
+      }
+      _dragSrcCard = null;
+    });
+  }
 
   return card;
 }
