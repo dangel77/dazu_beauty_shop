@@ -49,6 +49,15 @@
       </div>
     </div>
 
+    <!-- Search bar -->
+    <div class="search-bar-wrap" id="searchBarWrap">
+      <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" class="search-input" placeholder="Buscar producto..." autocomplete="off" />
+        <button class="search-clear-btn" id="searchClearBtn" aria-label="Limpiar búsqueda">✕</button>
+      </div>
+    </div>
+
     <!-- Filters -->
     <div class="catalog-filters-wrap">
       <div class="catalog-filters" id="filtersContainer">
@@ -147,6 +156,10 @@
           <h2 class="product-detail-name" id="productDetailName"></h2>
           <p class="product-detail-desc" id="productDetailDesc"></p>
           <p class="product-detail-price" id="productDetailPrice"></p>
+          <div class="variants-section" id="productDetailVariants" style="display:none">
+            <p class="variants-label">Elegí una opción:</p>
+            <div class="variants-list" id="variantsList"></div>
+          </div>
           <button class="btn-add product-detail-add" id="productDetailAdd">
             <span>🛒</span> Agregar al carrito
           </button>

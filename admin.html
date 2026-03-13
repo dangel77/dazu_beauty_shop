@@ -45,7 +45,16 @@
 
       <div class="admin-section-header">
         <h2>📦 Mis Productos</h2>
-        <button class="btn-add-product" id="btnAddProduct">＋ Agregar producto</button>
+        <div class="admin-header-btns">
+          <button class="btn-reorder" id="btnReorderProducts">↕️ Editar orden</button>
+          <button class="btn-add-product" id="btnAddProduct">＋ Agregar producto</button>
+        </div>
+      </div>
+
+      <div class="reorder-actions" id="reorderActions">
+        <span class="reorder-actions-label">↕️ Arrastrá las tarjetas para reordenar. En móvil usá ▲ ▼.</span>
+        <button class="btn-cancel-order" id="btnCancelOrder">Cancelar</button>
+        <button class="btn-save-order" id="btnSaveOrder">💾 Guardar orden</button>
       </div>
 
       <div class="product-grid" id="adminProductGrid"></div>
@@ -131,6 +140,18 @@
         <div class="form-group">
           <label for="productDesc">Descripcion (opcional)</label>
           <textarea id="productDesc" placeholder="Describe brevemente el producto..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Variantes (opcional)</label>
+          <div class="variants-admin-section">
+            <div class="variants-admin-header">
+              <span class="variants-admin-label">Opciones / tonos / tallas</span>
+              <button type="button" class="btn-add-variant" id="btnAddVariant">＋ Agregar variante</button>
+            </div>
+            <div class="variants-list-admin" id="variantsListAdmin">
+              <p class="variants-empty-hint" id="variantsEmptyHint">Sin variantes — el producto se vende sin opciones.</p>
+            </div>
+          </div>
         </div>
         <div class="form-group">
           <label>Disponibilidad</label>
