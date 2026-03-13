@@ -27,6 +27,9 @@ var searchDebounceTimer   = null;
 var currentDetailProductId = null;
 var currentDetailVariant   = null;
 
+// ===== CONSTANTS =====
+var NEW_PRODUCT_MS = 14 * 24 * 60 * 60 * 1000; // 14 days in ms
+
 // ===== HELPERS =====
 function getProductCategories(product) {
   if (Array.isArray(product.categories)) return product.categories;
@@ -36,7 +39,7 @@ function getProductCategories(product) {
 
 function isNewProduct(product) {
   return product.created_at &&
-    (Date.now() - new Date(product.created_at).getTime() < 14 * 24 * 60 * 60 * 1000);
+    (Date.now() - new Date(product.created_at).getTime() < NEW_PRODUCT_MS);
 }
 
 // ===== DOM =====
@@ -191,13 +194,10 @@ function buildProductCard(product) {
 }
 
 function renderProducts(filter) {
-  var cutoff = Date.now() - 14 * 24 * 60 * 60 * 1000;
   var filtered;
 
   if (filter === '__new__') {
-    filtered = allProducts.filter(function (p) {
-      return p.available && p.created_at && new Date(p.created_at).getTime() > cutoff;
-    });
+    filtered = allProducts.filter(function (p) { return p.available && isNewProduct(p); });
   } else if (filter === 'all') {
     filtered = allProducts;
   } else {
