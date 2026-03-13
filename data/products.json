@@ -17,18 +17,6 @@
   },
   "products": [
     {
-      "id": "mmn9jlnkseaapa",
-      "name": "shampoo",
-      "categories": [
-        "Shampoo"
-      ],
-      "price": 5000,
-      "description": "rico olor",
-      "available": true,
-      "image": "mmn9jlnkseaapa.jpg",
-      "created_at": "2026-03-12T09:26:15.511Z"
-    },
-    {
       "id": "mmnwkk3v7rt6tb",
       "name": "labial 1",
       "categories": [
@@ -69,6 +57,18 @@
           "available": true
         }
       ]
+    },
+    {
+      "id": "mmn9jlnkseaapa",
+      "name": "shampoo",
+      "categories": [
+        "Shampoo"
+      ],
+      "price": 5000,
+      "description": "rico olor",
+      "available": true,
+      "image": "mmn9jlnkseaapa.jpg",
+      "created_at": "2026-03-12T09:26:15.511Z"
     }
   ]
 }
