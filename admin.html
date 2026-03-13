@@ -52,7 +52,7 @@
       </div>
 
       <div class="reorder-actions" id="reorderActions">
-        <span class="reorder-actions-label">↕️ Arrastrá las tarjetas para reordenar. En móvil usá ▲ ▼.</span>
+        <span class="reorder-actions-label">↕️ Arrastrá las tarjetas para reordenar. En móvil usá el ☰ o las flechas ▲ ▼.</span>
         <button class="btn-cancel-order" id="btnCancelOrder">Cancelar</button>
         <button class="btn-save-order" id="btnSaveOrder">💾 Guardar orden</button>
       </div>
@@ -66,7 +66,7 @@
             <label for="waNumberInput">📱 Numero de WhatsApp</label>
             <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap">
               <span style="font-weight:600;font-size:1rem;color:var(--text);white-space:nowrap">+506</span>
-              <input type="tel" id="waNumberInput" placeholder="Ej: 61234567" style="flex:1;min-width:0" />
+              <input type="tel" id="waNumberInput" placeholder="Ej: 61234567" style="flex:1;min-width:0" inputmode="tel" />
             </div>
           </div>
           <button class="btn-save" id="btnSaveWaNumber" style="padding:0.65rem 1rem;margin-bottom:0">
@@ -135,7 +135,7 @@
         </div>
         <div class="form-group">
           <label for="productPrice">Precio *</label>
-          <input type="number" id="productPrice" placeholder="Ej: 3500" min="0" step="1" />
+          <input type="number" id="productPrice" placeholder="Ej: 3500" min="0" step="1" inputmode="numeric" />
         </div>
         <div class="form-group">
           <label for="productDesc">Descripcion (opcional)</label>

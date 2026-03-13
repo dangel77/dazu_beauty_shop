@@ -1703,6 +1703,12 @@ button {
 
 /* Mobile: stack image on top, info below */
 @media (max-width: 600px) {
+  .product-detail-modal {
+    max-height: 90vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .product-detail-content {
     grid-template-columns: 1fr;
   }
@@ -2601,6 +2607,7 @@ button {
 
 .product-card.dragging {
   opacity: 0.4;
+  transform: scale(0.95);
 }
 
 .drag-handle {
@@ -2619,6 +2626,12 @@ button {
   z-index: 5;
   line-height: 1.2;
   box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  /* Ensure large enough touch target on mobile (44x44px per iOS HIG / WCAG 2.5.5) */
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
 }
 
 .product-card.reorder-enabled .drag-handle { display: flex; align-items: center; }
@@ -2666,7 +2679,11 @@ button {
   .reorder-actions { padding: 0.6rem 0.8rem; gap: 0.5rem; }
   .reorder-actions-label { font-size: 0.8rem; }
   .btn-save-order, .btn-cancel-order { font-size: 0.82rem; padding: 0.45rem 0.9rem; }
-  .drag-handle { display: none !important; }
+  /* Show drag handle on mobile for touch drag support */
+  .product-card.reorder-enabled .drag-handle { display: flex; }
+  /* Add touch feedback transition on move buttons */
+  .btn-move-up, .btn-move-down { transition: background var(--transition), transform 0.1s; }
+  .btn-move-up:active, .btn-move-down:active { transform: scale(0.9); }
 }
 
 /* ===== ADMIN HEADER BUTTONS ROW ===== */

@@ -26,6 +26,20 @@ var searchQuery           = '';
 var searchDebounceTimer   = null;
 var currentDetailProductId = null;
 var currentDetailVariant   = null;
+var _catalogScrollY       = 0;   // saved scroll position for iOS scroll lock
+
+// ===== SCROLL LOCK (iOS Safari compatible) =====
+function lockCatalogBodyScroll() {
+  _catalogScrollY = window.scrollY;
+  document.body.style.top = '-' + _catalogScrollY + 'px';
+  document.body.classList.add('modal-open');
+}
+
+function unlockCatalogBodyScroll() {
+  document.body.classList.remove('modal-open');
+  document.body.style.top = '';
+  window.scrollTo(0, _catalogScrollY);
+}
 
 // ===== CONSTANTS =====
 var NEW_PRODUCT_MS = 14 * 24 * 60 * 60 * 1000; // 14 days in ms
@@ -358,18 +372,20 @@ function openCart() {
   renderCartItems();
   cartSidebar.classList.add('open');
   cartOverlay.classList.add('open');
-  document.body.style.overflow = 'hidden';
+  lockCatalogBodyScroll();
 }
 
 function closeCart() {
   cartSidebar.classList.remove('open');
   cartOverlay.classList.remove('open');
-  document.body.style.overflow = '';
+  unlockCatalogBodyScroll();
 }
 
 // ===== CHECKOUT =====
 function openCheckoutModal() {
-  closeCart();
+  // Close cart elements without unlocking body (body stays locked for checkout)
+  cartSidebar.classList.remove('open');
+  cartOverlay.classList.remove('open');
   checkoutModal.classList.add('open');
   buyerNameInput.value = '';
   paymentTypeInput.value = '';
@@ -378,6 +394,7 @@ function openCheckoutModal() {
 
 function closeCheckoutModal() {
   checkoutModal.classList.remove('open');
+  unlockCatalogBodyScroll();
 }
 
 // ===== PRODUCT DETAIL MODAL =====
@@ -463,12 +480,12 @@ function openProductDetail(product) {
 
   currentDetailProductId = product.id;
   productDetailModal.classList.add('open');
-  document.body.style.overflow = 'hidden';
+  lockCatalogBodyScroll();
 }
 
 function closeProductDetail() {
   productDetailModal.classList.remove('open');
-  document.body.style.overflow = '';
+  unlockCatalogBodyScroll();
   currentDetailProductId = null;
   currentDetailVariant = null;
 }
