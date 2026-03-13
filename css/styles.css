@@ -2993,3 +2993,264 @@ body.dark-mode .product-detail-close {
   background: rgba(30, 39, 66, 0.9);
   color: var(--text);
 }
+
+
+/* =====================================================
+   MOBILE-FIRST REDESIGN — DISEÑO IMPECABLE EN MÓVIL
+   ─────────────────────────────────────────────────
+   Solo afecta el catálogo público (catalogo.html,
+   index.html). NO modifica nada del admin.
+
+   Breakpoints:
+   • @media (hover: none)    → dispositivos touch
+   • @media (max-width: 600px) → móviles
+   • @media (max-width: 380px) → iPhone SE / muy chicos
+   ===================================================== */
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   1. TOUCH: Quitar hover effects que quedan "pegados",
+      agregar retroalimentación táctil con :active
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@media (hover: none) {
+  /* Anular elevación de tarjetas en hover */
+  .product-card:hover {
+    transform: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
+  }
+  /* Anular zoom de imagen en hover */
+  .product-card:hover .product-img-wrap img { transform: none; }
+  /* Anular overlay "Ver detalles" en hover */
+  .product-card:hover .product-img-wrap::after { opacity: 0; }
+  /* Anular efectos hover del botón agregar */
+  .btn-add:hover { transform: none; box-shadow: none; }
+  .btn-add:hover::after { left: -100%; }
+  /* Anular hover del botón catálogo en landing */
+  .btn-catalog:hover {
+    transform: none;
+    box-shadow: 0 6px 24px var(--shadow);
+  }
+  /* Anular hover de filtros y categorías */
+  .filter-btn:hover,
+  .btn-categories-toggle:hover,
+  .category-panel-btn:hover { transform: none; }
+
+  /* ── Retroalimentación táctil con :active ── */
+  .product-card:active {
+    transform: scale(0.97);
+    transition: transform 0.12s ease;
+  }
+  .btn-add:active,
+  .btn-catalog:active {
+    transform: scale(0.97);
+    transition: transform 0.12s ease;
+  }
+  .filter-btn:active,
+  .btn-categories-toggle:active,
+  .category-panel-btn:active {
+    transform: scale(0.95);
+    opacity: 0.82;
+    transition: transform 0.1s ease, opacity 0.1s ease;
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   2. MÓVIL ≤600px — Rediseño completo
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@media (max-width: 600px) {
+
+  /* ── Header: más compacto ── */
+  .catalog-header { padding: 0.6rem 1rem; }
+  .header-actions { gap: 0.5rem; }
+  .header-actions .dark-mode-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 0.95rem;
+  }
+
+  /* ── Catalog Hero: menos padding ── */
+  .catalog-hero { padding: 1.2rem 0.8rem 1rem; }
+  .catalog-hero-logo { width: clamp(46px, 10vw, 64px); }
+
+  /* ── Product Grid: 2 columnas ajustadas ── */
+  .product-grid {
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
+    gap: 0.7rem;
+  }
+
+  /* Imagen cuadrada (menos espacio vertical) */
+  .product-img-wrap { padding-top: 100%; }
+
+  /* Badges más pequeños en grid de 2 columnas */
+  .badge-new,
+  .badge-available,
+  .badge-unavailable {
+    font-size: 0.55rem;
+    padding: 2px 6px;
+    top: 6px;
+    right: 6px;
+  }
+  .badge-new { left: 6px; right: auto; }
+
+  /* ── Btn-add: solo icono 🛒 en tarjetas del grid ──
+     font-size:0 oculta visualmente el texto del nodo.
+     El texto sigue en el DOM y es leído por screen
+     readers, por lo que la accesibilidad se mantiene.
+     La clase en el span restaura el tamaño del emoji. */
+  .product-grid .btn-add {
+    font-size: 0;
+    padding: 0.5rem 0;
+    min-height: 36px;
+    border-radius: 8px;
+  }
+  .product-grid .btn-add span { font-size: 1.1rem; }
+  /* Botón deshabilitado "Sin stock": restaurar texto */
+  .product-grid .btn-add:disabled { font-size: 0.68rem; }
+
+  /* ── Product Detail Modal → Bottom Sheet ──
+     Sube desde abajo como las apps nativas         */
+  .modal-overlay.product-detail-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+  .product-detail-modal {
+    width: 100%;
+    border-radius: 24px 24px 0 0;
+    max-height: 90vh;
+    max-height: 90svh;
+    transform: translateY(100%);
+    transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .modal-overlay.product-detail-overlay.open .product-detail-modal {
+    transform: translateY(0);
+  }
+  .product-detail-img-side {
+    border-radius: 24px 24px 0 0;
+    min-height: 140px;
+    max-height: 38vh;
+  }
+  .product-detail-img {
+    max-height: 38vh;
+    padding: 0.75rem;
+  }
+  /* Botón cerrar: 44px mínimo touch target */
+  .product-detail-close {
+    width: 44px;
+    height: 44px;
+    font-size: 1.1rem;
+  }
+  .product-detail-info {
+    padding: 1rem 1rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* ── Checkout Modal: layout flex con footer sticky ── */
+  .modal {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .modal-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .modal-header,
+  .modal-footer { flex-shrink: 0; }
+  .modal-footer {
+    background: var(--bg-card);
+    padding-bottom: calc(0.8rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* ── Cart Sidebar: 100vw sin margen ── */
+  .cart-sidebar { width: 100vw; }
+
+  /* Safe-area notch en pie del carrito */
+  .cart-footer {
+    padding-bottom: calc(1.2rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Botones +/- cantidad: touch target mínimo 36px */
+  .qty-btn { width: 36px; height: 36px; font-size: 1.1rem; }
+
+  /* Botón cerrar carrito: touch target */
+  .cart-close { width: 44px; height: 44px; font-size: 1.2rem; }
+
+  /* ── Floating Buttons: más pequeños + safe-area ── */
+  .wa-float-btn {
+    width: 48px;
+    height: 48px;
+    font-size: 1.3rem;
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    left: 1rem;
+  }
+  .scroll-top-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    right: 1rem;
+  }
+  /* dark-mode-btn fijo en landing page */
+  .dark-mode-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    left: 1rem;
+  }
+
+  /* ── Toast: parte superior (no tapado por botones flotantes) ── */
+  .toast-container {
+    bottom: auto;
+    top: calc(0.8rem + env(safe-area-inset-top, 0px));
+  }
+
+  /* ── Landing Page ── */
+  .landing-logo-img { width: clamp(148px, 55vw, 230px); }
+  .btn-catalog { font-size: 0.95rem; padding: 0.75rem 1.8rem; }
+  .landing-admin-link {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* ── Promo Banner: más compacto ── */
+  .promo-banner { margin-bottom: 1rem; }
+
+  /* ── Empty State: menos padding y emoji reducido ── */
+  .empty-catalog { padding: 2rem 0.8rem; }
+  .empty-catalog span { font-size: 2.5rem; margin-bottom: 0.5rem; }
+
+  /* ── Skeleton Loaders: imagen cuadrada (igual que el grid) ── */
+  .skeleton-img { padding-top: 100%; }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   3. MUY PEQUEÑO ≤380px (iPhone SE, Galaxy A serie)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@media (max-width: 380px) {
+  .catalog-header { padding: 0.5rem 0.7rem; }
+  .header-brand-name { font-size: 0.88rem; }
+  .header-brand-logo { width: 28px; height: 28px; }
+
+  .catalog-hero { padding: 0.9rem 0.6rem 0.8rem; }
+
+  .product-grid { gap: 0.5rem; }
+  .product-body { padding: 0.4rem 0.45rem 0.55rem; gap: 0.12rem; }
+  .product-name { font-size: 0.75rem; }
+  .product-price { font-size: 0.85rem; }
+
+  .landing-logo-img { width: clamp(130px, 60vw, 185px); }
+  .btn-catalog { font-size: 0.88rem; padding: 0.6rem 1.4rem; }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   4. DARK MODE — Overrides para elementos móviles
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@media (max-width: 600px) {
+  body.dark-mode .modal-footer {
+    background: #1e2742;
+  }
+  body.dark-mode .toast.success { background: #1a7a40; }
+  body.dark-mode .toast.error   { background: #a02020; }
+}
