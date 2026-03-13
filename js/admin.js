@@ -78,26 +78,49 @@ function unlockBodyScroll() {
 }
 
 // Force modal body max-height via JS so footer is always visible
+var _visualViewportResizeHandler = null;
+
 function fixModalBodyHeight(modalEl) {
   if (window.innerWidth > 600) return; // only on mobile
   var header = modalEl.querySelector('.admin-modal-header');
   var footer = modalEl.querySelector('.admin-modal-footer');
   var body   = modalEl.querySelector('.admin-modal-body');
   if (!header || !footer || !body) return;
-  // Use a small delay so the modal has transitioned into view
-  setTimeout(function() {
-    var vh = window.innerHeight;
-    var modalMaxH = vh * 0.85;
+
+  function compute() {
+    // visualViewport.height is accurate on mobile: excludes on-screen keyboard, browser chrome
+    var vh = (window.visualViewport ? window.visualViewport.height : window.innerHeight);
+    var modalMaxH = vh * 0.90;
     var headerH = header.offsetHeight;
     var footerH = footer.offsetHeight;
     var bodyMaxH = modalMaxH - headerH - footerH;
-    body.style.maxHeight = Math.floor(bodyMaxH) + 'px';
-  }, 50);
+    // Ensure minimum viable modal body height before applying
+    if (bodyMaxH > 60) {
+      body.style.maxHeight = Math.floor(bodyMaxH) + 'px';
+    }
+  }
+
+  // 100ms delay: enough for layout to settle after CSS transitions begin (transition is 0.35s,
+  // but header/footer dimensions are stable well before the animation completes)
+  setTimeout(compute, 100);
+
+  // Re-compute whenever the viewport changes (e.g. keyboard shows/hides)
+  if (window.visualViewport) {
+    if (_visualViewportResizeHandler) {
+      window.visualViewport.removeEventListener('resize', _visualViewportResizeHandler);
+    }
+    _visualViewportResizeHandler = compute;
+    window.visualViewport.addEventListener('resize', _visualViewportResizeHandler);
+  }
 }
 
 function clearModalBodyHeight(modalEl) {
   var body = modalEl.querySelector('.admin-modal-body');
   if (body) body.style.maxHeight = '';
+  if (_visualViewportResizeHandler && window.visualViewport) {
+    window.visualViewport.removeEventListener('resize', _visualViewportResizeHandler);
+    _visualViewportResizeHandler = null;
+  }
 }
 
 // ===== DOM REFS =====
