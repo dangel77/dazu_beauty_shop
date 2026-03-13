@@ -4,10 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Catálogo de productos de belleza - Dazu Beauty Shop" />
+  <meta property="og:title" content="Dazu Beauty Shop" />
+  <meta property="og:description" content="Los mejores productos de belleza. Catálogo, pedidos por WhatsApp y envío a todo el país 🇨🇷" />
+  <meta property="og:image" content="assets/logo2.jpeg" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Dazu Beauty Shop" />
+  <meta name="twitter:description" content="Productos de belleza con envío a todo el país" />
+  <meta name="twitter:image" content="assets/logo2.jpeg" />
   <title>Catálogo – Dazu Beauty Shop</title>
   <link rel="icon" type="image/jpeg" href="assets/logo2.jpeg" />
   <meta name="theme-color" content="#c2185b" />
   <link rel="manifest" href="manifest.json" />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" as="style" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -24,6 +33,7 @@
       <span class="header-brand-name">Dazu Beauty</span>
     </a>
     <div class="header-actions">
+      <button class="dark-mode-btn" id="darkModeToggle" aria-label="Cambiar modo oscuro/claro">🌙</button>
       <button class="cart-btn" id="cartToggleBtn" aria-label="Ver carrito">
         🛒 <span id="cartBtnLabel">Carrito</span>
         <span class="cart-count" id="cartCount" style="display:none">0</span>
@@ -169,6 +179,11 @@
       </div>
     </div>
   </div>
+
+  <!-- ===== WHATSAPP FLOAT BUTTON ===== -->
+  <a class="wa-float-btn" id="waFloatBtn" href="#" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp">
+    💬
+  </a>
 
   <!-- ===== SCROLL-TO-TOP BUTTON ===== -->
   <button class="scroll-top-btn" id="scrollTopBtn" aria-label="Volver arriba">↑</button>

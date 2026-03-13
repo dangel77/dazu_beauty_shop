@@ -160,6 +160,11 @@ function loadProducts() {
       renderFilters();
       renderProducts(activeFilter);
       updateCartUI();
+      // Update floating WhatsApp button href
+      var waFloatBtn = document.getElementById('waFloatBtn');
+      if (waFloatBtn && waNumber) {
+        waFloatBtn.href = 'https://wa.me/' + waNumber + '?text=' + encodeURIComponent('Hola! Vi tu catálogo de Dazu Beauty Shop 💖');
+      }
     })
     .catch(function () {
       productGrid.innerHTML =

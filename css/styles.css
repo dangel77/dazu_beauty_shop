@@ -2792,3 +2792,204 @@ button {
   color: var(--text-light);
   margin-top: 0.25rem;
 }
+
+/* ===== DARK MODE TOGGLE BUTTON ===== */
+.dark-mode-btn {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  color: var(--text);
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 16px var(--shadow);
+  z-index: 91;
+  transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+}
+
+.dark-mode-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 24px var(--shadow-heavy);
+}
+
+/* In catalog header the button is inline, not fixed */
+.header-actions .dark-mode-btn {
+  position: static;
+  width: 38px;
+  height: 38px;
+  font-size: 1.1rem;
+  background: rgba(255,255,255,0.18);
+  border-color: rgba(255,255,255,0.35);
+  color: #fff;
+  box-shadow: none;
+}
+
+.header-actions .dark-mode-btn:hover {
+  background: rgba(255,255,255,0.28);
+  box-shadow: none;
+}
+
+/* ===== WHATSAPP FLOATING BUTTON ===== */
+.wa-float-btn {
+  position: fixed;
+  bottom: 4.5rem;
+  left: 1.5rem;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #25d366;
+  color: #fff;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(37,211,102,0.4);
+  z-index: 90;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+  animation: waPulse 2.5s ease-in-out infinite;
+}
+
+.wa-float-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 24px rgba(37,211,102,0.5);
+  animation: none;
+}
+
+@keyframes waPulse {
+  0%, 100% { box-shadow: 0 4px 16px rgba(37,211,102,0.4); }
+  50% { box-shadow: 0 4px 24px rgba(37,211,102,0.65); }
+}
+
+/* ===== DARK MODE ===== */
+body.dark-mode {
+  --bg: #1a1a2e;
+  --bg-card: #1e2742;
+  --text: #e8e8e8;
+  --text-light: #a0a0b0;
+  --border: #2a3a5a;
+  --secondary: #2a2040;
+  --shadow: rgba(233, 30, 140, 0.25);
+  --shadow-heavy: rgba(233, 30, 140, 0.35);
+}
+
+body.dark-mode .landing {
+  background: linear-gradient(-45deg, #1a1a2e, #16213e, #0f1a35, #1a1a2e);
+}
+
+body.dark-mode .catalog-header {
+  background: linear-gradient(135deg, #14103a, #1e1558);
+}
+
+body.dark-mode .modal,
+body.dark-mode .admin-modal {
+  background: rgba(30, 39, 66, 0.98);
+}
+
+body.dark-mode .admin-modal-header,
+body.dark-mode .admin-modal-footer {
+  background: #1e2742;
+  border-color: var(--border);
+}
+
+body.dark-mode .cart-sidebar {
+  background: rgba(26, 26, 46, 0.97);
+}
+
+body.dark-mode .cart-footer {
+  background: #1e2742;
+}
+
+body.dark-mode .filter-btn,
+body.dark-mode .btn-categories-toggle {
+  background: var(--bg-card);
+}
+
+body.dark-mode .category-panel {
+  background: var(--bg-card);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .product-img-wrap {
+  background: #16203a;
+}
+
+body.dark-mode .search-bar {
+  background: var(--bg-card);
+  border-color: var(--border);
+}
+
+body.dark-mode .notice-box {
+  background: #2a2010;
+  border-color: #5a4800;
+  color: #c8a820;
+}
+
+body.dark-mode .btn-cancel {
+  background: #2a3a5a;
+  color: var(--text-light);
+}
+
+body.dark-mode .btn-cancel:hover {
+  background: #334a6e;
+}
+
+body.dark-mode .form-group input,
+body.dark-mode .form-group select,
+body.dark-mode .form-group textarea {
+  background: #16203a;
+  color: var(--text);
+  border-color: var(--border);
+}
+
+body.dark-mode .product-categories-select {
+  background: #16203a;
+}
+
+body.dark-mode .admin-page {
+  background: #12112a;
+}
+
+body.dark-mode .admin-settings {
+  background: var(--bg-card);
+  border-color: var(--border);
+}
+
+body.dark-mode .landing-feature-chip {
+  background: rgba(30,39,66,0.85);
+  border-color: rgba(233,30,140,0.25);
+  color: var(--text-light);
+}
+
+body.dark-mode .skeleton-img,
+body.dark-mode .skeleton-line {
+  background: linear-gradient(110deg, #1e2742 8%, #253460 18%, #1e2742 33%);
+  background-size: 200% 100%;
+}
+
+body.dark-mode .landing-admin-link {
+  background: rgba(30,39,66,0.7);
+  border-color: rgba(80,100,140,0.4);
+  color: rgba(160,160,180,0.7);
+}
+
+body.dark-mode .landing-admin-link:hover {
+  background: rgba(40,55,90,0.9);
+  color: rgba(200,200,220,0.9);
+}
+
+body.dark-mode .product-detail-modal {
+  background: rgba(30, 39, 66, 0.98);
+}
+
+body.dark-mode .product-detail-close {
+  background: rgba(30, 39, 66, 0.9);
+  color: var(--text);
+}
