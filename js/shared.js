@@ -142,7 +142,7 @@ initDarkMode();
 // Attach toggle listeners once DOM is ready
 (function () {
   function _attachDarkModeListeners() {
-    var ids = ['darkModeToggle', 'darkModeToggleLanding'];
+    var ids = ['darkModeToggle', 'darkModeToggleLanding', 'darkModeToggleAdmin'];
     for (var i = 0; i < ids.length; i++) {
       var btn = document.getElementById(ids[i]);
       if (btn) btn.addEventListener('click', toggleDarkMode);

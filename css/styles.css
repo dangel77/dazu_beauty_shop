@@ -2836,6 +2836,23 @@ button {
   box-shadow: none;
 }
 
+/* In admin topbar the button is also inline */
+.admin-topbar-actions .dark-mode-btn {
+  position: static;
+  width: 38px;
+  height: 38px;
+  font-size: 1.1rem;
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.25);
+  color: #fff;
+  box-shadow: none;
+}
+
+.admin-topbar-actions .dark-mode-btn:hover {
+  background: rgba(255,255,255,0.22);
+  box-shadow: none;
+}
+
 /* ===== WHATSAPP FLOATING BUTTON ===== */
 .wa-float-btn {
   position: fixed;
@@ -2992,6 +3009,166 @@ body.dark-mode .product-detail-modal {
 body.dark-mode .product-detail-close {
   background: rgba(30, 39, 66, 0.9);
   color: var(--text);
+}
+
+/* ── Product cards ── */
+body.dark-mode .product-category {
+  color: var(--primary-light);
+}
+body.dark-mode .product-name {
+  color: #e8e8e8;
+}
+body.dark-mode .product-desc {
+  color: #aaa;
+}
+body.dark-mode .product-price {
+  color: var(--primary-light);
+}
+
+/* ── Product detail modal texts ── */
+body.dark-mode .product-detail-name {
+  color: #e8e8e8;
+}
+body.dark-mode .product-detail-desc {
+  color: #aaa;
+}
+body.dark-mode .product-detail-price {
+  color: var(--primary-light);
+}
+body.dark-mode .product-detail-category {
+  color: var(--primary-light);
+}
+body.dark-mode .product-detail-img-side {
+  background: #16203a;
+}
+
+/* ── Checkout modal ── */
+body.dark-mode .modal-header {
+  border-color: var(--border);
+}
+body.dark-mode .modal-header h2 {
+  color: #e0e0e0;
+}
+body.dark-mode .form-group label {
+  color: #ccc;
+}
+
+/* ── Cart sidebar ── */
+body.dark-mode .cart-header {
+  background: linear-gradient(135deg, #14103a, #1e1558);
+}
+body.dark-mode .cart-items {
+  background: var(--bg);
+}
+body.dark-mode .cart-item {
+  border-color: var(--border);
+}
+body.dark-mode .cart-item-name {
+  color: #e0e0e0;
+}
+body.dark-mode .cart-item-price {
+  color: var(--primary-light);
+}
+body.dark-mode .cart-total-label {
+  color: #aaa;
+}
+body.dark-mode .cart-total-value {
+  color: var(--primary-light);
+}
+body.dark-mode .cart-empty {
+  color: #888;
+}
+body.dark-mode .qty-btn {
+  background: #2a3a5a;
+  color: var(--primary-light);
+  border-color: var(--border);
+}
+
+/* ── Search bar ── */
+body.dark-mode .search-input {
+  background: transparent;
+  color: #e0e0e0;
+}
+body.dark-mode .search-input::placeholder {
+  color: #666;
+}
+
+/* ── Filter buttons ── */
+body.dark-mode .filter-btn {
+  color: #ccc;
+  border-color: var(--border);
+}
+body.dark-mode .filter-btn.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+body.dark-mode .btn-categories-toggle {
+  color: #ccc;
+  border-color: var(--border);
+}
+body.dark-mode .category-panel-btn {
+  background: #16203a;
+  color: #ccc;
+  border-color: var(--border);
+}
+
+/* ── Promo banner ── */
+body.dark-mode .promo-banner {
+  background: #2a2a3a;
+}
+body.dark-mode .promo-banner-inner {
+  color: #ccc;
+}
+
+/* ── Toast notifications ── */
+body.dark-mode .toast {
+  background: #2a3a5a;
+  color: #e0e0e0;
+}
+
+/* ── Variant chips ── */
+body.dark-mode .variant-chip {
+  background: #2a3a5a;
+  color: #ccc;
+  border-color: var(--border);
+}
+body.dark-mode .variant-chip.selected {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+/* ── Landing page additions ── */
+body.dark-mode .landing-subtitle {
+  color: #aaa;
+}
+
+/* ── Admin panel dark mode ── */
+body.dark-mode .admin-topbar {
+  background: linear-gradient(135deg, #1a1a2e, #2a2a3a);
+}
+body.dark-mode .admin-topbar .dark-mode-btn {
+  position: static;
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.2);
+  color: #fff;
+  box-shadow: none;
+}
+body.dark-mode .admin-categories {
+  background: var(--bg-card);
+  border-color: var(--border);
+  color: #e0e0e0;
+}
+body.dark-mode .admin-settings h3,
+body.dark-mode .admin-categories h3 {
+  color: #e0e0e0;
+}
+body.dark-mode .admin-modal-header h2 {
+  color: #e0e0e0;
+}
+body.dark-mode .admin-modal-body {
+  color: #ccc;
 }
 
 
@@ -3177,18 +3354,22 @@ body.dark-mode .product-detail-close {
 
   /* ── Floating Buttons: más pequeños + safe-area ── */
   .wa-float-btn {
-    width: 48px;
-    height: 48px;
-    font-size: 1.3rem;
-    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
-    left: 1rem;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+    bottom: calc(70px + env(safe-area-inset-bottom, 0px));
+    right: 12px;
+    left: auto;
+    opacity: 0.75;
+    transition: opacity 0.2s ease, transform 0.3s ease, box-shadow 0.3s ease;
   }
+  .wa-float-btn:active { opacity: 1; transform: scale(0.95); }
   .scroll-top-btn {
     width: 40px;
     height: 40px;
     font-size: 1rem;
-    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
-    right: 1rem;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    right: 12px;
   }
   /* dark-mode-btn fijo en landing page */
   .dark-mode-btn {
