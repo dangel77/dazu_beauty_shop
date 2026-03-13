@@ -77,6 +77,29 @@ function unlockBodyScroll() {
   document.removeEventListener('touchmove', _preventBgScroll);
 }
 
+// Force modal body max-height via JS so footer is always visible
+function fixModalBodyHeight(modalEl) {
+  if (window.innerWidth > 600) return; // only on mobile
+  var header = modalEl.querySelector('.admin-modal-header');
+  var footer = modalEl.querySelector('.admin-modal-footer');
+  var body   = modalEl.querySelector('.admin-modal-body');
+  if (!header || !footer || !body) return;
+  // Use a small delay so the modal has transitioned into view
+  setTimeout(function() {
+    var vh = window.innerHeight;
+    var modalMaxH = vh * 0.85;
+    var headerH = header.offsetHeight;
+    var footerH = footer.offsetHeight;
+    var bodyMaxH = modalMaxH - headerH - footerH;
+    body.style.maxHeight = Math.floor(bodyMaxH) + 'px';
+  }, 50);
+}
+
+function clearModalBodyHeight(modalEl) {
+  var body = modalEl.querySelector('.admin-modal-body');
+  if (body) body.style.maxHeight = '';
+}
+
 // ===== DOM REFS =====
 var setupScreen       = document.getElementById('setupScreen');
 var adminPanel        = document.getElementById('adminPanel');
@@ -411,11 +434,13 @@ function openEditCategory(catName) {
   editCategoryInput.value = catName;
   editCategoryModal.classList.add('open');
   lockBodyScroll();
+  fixModalBodyHeight(editCategoryModal.querySelector('.admin-modal'));
   editCategoryInput.focus();
 }
 
 function closeEditCategory() {
   editCategoryModal.classList.remove('open');
+  clearModalBodyHeight(editCategoryModal.querySelector('.admin-modal'));
   unlockBodyScroll();
   editingCategory = null;
 }
@@ -598,11 +623,13 @@ function openProductForm(id) {
 
   productFormModal.classList.add('open');
   lockBodyScroll();
+  fixModalBodyHeight(productFormModal.querySelector('.admin-modal'));
   productName.focus();
 }
 
 function closeProductForm() {
   productFormModal.classList.remove('open');
+  clearModalBodyHeight(productFormModal.querySelector('.admin-modal'));
   unlockBodyScroll();
   editingId = null;
   selectedImageFile = null;
@@ -730,10 +757,12 @@ function openDeleteModal(id, name) {
   deleteProductName.textContent = name;
   deleteModal.classList.add('open');
   lockBodyScroll();
+  fixModalBodyHeight(deleteModal.querySelector('.admin-modal'));
 }
 
 function closeDeleteModal() {
   deleteModal.classList.remove('open');
+  clearModalBodyHeight(deleteModal.querySelector('.admin-modal'));
   unlockBodyScroll();
   pendingDeleteId = null;
 }
