@@ -158,7 +158,14 @@
       <div class="product-detail-content">
         <!-- Image side -->
         <div class="product-detail-img-side">
-          <img id="productDetailImg" src="" alt="" class="product-detail-img" />
+          <div id="productDetailCarousel" class="product-detail-carousel" style="display:none">
+            <div class="carousel-track-wrap">
+              <div class="carousel-track" id="carouselTrack"></div>
+            </div>
+            <button class="carousel-btn carousel-prev" id="carouselPrev" aria-label="Imagen anterior">&#8249;</button>
+            <button class="carousel-btn carousel-next" id="carouselNext" aria-label="Imagen siguiente">&#8250;</button>
+            <div class="carousel-dots" id="carouselDots"></div>
+          </div>
           <div class="product-detail-placeholder" id="productDetailPlaceholder"></div>
           <div class="product-detail-badges" id="productDetailBadges"></div>
         </div>

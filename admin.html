@@ -111,20 +111,15 @@
       </div>
       <div class="admin-modal-body">
         <div class="form-group">
-          <label>Foto del producto</label>
+          <label>Fotos del producto</label>
           <div id="imgUploadArea" class="img-upload-area">
-            <input type="file" id="imgFileInput" accept="image/*" aria-label="Subir imagen" />
+            <input type="file" id="imgFileInput" accept="image/*" multiple aria-label="Subir imágenes" />
             <div id="imgPlaceholder">
               <div class="img-upload-icon">📷</div>
-              <p class="img-upload-text">Hace clic o arrastra una imagen aqui<br><small>JPG, PNG, WEBP – max. 5 MB</small></p>
-            </div>
-            <div id="imgPreviewWrap" class="img-preview-wrap" style="display:none">
-              <img id="imgPreview" class="img-preview" src="" alt="Vista previa" />
+              <p class="img-upload-text">Hacé clic o arrastrá imágenes aquí<br><small>JPG, PNG, WEBP – máx. 5 MB por imagen</small></p>
             </div>
           </div>
-          <button type="button" id="btnRemoveImg" style="display:none;margin-top:0.4rem;background:#fce8e8;color:#d32f2f;border:none;border-radius:6px;padding:0.3rem 0.8rem;font-size:0.8rem;cursor:pointer;font-family:var(--font)">
-            🗑 Quitar imagen
-          </button>
+          <div id="imgPreviewGrid" class="img-preview-grid"></div>
         </div>
         <div class="form-group">
           <label for="productName">Nombre del producto *</label>

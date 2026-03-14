@@ -25,8 +25,7 @@ var settings = { wa_number: '', categories: [] };
 var jsonSha = '';            // SHA of products.json (needed for GitHub API updates)
 var editingId = null;
 var pendingDeleteId = null;
-var selectedImageFile = null;
-var currentImageName = '';   // current image filename in data/images/
+var pendingImages = [];      // [{file, src, name, isNew}] — images pending in the form
 var editingCategory = null;  // original name of the category being edited
 var _savedScrollY = 0;       // scroll position saved when a modal is opened (iOS fix)
 var reorderMode = false;     // whether reorder mode is active
@@ -132,9 +131,7 @@ var productFormCancel = document.getElementById('productFormCancel');
 var productFormSave   = document.getElementById('productFormSave');
 var imgFileInput      = document.getElementById('imgFileInput');
 var imgPlaceholder    = document.getElementById('imgPlaceholder');
-var imgPreviewWrap    = document.getElementById('imgPreviewWrap');
-var imgPreview        = document.getElementById('imgPreview');
-var btnRemoveImg      = document.getElementById('btnRemoveImg');
+var imgPreviewGrid    = document.getElementById('imgPreviewGrid');
 var productName               = document.getElementById('productName');
 var productCategoriesSelect   = document.getElementById('productCategoriesSelect');
 var productPrice              = document.getElementById('productPrice');
@@ -178,6 +175,12 @@ var btnCancelOrder     = document.getElementById('btnCancelOrder');
 function getProductCategories(product) {
   if (Array.isArray(product.categories)) return product.categories;
   if (product.category) return [product.category];
+  return [];
+}
+
+function getProductImages(product) {
+  if (Array.isArray(product.images) && product.images.length > 0) return product.images;
+  if (product.image) return [product.image];
   return [];
 }
 
@@ -645,11 +648,16 @@ function buildAdminCard(product) {
   card.className = 'product-card fade-in';
   card.dataset.id = product.id;
 
-  var imgSrc = product.image ? 'data/images/' + encodeURIComponent(product.image) : '';
+  var imgs = getProductImages(product);
+  var imgSrc = imgs.length > 0 ? 'data/images/' + encodeURIComponent(imgs[0]) : '';
   var firstCat = getProductCategories(product)[0] || '';
   var imgContent = imgSrc
     ? '<img src="' + escapeAttr(imgSrc) + '" alt="' + escapeAttr(product.name) + '" loading="lazy" />'
     : '<div class="product-placeholder">' + getCategoryEmoji(firstCat) + '</div>';
+
+  var imgCountBadge = imgs.length > 1
+    ? '<span class="badge-img-count">📷 ' + imgs.length + '</span>'
+    : '';
 
   var badgeHtml = product.available
     ? '<span class="badge-available">Disponible</span>'
@@ -666,7 +674,7 @@ function buildAdminCard(product) {
 
   card.innerHTML =
     '<div class="product-img-wrap">' +
-      imgContent + badgeHtml +
+      imgContent + badgeHtml + imgCountBadge +
     '</div>' +
     '<div class="product-body">' +
       catHtml +
@@ -685,9 +693,7 @@ function buildAdminCard(product) {
 // ===== PRODUCT FORM MODAL =====
 function openProductForm(id) {
   editingId = id || null;
-  selectedImageFile = null;
-  currentImageName = '';
-  resetImageUpload();
+  pendingImages = [];
 
   if (editingId) {
     var product = products.find(function (p) { return p.id === editingId; });
@@ -700,10 +706,9 @@ function openProductForm(id) {
     productAvailable.checked = product.available;
     availableLabel.textContent = product.available ? 'Disponible' : 'Sin stock';
     renderVariantsForm(product.variants || []);
-    if (product.image) {
-      currentImageName = product.image;
-      showImagePreview('data/images/' + encodeURIComponent(product.image));
-    }
+    getProductImages(product).forEach(function (name) {
+      pendingImages.push({ file: null, src: 'data/images/' + encodeURIComponent(name), name: name, isNew: false });
+    });
   } else {
     productFormTitle.textContent = 'Agregar producto';
     productName.value        = '';
@@ -715,6 +720,7 @@ function openProductForm(id) {
     clearVariantsForm();
   }
 
+  renderImagesAdmin();
   productFormModal.classList.add('open');
   lockBodyScroll();
   fixModalBodyHeight(productFormModal.querySelector('.admin-modal'));
@@ -726,8 +732,7 @@ function closeProductForm() {
   clearModalBodyHeight(productFormModal.querySelector('.admin-modal'));
   unlockBodyScroll();
   editingId = null;
-  selectedImageFile = null;
-  currentImageName = '';
+  pendingImages = [];
 }
 
 // ===== SAVE PRODUCT =====
@@ -749,31 +754,44 @@ function saveProduct() {
   productFormSave.disabled = true;
   productFormSave.textContent = 'Guardando...';
 
-  var imageName = currentImageName;
   var id = editingId || generateId();
+  var oldProduct = editingId ? products.find(function (p) { return p.id === editingId; }) : null;
+  var oldImages = oldProduct ? getProductImages(oldProduct) : [];
 
-  // Determine if we need to upload an image
-  var imagePromise;
-  if (selectedImageFile) {
-    imageName = id + '.jpg';
-    imagePromise = compressImage(selectedImageFile)
-      .then(function (blob) { return blobToBase64Raw(blob); })
-      .then(function (base64) { return uploadImageToGitHub(base64, imageName); });
-  } else {
-    imagePromise = Promise.resolve();
-  }
+  // Assign filenames to new images before uploading
+  var newImgCounter = 0;
+  pendingImages.forEach(function (img) {
+    if (img.isNew) {
+      img.name = id + '_' + Date.now() + '_' + (newImgCounter++) + '.jpg';
+    }
+  });
 
-  imagePromise
+  // Images to upload (newly added)
+  var imagesToUpload = pendingImages.filter(function (img) { return img.isNew; });
+
+  // Images to delete (were in old product but removed from pendingImages)
+  var keptNames = pendingImages.filter(function (img) { return !img.isNew; }).map(function (img) { return img.name; });
+  var imagesToDelete = oldImages.filter(function (n) { return keptNames.indexOf(n) === -1; });
+
+  // Upload new images sequentially
+  var uploadChain = imagesToUpload.reduce(function (chain, img) {
+    return chain.then(function () {
+      return compressImage(img.file)
+        .then(function (blob) { return blobToBase64Raw(blob); })
+        .then(function (base64) { return uploadImageToGitHub(base64, img.name); });
+    });
+  }, Promise.resolve());
+
+  // Then delete removed images
+  uploadChain
     .then(function () {
-      // If editing and image was removed (no selectedFile + no currentImageName)
-      if (editingId && !selectedImageFile && !currentImageName) {
-        var oldProduct = products.find(function (p) { return p.id === editingId; });
-        if (oldProduct && oldProduct.image) {
-          return deleteImageFromGitHub(oldProduct.image);
-        }
-      }
+      return imagesToDelete.reduce(function (chain, n) {
+        return chain.then(function () { return deleteImageFromGitHub(n); });
+      }, Promise.resolve());
     })
     .then(function () {
+      var finalImages = pendingImages.map(function (img) { return img.name; }).filter(Boolean);
+
       var productData = {
         id: id,
         name: name,
@@ -781,7 +799,7 @@ function saveProduct() {
         price: price,
         description: productDesc.value.trim(),
         available: productAvailable.checked,
-        image: imageName,
+        images: finalImages,
         created_at: editingId
           ? (products.find(function (p) { return p.id === editingId; }) || {}).created_at || new Date().toISOString()
           : new Date().toISOString()
@@ -821,7 +839,7 @@ function saveProduct() {
 function handleImageFile(file) {
   if (!file) return;
   if (file.size > 5 * 1024 * 1024) {
-    showToast('La imagen es muy grande. Maximo 5 MB.', 'error');
+    showToast('La imagen es muy grande. Máximo 5 MB.', 'error');
     return;
   }
   if (!file.type.startsWith('image/')) {
@@ -829,25 +847,36 @@ function handleImageFile(file) {
     return;
   }
 
-  selectedImageFile = file;
   var reader = new FileReader();
-  reader.onload = function (e) { showImagePreview(e.target.result); };
+  reader.onload = function (e) {
+    pendingImages.push({ file: file, src: e.target.result, name: '', isNew: true });
+    renderImagesAdmin();
+  };
   reader.readAsDataURL(file);
 }
 
-function showImagePreview(src) {
-  imgPreview.src = src;
-  imgPlaceholder.style.display  = 'none';
-  imgPreviewWrap.style.display  = 'block';
-  btnRemoveImg.style.display    = 'block';
+function renderImagesAdmin() {
+  imgPreviewGrid.innerHTML = '';
+  if (pendingImages.length === 0) {
+    imgPlaceholder.style.display = 'block';
+    return;
+  }
+  imgPlaceholder.style.display = 'none';
+  pendingImages.forEach(function (img, idx) {
+    var item = document.createElement('div');
+    item.className = 'img-preview-item' + (idx === 0 ? ' img-preview-main' : '');
+    item.innerHTML =
+      '<img src="' + escapeAttr(img.src) + '" alt="Imagen ' + (idx + 1) + '" />' +
+      (idx === 0 ? '<span class="img-preview-main-badge">Principal</span>' : '') +
+      '<button type="button" class="btn-remove-single-img" data-idx="' + idx + '" title="Eliminar imagen">✕</button>';
+    imgPreviewGrid.appendChild(item);
+  });
 }
 
 function resetImageUpload() {
-  imgPreview.src                = '';
-  imgPlaceholder.style.display  = 'block';
-  imgPreviewWrap.style.display  = 'none';
-  btnRemoveImg.style.display    = 'none';
-  imgFileInput.value            = '';
+  pendingImages = [];
+  imgFileInput.value = '';
+  renderImagesAdmin();
 }
 
 // ===== DELETE PRODUCT =====
@@ -873,11 +902,13 @@ function confirmDelete() {
   deleteConfirmBtn.textContent = 'Eliminando...';
 
   var product = products.find(function (p) { return p.id === pendingDeleteId; });
-  var imageDeletePromise = (product && product.image)
-    ? deleteImageFromGitHub(product.image)
-    : Promise.resolve();
+  var imagesToDelete = product ? getProductImages(product) : [];
 
-  imageDeletePromise
+  var deleteImagesChain = imagesToDelete.reduce(function (chain, name) {
+    return chain.then(function () { return deleteImageFromGitHub(name); });
+  }, Promise.resolve());
+
+  deleteImagesChain
     .then(function () {
       products = products.filter(function (p) { return p.id !== pendingDeleteId; });
       return saveJsonToGitHub({ settings: settings, products: products });
@@ -932,7 +963,8 @@ function buildAdminCardReorder(product, index) {
   card.dataset.index = index;
   card.draggable = true;
 
-  var imgSrc = product.image ? 'data/images/' + encodeURIComponent(product.image) : '';
+  var imgs = getProductImages(product);
+  var imgSrc = imgs.length > 0 ? 'data/images/' + encodeURIComponent(imgs[0]) : '';
   var firstCat = getProductCategories(product)[0] || '';
   var imgContent = imgSrc
     ? '<img src="' + escapeAttr(imgSrc) + '" alt="' + escapeAttr(product.name) + '" loading="lazy" />'
@@ -1177,7 +1209,11 @@ btnAddVariant.addEventListener('click', function () { addVariantRow('', true); }
 
 // Image upload
 imgFileInput.addEventListener('change', function (e) {
-  handleImageFile(e.target.files[0]);
+  var files = e.target.files;
+  for (var i = 0; i < files.length; i++) {
+    handleImageFile(files[i]);
+  }
+  imgFileInput.value = '';
 });
 
 var imgUploadArea = document.getElementById('imgUploadArea');
@@ -1191,13 +1227,21 @@ imgUploadArea.addEventListener('dragleave', function () {
 imgUploadArea.addEventListener('drop', function (e) {
   e.preventDefault();
   imgUploadArea.style.borderColor = '';
-  if (e.dataTransfer.files[0]) handleImageFile(e.dataTransfer.files[0]);
+  var files = e.dataTransfer.files;
+  for (var i = 0; i < files.length; i++) {
+    handleImageFile(files[i]);
+  }
 });
 
-btnRemoveImg.addEventListener('click', function () {
-  selectedImageFile = null;
-  currentImageName = '';
-  resetImageUpload();
+// Remove individual image from preview grid (event delegation)
+imgPreviewGrid.addEventListener('click', function (e) {
+  var btn = e.target.closest('.btn-remove-single-img');
+  if (!btn) return;
+  var idx = parseInt(btn.dataset.idx, 10);
+  if (!isNaN(idx) && idx >= 0 && idx < pendingImages.length) {
+    pendingImages.splice(idx, 1);
+    renderImagesAdmin();
+  }
 });
 
 // Delete modal
