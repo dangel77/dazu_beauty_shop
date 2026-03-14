@@ -18,6 +18,21 @@
   },
   "products": [
     {
+      "id": "mmpo5a845gvldh",
+      "name": "prueba",
+      "categories": [
+        "Mascarilla"
+      ],
+      "price": 2200,
+      "description": "si",
+      "available": true,
+      "images": [
+        "mmpo5a845gvldh_mmpo5a84klsy3u.jpg",
+        "mmpo5a845gvldh_mmpo5a85dygl35.jpg"
+      ],
+      "created_at": "2026-03-14T01:50:35.864Z"
+    },
+    {
       "id": "mmnwkk3v7rt6tb",
       "name": "labial 1",
       "categories": [
