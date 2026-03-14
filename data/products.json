@@ -19,6 +19,22 @@
   },
   "products": [
     {
+      "id": "mmqq7yefui3s82",
+      "name": "Serum de aceite de Caléndula KHRISANTEMOS  5Oml",
+      "categories": [
+        "Aceite",
+        "Cuidado facial",
+        "Serum Faciales"
+      ],
+      "price": 4900,
+      "description": "Beneficios milenarios \n🌼Trata el acné \n🌼Dismuye las cicatrices. \n🌼Aclara manchas y disminuye líneas de expresión \n🌼Disminuye la caspa aplicándolo en el cuero cabelludo.\n🌼 ideal para la inflamación producida por picaduras de insectos .\n🌼contiene aceite de arroz, jojoba, aguacate .\n🌼",
+      "available": true,
+      "images": [
+        "mmqq7yefui3s82_mmqq7yefvpqtyf.jpg"
+      ],
+      "created_at": "2026-03-14T19:36:24.668Z"
+    },
+    {
       "id": "mmqoruzj5s9t37",
       "name": "Paleta de base y contorno",
       "categories": [
