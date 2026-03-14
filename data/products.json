@@ -16,5 +16,20 @@
       "Kit shampoo y acondicionador"
     ]
   },
-  "products": []
+  "products": [
+    {
+      "id": "mmqn0tfbzg95wl",
+      "name": "Crema de manos aroma manzana suavizante y antiedad",
+      "categories": [
+        "Cuidado corporal"
+      ],
+      "price": 3000,
+      "description": "Nuestra crema para manos contiene extracto de manzana verde que proporciona un aroma deliciosos a la piel !! Ademas de manteca de cacao que suaviza profundamente y previene signos de la edad",
+      "available": true,
+      "images": [
+        "mmqn0tfbzg95wl_mmqn0tfdlea58x.jpg"
+      ],
+      "created_at": "2026-03-14T18:06:53.225Z"
+    }
+  ]
 }
