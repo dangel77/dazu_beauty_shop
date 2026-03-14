@@ -759,10 +759,9 @@ function saveProduct() {
   var oldImages = oldProduct ? getProductImages(oldProduct) : [];
 
   // Assign filenames to new images before uploading
-  var newImgCounter = 0;
   pendingImages.forEach(function (img) {
     if (img.isNew) {
-      img.name = id + '_' + Date.now() + '_' + (newImgCounter++) + '.jpg';
+      img.name = id + '_' + generateId() + '.jpg';
     }
   });
 
