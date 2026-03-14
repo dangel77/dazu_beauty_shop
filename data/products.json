@@ -18,6 +18,20 @@
   },
   "products": [
     {
+      "id": "mmqncuq8uf7qqh",
+      "name": "Kit de shampoo y Acondicionador de Romero Aquaspiro",
+      "categories": [
+        "Kit shampoo y acondicionador"
+      ],
+      "price": 14600,
+      "description": "Este poderoso ayudará a combatir, prevenir y tratar la caída capilar, además de disminuir la grasa \n🌿Estimula un crecimiento más rápido y sano. \n🌿Sin Sales, sulfatos, ni parabenos",
+      "available": true,
+      "images": [
+        "mmqncuq8uf7qqh_mmqncuq8sj1jpt.jpg"
+      ],
+      "created_at": "2026-03-14T18:16:14.693Z"
+    },
+    {
       "id": "mmqn0tfbzg95wl",
       "name": "Crema de manos aroma manzana suavizante y antiedad",
       "categories": [
