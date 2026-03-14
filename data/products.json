@@ -16,40 +16,5 @@
       "Kit shampoo y acondicionador"
     ]
   },
-  "products": [
-    {
-      "id": "mmpxy7p1hm1wft",
-      "name": "massiel",
-      "categories": [
-        "Kit shampoo y acondicionador"
-      ],
-      "price": 1000000000,
-      "description": "respira y se enoja",
-      "available": true,
-      "images": [
-        "mmpxy7p1hm1wft_mmpxy7p1oweeme.jpg",
-        "mmpxy7p1hm1wft_mmpxy7p1kwb661.jpg",
-        "mmpxy7p1hm1wft_mmpxy7p1wgvk5m.jpg",
-        "mmpxy7p1hm1wft_mmpxy7p1sl8hvv.jpg",
-        "mmpxy7p1hm1wft_mmpxy7p19kzpo0.jpg",
-        "mmpxy7p1hm1wft_mmpxy7p1c5rndr.jpg",
-        "mmpxy7p1hm1wft_mmpxy7p114d5nj.jpg"
-      ],
-      "created_at": "2026-03-14T06:25:07.159Z",
-      "variants": [
-        {
-          "name": "en negro",
-          "available": true
-        },
-        {
-          "name": "en blanco",
-          "available": true
-        },
-        {
-          "name": "en verde",
-          "available": true
-        }
-      ]
-    }
-  ]
+  "products": []
 }
