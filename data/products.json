@@ -18,6 +18,20 @@
   },
   "products": [
     {
+      "id": "mmqntcrgcym4s1",
+      "name": "Serum de aceite de rosas Khrysantemos 50ml 50 ml",
+      "categories": [
+        "Cuidado facial"
+      ],
+      "price": 4900,
+      "description": "el aceite de rosas le aporta a tu piel propiedades únicas \n🌷Un glow espectacular \n🌷Ideal para pieles secas y maduras o jóvenes . \n🌷Apta para pieles adolescentes \n🌷Lo puedes usar pos depilado \n🌷Atenua manchas, disminuye arrugas. \n🌷Desvanece estrías",
+      "available": true,
+      "images": [
+        "mmqntcrgcym4s1_mmqntcrgue6d2d.jpg"
+      ],
+      "created_at": "2026-03-14T18:29:04.253Z"
+    },
+    {
       "id": "mmqncuq8uf7qqh",
       "name": "Kit de shampoo y Acondicionador de Romero Aquaspiro",
       "categories": [
