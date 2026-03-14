@@ -16,30 +16,5 @@
       "Kit shampoo y acondicionador"
     ]
   },
-  "products": [
-    {
-      "id": "mmpcvj3tlnww1y",
-      "name": "brillo",
-      "categories": [],
-      "price": 40000,
-      "description": "brillos, con diferentes tonos",
-      "available": true,
-      "image": "mmpcvj3tlnww1y.jpg",
-      "created_at": "2026-03-13T20:35:04.039Z",
-      "variants": [
-        {
-          "name": "roda",
-          "available": true
-        },
-        {
-          "name": "vainilla",
-          "available": true
-        },
-        {
-          "name": "coco",
-          "available": true
-        }
-      ]
-    }
-  ]
+  "products": []
 }
