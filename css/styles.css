@@ -1429,6 +1429,87 @@ button {
   border: 2px solid var(--border);
 }
 
+/* ===== MULTI-IMAGE ADMIN PREVIEW GRID ===== */
+.img-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.img-preview-item {
+  position: relative;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 2px solid var(--border);
+  aspect-ratio: 1;
+  background: var(--bg);
+}
+
+.img-preview-item.img-preview-main {
+  border-color: var(--primary);
+}
+
+.img-preview-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.img-preview-main-badge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-align: center;
+  padding: 0.15rem 0;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.btn-remove-single-img {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.55);
+  color: #fff;
+  border: none;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background var(--transition);
+  font-family: var(--font);
+  line-height: 1;
+}
+
+.btn-remove-single-img:hover {
+  background: #d32f2f;
+}
+
+/* Image count badge on admin card */
+.badge-img-count {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  background: rgba(0,0,0,0.55);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 0.15rem 0.5rem;
+  pointer-events: none;
+}
+
 /* ===== TOGGLE SWITCH ===== */
 .toggle-wrap {
   display: flex;
@@ -1743,6 +1824,129 @@ button {
     width: 32px;
     height: 32px;
     font-size: 0.9rem;
+  }
+}
+
+/* ===== PRODUCT IMAGE CAROUSEL ===== */
+.product-detail-carousel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+  overflow: hidden;
+}
+
+.carousel-track-wrap {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.carousel-track {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.carousel-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+}
+
+.carousel-slide .product-detail-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 1.5rem;
+  max-height: 460px;
+  display: block;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid var(--border);
+  color: var(--primary-dark);
+  font-size: 1.4rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: background var(--transition), color var(--transition), transform var(--transition);
+  font-family: var(--font);
+  line-height: 1;
+}
+
+.carousel-btn:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.carousel-prev { left: 0.5rem; }
+.carousel-next { right: 0.5rem; }
+
+.carousel-dots {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.35rem;
+  z-index: 5;
+}
+
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.5);
+  border: 1.5px solid rgba(233,30,140,0.4);
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.carousel-dot.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  transform: scale(1.2);
+}
+
+@media (max-width: 600px) {
+  .product-detail-carousel {
+    min-height: 220px;
+  }
+
+  .carousel-slide {
+    min-height: 220px;
+  }
+
+  .carousel-slide .product-detail-img {
+    max-height: 280px;
+    padding: 1rem;
+  }
+
+  .carousel-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 1.1rem;
   }
 }
 
@@ -3043,6 +3247,28 @@ body.dark-mode .product-detail-img-side {
   background: #16203a;
 }
 
+body.dark-mode .carousel-btn {
+  background: rgba(22, 32, 58, 0.9);
+  border-color: #2a3a5a;
+  color: var(--primary-light);
+}
+
+body.dark-mode .carousel-btn:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+body.dark-mode .carousel-dot {
+  background: rgba(255,255,255,0.2);
+  border-color: rgba(233,30,140,0.3);
+}
+
+body.dark-mode .img-preview-item {
+  border-color: #2a3a5a;
+  background: #1a2540;
+}
+
 /* ── Checkout modal ── */
 body.dark-mode .modal-header {
   border-color: var(--border);
@@ -3347,6 +3573,18 @@ body.dark-mode ::-webkit-scrollbar-thumb { background: #3a3a5a; }
     max-height: 38vh;
   }
   .product-detail-img {
+    max-height: 38vh;
+    padding: 0.75rem;
+  }
+  .product-detail-carousel {
+    min-height: 140px;
+    max-height: 38vh;
+    border-radius: 24px 24px 0 0;
+  }
+  .carousel-slide {
+    min-height: 140px;
+  }
+  .carousel-slide .product-detail-img {
     max-height: 38vh;
     padding: 0.75rem;
   }
