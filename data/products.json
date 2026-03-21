@@ -21,6 +21,21 @@
   },
   "products": [
     {
+      "id": "mn0uq8mt8p3whf",
+      "name": "Base liquida Matte Cover Pink Up",
+      "categories": [
+        "Maquillaje"
+      ],
+      "price": 9500,
+      "description": "Base de maquillaje líquida de acabado mate, su textura es suave y confortable, brinda a la piel una cobertura media de larga duración. Está formulada especialmente para pieles mixtas a grasas que necesitan controlar el brillo antiestético del rostro.",
+      "available": true,
+      "images": [
+        "mn0uq8mt8p3whf_mn0uq8mtnc6xp0.jpg",
+        "mn0uq8mt8p3whf_mn0uq8mtxz0sv6.jpg"
+      ],
+      "created_at": "2026-03-21T21:40:20.028Z"
+    },
+    {
       "id": "mn0twtewxuwubi",
       "name": "Base compacta mineral Cover Pink Up",
       "categories": [
