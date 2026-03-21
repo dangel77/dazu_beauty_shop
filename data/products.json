@@ -33,7 +33,29 @@
         "mn0uq8mt8p3whf_mn0uq8mtnc6xp0.jpg",
         "mn0uq8mt8p3whf_mn0uq8mtxz0sv6.jpg"
       ],
-      "created_at": "2026-03-21T21:40:20.028Z"
+      "created_at": "2026-03-21T21:40:20.028Z",
+      "variants": [
+        {
+          "name": "100-Pale",
+          "available": true
+        },
+        {
+          "name": "200-ligth",
+          "available": true
+        },
+        {
+          "name": "300-beige",
+          "available": true
+        },
+        {
+          "name": "400-tru beige",
+          "available": true
+        },
+        {
+          "name": "500-medium",
+          "available": true
+        }
+      ]
     },
     {
       "id": "mn0twtewxuwubi",
