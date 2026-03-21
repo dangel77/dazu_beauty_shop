@@ -20,6 +20,20 @@
   },
   "products": [
     {
+      "id": "mn0j9u9aitmiin",
+      "name": "lip oil",
+      "categories": [
+        "Labios"
+      ],
+      "price": 2500,
+      "description": "Aceite hidratante con color",
+      "available": true,
+      "images": [
+        "mn0j9u9aitmiin_mn0j9u9aa2wmks.jpg"
+      ],
+      "created_at": "2026-03-21T16:19:37.257Z"
+    },
+    {
       "id": "mmw8sym6r674t9",
       "name": "Kit Facial Bioaqua Aguacate y Nicianamida",
       "categories": [
