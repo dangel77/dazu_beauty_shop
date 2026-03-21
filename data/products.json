@@ -56,6 +56,34 @@
         {
           "name": "Soft cream",
           "available": true
+        },
+        {
+          "name": "Pretty",
+          "available": true
+        },
+        {
+          "name": "Nice",
+          "available": true
+        },
+        {
+          "name": "Chic",
+          "available": true
+        },
+        {
+          "name": "in love",
+          "available": true
+        },
+        {
+          "name": "Jolie",
+          "available": true
+        },
+        {
+          "name": "Diva",
+          "available": true
+        },
+        {
+          "name": "Dreamer",
+          "available": true
         }
       ]
     },
