@@ -20,26 +20,6 @@
   },
   "products": [
     {
-      "id": "mn0iwt4rxhejut",
-      "name": "SHAMPOO",
-      "categories": [
-        "Shampoo"
-      ],
-      "price": 23000,
-      "description": "ss",
-      "available": true,
-      "images": [
-        "mn0iwt4rxhejut_mn0iwt4saibis1.jpg"
-      ],
-      "created_at": "2026-03-21T16:09:28.975Z",
-      "variants": [
-        {
-          "name": "rosa",
-          "available": true
-        }
-      ]
-    },
-    {
       "id": "mmw8sym6r674t9",
       "name": "Kit Facial Bioaqua Aguacate y Nicianamida",
       "categories": [
