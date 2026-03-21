@@ -22,6 +22,20 @@
   },
   "products": [
     {
+      "id": "mn0vabd7edlh54",
+      "name": "Labial Líquido Súper Glossy Pink Up Larga duración",
+      "categories": [
+        "Labios"
+      ],
+      "price": 7600,
+      "description": "Color intenso, brillo extremo por horas. \nFórmulas hidratante",
+      "available": true,
+      "images": [
+        "mn0vabd7edlh54_mn0vabd7n1l4kx.jpg"
+      ],
+      "created_at": "2026-03-21T21:55:55.253Z"
+    },
+    {
       "id": "mn0uq8mt8p3whf",
       "name": "Base liquida Matte Cover Pink Up",
       "categories": [
