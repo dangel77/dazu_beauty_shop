@@ -33,7 +33,21 @@
       "images": [
         "mn0vabd7edlh54_mn0vabd7n1l4kx.jpg"
       ],
-      "created_at": "2026-03-21T21:55:55.253Z"
+      "created_at": "2026-03-21T21:55:55.253Z",
+      "variants": [
+        {
+          "name": "Nude",
+          "available": true
+        },
+        {
+          "name": "Rose",
+          "available": true
+        },
+        {
+          "name": "Soft cream",
+          "available": true
+        }
+      ]
     },
     {
       "id": "mn0uq8mt8p3whf",
