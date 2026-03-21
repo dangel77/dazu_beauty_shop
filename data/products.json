@@ -21,6 +21,49 @@
   },
   "products": [
     {
+      "id": "mn0twtewxuwubi",
+      "name": "Base compacta mineral Cover Pink Up",
+      "categories": [
+        "Polvos y bases compactas"
+      ],
+      "price": 8500,
+      "description": "Base el polvo , ingredientes minerales que no obstruyen la piel y deja  un acabado aterciopelado . No obstruye poros, controla la grasa y no reseca la piel",
+      "available": true,
+      "images": [
+        "mn0twtewxuwubi_mn0twtewe0076y.jpg",
+        "mn0twtewxuwubi_mn0twtewe3tpip.jpg",
+        "mn0twtewxuwubi_mn0twtew1ax9s7.jpg",
+        "mn0twtewxuwubi_mn0twtewgnu010.jpg"
+      ],
+      "created_at": "2026-03-21T21:17:31.919Z",
+      "variants": [
+        {
+          "name": "100- Ligth",
+          "available": true
+        },
+        {
+          "name": "200-natural",
+          "available": true
+        },
+        {
+          "name": "300-Beige",
+          "available": true
+        },
+        {
+          "name": "400- sand",
+          "available": true
+        },
+        {
+          "name": "500- sunny",
+          "available": true
+        },
+        {
+          "name": "600-Tunning",
+          "available": true
+        }
+      ]
+    },
+    {
       "id": "mn0sefgh5je0cc",
       "name": "Gloss mágico con  llavero de peluche",
       "categories": [
