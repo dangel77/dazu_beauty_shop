@@ -20,6 +20,29 @@
   },
   "products": [
     {
+      "id": "mn0jczpckumss6",
+      "name": "Lip oíl Hidrante Hitalia Deluxe",
+      "categories": [
+        "Labios"
+      ],
+      "price": 2500,
+      "description": "Líp oil Hidratante con color, \nmás brillo, más hidratación evita pellejitos y labios resecos. \nTextura suave, ligera y no pegajosa",
+      "available": true,
+      "images": [
+        "mn0jczpckumss6_mn0jczpc6z8x3g.jpg",
+        "mn0jczpckumss6_mn0jczpcabdyep.jpg",
+        "mn0jczpckumss6_mn0jczpcyj56yr.jpg",
+        "mn0jczpckumss6_mn0jczpc9bgomo.jpg"
+      ],
+      "created_at": "2026-03-21T16:22:07.696Z",
+      "variants": [
+        {
+          "name": "PLAYA",
+          "available": true
+        }
+      ]
+    },
+    {
       "id": "mn0j9u9aitmiin",
       "name": "lip oil",
       "categories": [
