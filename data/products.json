@@ -22,6 +22,20 @@
   },
   "products": [
     {
+      "id": "mn0y53qa751pd9",
+      "name": "Perfume corporal DEAH Body Real Glamour",
+      "categories": [
+        "Perfume"
+      ],
+      "price": 4500,
+      "description": "Deliciosos aroma floral dulce !! Para que huelas deliciosos de dos y de noche !! \nEnamora a casa paso",
+      "available": true,
+      "images": [
+        "mn0y53qa751pd9_mn0y53qascd6nu.jpg"
+      ],
+      "created_at": "2026-03-21T23:15:51.173Z"
+    },
+    {
       "id": "mn0y0umr2yk1p3",
       "name": "Serum labial con ácido hialurónico efecto gloss Italia Deluxe",
       "categories": [
