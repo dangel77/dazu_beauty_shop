@@ -23,6 +23,20 @@
   },
   "products": [
     {
+      "id": "mn6phkzrvmwe5n",
+      "name": "Gelatina Pink Limonada Salon line 550g",
+      "categories": [
+        "Espumas líquidas Faciales"
+      ],
+      "price": 7500,
+      "description": "La gelatina de limonada rosa de #todecacho garantiza 72 horas de definición y fijación fuerte de los rizos, además de proporcionar un efecto de rizo definido, un brillo intenso y un cabello sin frizz. Su fórmula ultrahidratante promueve la suavidad y una gran durabilidad, logrando rizos definidos que perduran todo el día",
+      "available": true,
+      "images": [
+        "mn6phkzrvmwe5n_mn6phkzrpkwuur.jpg"
+      ],
+      "created_at": "2026-03-26T00:00:13.266Z"
+    },
+    {
       "id": "mn4ukfiyir3q4l",
       "name": "Crema para peinar 3 en 1 Salón Line Pink Limonada",
       "categories": [
