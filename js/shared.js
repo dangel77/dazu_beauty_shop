@@ -14,26 +14,8 @@ function escapeHtml(str) {
     .replace(/'/g, '&#039;');
 }
 
-function escapeAttr(str) {
-  return escapeHtml(str);
-}
-
-function getCategoryEmoji(category) {
-  const map = {
-    'shampoo': '🧴',
-    'crema': '🧴',
-    'jabón': '🧼',
-    'jabon': '🧼',
-    'acondicionador': '💆',
-    'aceite': '🫙',
-    'mascarilla': '💆',
-    'perfume': '🌹',
-    'maquillaje': '💄',
-    'cuidado facial': '✨',
-    'cuidado corporal': '🌿'
-  };
-  const key = (category || '').toLowerCase();
-  return map[key] || '✨';
+function icon(name) {
+  return '<svg class="icon" aria-hidden="true"><use href="#i-' + name + '"/></svg>';
 }
 
 function formatPrice(n) {
@@ -51,6 +33,10 @@ function normalizeText(str) {
     .replace(/[̀-ͯ]/g, '');
 }
 
+function cleanName(name) {
+  return String(name).replace(/\s+/g, ' ').trim();
+}
+
 // ===== PRODUCT HELPERS =====
 // Older products stored a single `category` / `image`; newer ones use arrays.
 function getProductCategories(product) {
@@ -65,8 +51,28 @@ function getProductImages(product) {
   return [];
 }
 
+function hasVariants(product) {
+  return Array.isArray(product.variants) && product.variants.length > 0;
+}
+
+// Every photo has a full-size file and a small copy with the same name for lists
+var IMAGE_DIR = 'data/images/';
+var THUMB_DIR = 'data/thumbs/';
+
 function imageUrl(name) {
-  return 'data/images/' + encodeURIComponent(name);
+  return IMAGE_DIR + encodeURIComponent(name);
+}
+
+function thumbUrl(name) {
+  return THUMB_DIR + encodeURIComponent(name);
+}
+
+// <img> that shows the small copy and falls back to the full photo when the
+// small one does not exist (see the `error` listener at the end of this file).
+function thumbImg(name, className, alt, loading) {
+  return '<img class="' + className + '" src="' + escapeHtml(thumbUrl(name)) + '"' +
+    ' data-full="' + escapeHtml(imageUrl(name)) + '" alt="' + escapeHtml(alt || '') + '"' +
+    ' loading="' + (loading || 'lazy') + '" decoding="async" />';
 }
 
 // ===== STORE SETTINGS =====
@@ -90,70 +96,96 @@ function getSetting(settings, key) {
   return typeof value === 'string' ? value : fallback;
 }
 
+// Options may come as plain text; an option asks for an address when it is a delivery
+function getDeliveryOptions(settings) {
+  return getSetting(settings, 'delivery_options').map(function (option) {
+    if (typeof option === 'string') {
+      return { label: option, address: /env[ií]o|domicilio|correo|encomienda/i.test(option) };
+    }
+    return { label: String(option.label || '').trim(), address: !!option.address };
+  }).filter(function (option) { return option.label; });
+}
+
 // ===== TOAST =====
 // Only one toast at a time: a new message replaces the previous one.
 var _toastTimer = null;
 
 function showToast(message, type) {
-  const container = document.getElementById('toastContainer');
+  var container = document.getElementById('toastContainer');
   if (!container) return;
   clearTimeout(_toastTimer);
   container.innerHTML = '';
-  const toast = document.createElement('div');
+  var toast = document.createElement('div');
   toast.className = 'toast' + (type ? ' ' + type : '');
   toast.textContent = message;
   container.appendChild(toast);
-  _toastTimer = setTimeout(() => toast.remove(), 2600);
+  _toastTimer = setTimeout(function () { toast.remove(); }, type === 'error' ? 4500 : 2600);
 }
 
-// ===== IMAGE COMPRESSION (client-side) =====
-// Resizes large images before uploading to keep repo lean
-function compressImage(file, maxWidth, quality) {
-  maxWidth = maxWidth || 800;
-  quality = quality || 0.82;
+// ===== IMAGE PREPARATION (client-side) =====
+// Phone photos weigh several MB. Before uploading, each one is scaled down and
+// re-encoded, and a small copy is made for the catalog grid.
+var IMAGE_MAX_SIDE = 1200;
+var THUMB_MAX_SIDE = 480;
 
-  return new Promise(function (resolve) {
-    // If file is small enough and a JPEG, skip compression
-    if (file.size < 150000 && file.type === 'image/jpeg') {
-      resolve(file);
-      return;
-    }
+function _decodeImage(file) {
+  function withImgElement() {
+    return new Promise(function (resolve, reject) {
+      var url = URL.createObjectURL(file);
+      var img = new Image();
+      img.onload = function () { URL.revokeObjectURL(url); resolve(img); };
+      img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('No se pudo leer la imagen')); };
+      img.src = url;
+    });
+  }
+  if (!window.createImageBitmap) return withImgElement();
+  // 'from-image' applies the rotation that phone cameras store as metadata
+  return createImageBitmap(file, { imageOrientation: 'from-image' }).catch(withImgElement);
+}
 
-    var img = new Image();
-    var reader = new FileReader();
+function _renderImage(source, maxSide, type, quality) {
+  var width  = source.naturalWidth || source.width;
+  var height = source.naturalHeight || source.height;
+  var scale  = Math.min(1, maxSide / Math.max(width, height));
 
-    reader.onload = function (e) {
-      img.onload = function () {
-        var canvas = document.createElement('canvas');
-        var w = img.width;
-        var h = img.height;
+  var canvas = document.createElement('canvas');
+  canvas.width  = Math.max(1, Math.round(width * scale));
+  canvas.height = Math.max(1, Math.round(height * scale));
 
-        if (w > maxWidth) {
-          h = Math.round(h * maxWidth / w);
-          w = maxWidth;
-        }
+  var ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#ffffff';   // transparent PNGs would otherwise turn black
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(source, 0, 0, canvas.width, canvas.height);
 
-        canvas.width = w;
-        canvas.height = h;
-        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+  return new Promise(function (resolve) { canvas.toBlob(resolve, type, quality); });
+}
 
-        canvas.toBlob(function (blob) {
-          resolve(blob || file);
-        }, 'image/jpeg', quality);
-      };
-      img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
+// Resolves with { main: Blob, thumb: Blob, ext: 'webp' | 'jpg' }
+function prepareImage(file) {
+  return _decodeImage(file).then(function (source) {
+    return _renderImage(source, IMAGE_MAX_SIDE, 'image/webp', 0.82).then(function (main) {
+      // WebP is smaller, but a browser that cannot write it hands back a PNG instead
+      var webp = !!main && main.type === 'image/webp';
+      var type = webp ? 'image/webp' : 'image/jpeg';
+
+      return Promise.all([
+        webp ? main : _renderImage(source, IMAGE_MAX_SIDE, 'image/jpeg', 0.85),
+        _renderImage(source, THUMB_MAX_SIDE, type, 0.8)
+      ]).then(function (blobs) {
+        if (source.close) source.close();
+        if (!blobs[0] || !blobs[1]) throw new Error('No se pudo procesar la imagen');
+        return { main: blobs[0], thumb: blobs[1], ext: webp ? 'webp' : 'jpg' };
+      });
+    });
   });
 }
 
 // Convert blob/file to pure base64 string (no data URL prefix)
 function blobToBase64Raw(blob) {
-  return new Promise(function (resolve) {
+  return new Promise(function (resolve, reject) {
     var reader = new FileReader();
-    reader.onload = function () {
-      resolve(reader.result.split(',')[1]);
-    };
+    reader.onload = function () { resolve(reader.result.split(',')[1]); };
+    reader.onerror = function () { reject(new Error('No se pudo leer la imagen')); };
     reader.readAsDataURL(blob);
   });
 }
@@ -163,49 +195,44 @@ function generateId() {
 }
 
 // ===== DARK MODE =====
+// The `dark` class on <html> swaps the color tokens (see css/styles.css)
 var DARK_MODE_KEY = 'dazu_dark_mode';
-
-// `html.dark` drives the catalog theme; `body.dark-mode` is what the admin stylesheet expects.
-function _applyDarkMode(isDark) {
-  document.documentElement.classList.toggle('dark', isDark);
-  document.body.classList.toggle('dark-mode', isDark);
-  _updateDarkModeIcons(isDark);
-}
 
 function initDarkMode() {
   var stored = localStorage.getItem(DARK_MODE_KEY);
   var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-  _applyDarkMode(stored !== null ? stored === 'true' : prefersDark);
+  document.documentElement.classList.toggle('dark', stored !== null ? stored === 'true' : prefersDark);
 }
 
 function toggleDarkMode() {
-  var isDark = !document.documentElement.classList.contains('dark');
+  var isDark = document.documentElement.classList.toggle('dark');
   localStorage.setItem(DARK_MODE_KEY, isDark ? 'true' : 'false');
-  _applyDarkMode(isDark);
 }
 
-function _updateDarkModeIcons(isDark) {
-  var icon = isDark ? '☀️' : '🌙';
-  var btns = document.querySelectorAll('.dark-mode-btn');
-  for (var i = 0; i < btns.length; i++) {
-    btns[i].textContent = icon;
-  }
-}
-
-// Init dark mode immediately so there's no flash
 initDarkMode();
 
-// Attach toggle listeners once DOM is ready
-(function () {
-  function _attachDarkModeListeners() {
-    var btns = document.querySelectorAll('.dark-mode-btn, [data-theme-toggle]');
-    for (var i = 0; i < btns.length; i++) {
-      btns[i].addEventListener('click', toggleDarkMode);
-    }
+document.addEventListener('click', function (e) {
+  if (e.target.closest('[data-theme-toggle]')) toggleDarkMode();
+});
+
+// ===== IMAGE FALLBACKS =====
+// `error` does not bubble, hence the capture. A missing thumbnail is replaced
+// by the full photo. A missing photo marks its frame so CSS shows a placeholder,
+// and becomes a transparent pixel so the browser's broken-image icon never shows.
+var BLANK_IMAGE = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+
+document.addEventListener('error', function (e) {
+  var img = e.target;
+  if (!img || img.tagName !== 'IMG') return;
+
+  if (img.dataset.full) {
+    var full = img.dataset.full;
+    delete img.dataset.full;
+    img.src = full;
+    return;
   }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', _attachDarkModeListeners);
-  } else {
-    _attachDarkModeListeners();
-  }
-}());
+
+  var frame = img.closest('.card-media, .slide, .photo');
+  if (frame) frame.classList.add('no-img');
+  if (img.getAttribute('src') !== BLANK_IMAGE) img.src = BLANK_IMAGE;
+}, true);

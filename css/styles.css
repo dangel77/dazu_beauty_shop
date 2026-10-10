@@ -728,10 +728,17 @@ body.has-cart .site-footer { padding-bottom: calc(100px + env(safe-area-inset-bo
   box-shadow: var(--shadow-lg);
   visibility: hidden;
   transform: translateY(105%);
-  transition: transform 0.3s var(--ease), opacity 0.2s ease, visibility 0.3s;
+  /* Hidden only after the closing animation ends… */
+  transition: transform 0.3s var(--ease), opacity 0.2s ease, visibility 0s linear 0.3s;
 }
 
-.sheet.open { visibility: visible; transform: none; }
+/* …and visible at once when opening: an element cannot take focus while it is
+   still `visibility: hidden`, and the scripts focus the sheet right away. */
+.sheet.open {
+  visibility: visible;
+  transform: none;
+  transition: transform 0.3s var(--ease), opacity 0.2s ease;
+}
 .sheet:focus { outline: none; }
 
 .sheet-head {

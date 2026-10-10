@@ -2,218 +2,287 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>Admin – Dazu Beauty Shop</title>
+  <title>Panel – Dazu Beauty Shop</title>
   <link rel="icon" type="image/png" href="assets/favicon.png" />
-  <meta name="theme-color" content="#c2185b" />
+  <meta name="theme-color" content="#ff0092" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/admin-legacy.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+  <script>
+    try {
+      var d = localStorage.getItem('dazu_dark_mode');
+      if (d === 'true' || (d === null && matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    } catch (e) {}
+  </script>
 </head>
-<body class="admin-page">
+<body class="admin">
 
-  <!-- ===== SETUP SCREEN (solo pide token, una sola vez) ===== -->
-  <div id="setupScreen" class="password-screen">
-    <div class="password-card">
-      <img src="assets/logo-blanco.jpeg" alt="Dazu Beauty Shop" class="password-logo" />
-      <p>Ingresa tu clave de acceso para administrar la tienda.</p>
-      <div class="password-input-wrap">
-        <input type="password" id="setupToken" placeholder="Clave de acceso" autocomplete="off" />
-        <button class="btn-unlock" id="setupBtn">Entrar</button>
-      </div>
-      <p class="password-error" id="setupError"></p>
-      <a href="./" style="display:block;margin-top:1.2rem;font-size:0.8rem;color:#aaa;">← Volver al catálogo</a>
-    </div>
-  </div>
+  <!-- ===== ICONOS (se usan con <svg><use href="#i-nombre"/></svg>) ===== -->
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon-sprite" aria-hidden="true">
+    <symbol id="i-bag" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M10 11v6"/><path d="M14 11v6"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-top" viewBox="0 0 24 24"><path d="M5 3h14"/><path d="m18 13-6-6-6 6"/><path d="M12 7v14"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2Z"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></symbol>
+    <symbol id="i-sort" viewBox="0 0 24 24"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+  </svg>
 
-  <!-- ===== ADMIN PANEL (hidden until connected) ===== -->
-  <div id="adminPanel" style="display:none">
-
-    <header class="admin-topbar">
-      <div class="admin-topbar-brand">
-        <img src="assets/logo-negro.jpeg" alt="Dazu" class="admin-topbar-logo" />
-        <span>Admin</span>
-      </div>
-      <div class="admin-topbar-actions">
-        <button class="dark-mode-btn" id="darkModeToggleAdmin" aria-label="Cambiar modo oscuro/claro">🌙</button>
-        <a href="./" class="btn-view-catalog">👁 Ver catalogo</a>
-        <button class="btn-logout" id="btnLogout">🔒 Desconectar</button>
-      </div>
-    </header>
-
-    <main class="catalog-main">
-
-      <div class="admin-section-header">
-        <h2>📦 Mis Productos</h2>
-        <div class="admin-header-btns">
-          <button class="btn-reorder" id="btnReorderProducts">↕️ Editar orden</button>
-          <button class="btn-add-product" id="btnAddProduct">＋ Agregar producto</button>
-        </div>
-      </div>
-
-      <div class="reorder-actions" id="reorderActions">
-        <span class="reorder-actions-label">↕️ Arrastrá las tarjetas para reordenar. En móvil usá el ☰ o las flechas ▲ ▼.</span>
-        <button class="btn-cancel-order" id="btnCancelOrder">Cancelar</button>
-        <button class="btn-save-order" id="btnSaveOrder">💾 Guardar orden</button>
-      </div>
-
-      <div class="product-grid" id="adminProductGrid"></div>
-
-      <div class="admin-settings">
-        <h3>⚙️ Configuración</h3>
-        <div class="settings-row">
-          <div class="form-group">
-            <label for="waNumberInput">📱 Número de WhatsApp</label>
-            <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap">
-              <span style="font-weight:600;font-size:1rem;color:var(--text);white-space:nowrap">+506</span>
-              <input type="tel" id="waNumberInput" placeholder="Ej: 61234567" style="flex:1;min-width:0" inputmode="tel" />
-            </div>
-          </div>
-          <button class="btn-save" id="btnSaveWaNumber" style="padding:0.65rem 1rem;margin-bottom:0">
-            Guardar
+  <!-- ===== INGRESO ===== -->
+  <main class="login" id="loginScreen" hidden>
+    <form class="login-card" id="loginForm" novalidate>
+      <img src="assets/icon-192.png" alt="Dazu Beauty Shop" class="login-logo" width="88" height="88" />
+      <h1>Panel de la tienda</h1>
+      <p class="login-hint" id="loginHint">Ingresá tu contraseña para administrar el catálogo.</p>
+      <div class="field">
+        <label for="loginPassword">Contraseña</label>
+        <div class="password-wrap">
+          <input type="password" id="loginPassword" autocomplete="current-password" />
+          <button class="icon-btn" type="button" id="loginReveal" aria-label="Mostrar la contraseña" aria-pressed="false">
+            <svg class="icon"><use href="#i-eye"/></svg>
           </button>
         </div>
-        <div class="wa-config-notice">
-          <span>ℹ️</span>
-          Ingresa solo tu numero sin espacios ni signos. Ejemplo: <strong>61234567</strong>
+      </div>
+      <p class="form-error" id="loginError" role="alert" hidden></p>
+      <button class="btn btn-primary btn-lg btn-block" type="submit" id="loginBtn">Entrar</button>
+      <a class="login-back" href="./">Volver al catálogo</a>
+    </form>
+  </main>
+
+  <!-- ===== PANEL ===== -->
+  <div class="panel" id="adminPanel" hidden>
+    <header class="admin-bar">
+      <div class="admin-bar-inner">
+        <div class="brand">
+          <img src="assets/icon-192.png" alt="" class="brand-logo" width="44" height="44" />
+          <span class="brand-name">Panel</span>
         </div>
-        <div class="wa-config-notice" style="margin-top:0.6rem;background:#fff8e1;border-color:#ffe082;color:#7d6608;">
-          <span>⏳</span>
-          Los cambios pueden tardar unos minutos en aparecer para los clientes (cache de GitHub Pages).
+        <div class="topbar-actions">
+          <a class="btn btn-light" href="./" target="_blank" rel="noopener">
+            Ver catálogo <svg class="icon"><use href="#i-external"/></svg>
+          </a>
+          <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Cambiar entre modo claro y oscuro">
+            <svg class="icon i-moon"><use href="#i-moon"/></svg>
+            <svg class="icon i-sun"><use href="#i-sun"/></svg>
+          </button>
+          <button class="icon-btn" type="button" id="logoutBtn" aria-label="Cerrar sesión">
+            <svg class="icon"><use href="#i-logout"/></svg>
+          </button>
         </div>
       </div>
+      <nav class="tabs" role="tablist" aria-label="Secciones del panel">
+        <button class="tab" type="button" role="tab" data-tab="products" aria-selected="true">Productos</button>
+        <button class="tab" type="button" role="tab" data-tab="categories" aria-selected="false">Categorías</button>
+        <button class="tab" type="button" role="tab" data-tab="settings" aria-selected="false">Ajustes</button>
+      </nav>
+    </header>
 
-      <!-- ===== CATEGORIES MANAGEMENT ===== -->
-      <div class="admin-categories" id="adminCategoriesSection">
-        <div class="admin-categories-header">
-          <h3>🏷️ Categorías</h3>
-          <p class="admin-categories-hint">Gestioná las categorías disponibles para tus productos.</p>
-        </div>
-        <div class="categories-list" id="categoriesList"></div>
-        <div class="add-category-row">
-          <input type="text" id="newCategoryInput" placeholder="Nueva categoría..." maxlength="40" />
-          <button class="btn-add-category" id="btnAddCategory">＋ Agregar</button>
-        </div>
-      </div>
+    <!-- Avisa cuándo los cambios guardados ya se ven en el catálogo -->
+    <p class="publish" id="publishStatus" role="status" hidden></p>
 
+    <main class="admin-main">
+
+      <!-- ===== PRODUCTOS ===== -->
+      <section id="tab-products">
+        <div class="list-tools" id="listTools">
+          <div class="search">
+            <svg class="icon search-icon"><use href="#i-search"/></svg>
+            <input type="search" id="adminSearch" placeholder="Buscar producto…" autocomplete="off" aria-label="Buscar producto" />
+          </div>
+          <button class="btn btn-soft" type="button" id="reorderBtn">
+            <svg class="icon"><use href="#i-sort"/></svg> Ordenar
+          </button>
+          <button class="btn btn-primary" type="button" id="addProductBtn">
+            <svg class="icon"><use href="#i-plus"/></svg> Agregar
+          </button>
+        </div>
+
+        <div class="reorder-bar" id="reorderBar" hidden>
+          <span>Mové los productos con las flechas. Así se ordenan en el catálogo.</span>
+          <button class="btn btn-ghost" type="button" id="reorderCancel">Cancelar</button>
+          <button class="btn btn-primary" type="button" id="reorderSave">Guardar orden</button>
+        </div>
+
+        <p class="list-count" id="listCount"></p>
+        <ul class="rows" id="productList"></ul>
+      </section>
+
+      <!-- ===== CATEGORÍAS ===== -->
+      <section id="tab-categories" hidden>
+        <p class="section-hint">Son los filtros que ven los clientes arriba del catálogo. Solo aparecen las que tienen productos.</p>
+        <ul class="rows" id="categoryList"></ul>
+        <form class="inline-add" id="categoryForm">
+          <input type="text" id="categoryInput" placeholder="Nueva categoría" maxlength="40" aria-label="Nueva categoría" />
+          <button class="btn btn-primary" type="submit">Agregar</button>
+        </form>
+      </section>
+
+      <!-- ===== AJUSTES ===== -->
+      <section id="tab-settings" hidden>
+        <form class="settings" id="settingsForm" novalidate>
+          <div class="field">
+            <label for="setWhatsapp">WhatsApp donde llegan los pedidos</label>
+            <div class="prefix-wrap">
+              <span>+506</span>
+              <input type="text" id="setWhatsapp" inputmode="numeric" placeholder="61234567" maxlength="12" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="setBanner">Frase bajo el título del catálogo</label>
+            <input type="text" id="setBanner" maxlength="90" />
+            <p class="field-hint">Dejala vacía si no querés mostrar ninguna.</p>
+          </div>
+
+          <div class="field">
+            <span class="field-title">Formas de pago</span>
+            <div class="option-list" id="setPayments"></div>
+            <button class="btn btn-soft btn-start" type="button" id="setAddPayment">
+              <svg class="icon"><use href="#i-plus"/></svg> Agregar forma de pago
+            </button>
+          </div>
+
+          <div class="field">
+            <span class="field-title">Formas de entrega</span>
+            <p class="field-hint">Marcá “Pide dirección” en las que son envío a domicilio.</p>
+            <div class="option-list" id="setDeliveries"></div>
+            <button class="btn btn-soft btn-start" type="button" id="setAddDelivery">
+              <svg class="icon"><use href="#i-plus"/></svg> Agregar forma de entrega
+            </button>
+          </div>
+
+          <div class="field">
+            <label for="setNotice">Aviso que ve el cliente antes de enviar el pedido</label>
+            <textarea id="setNotice" rows="3" maxlength="300"></textarea>
+          </div>
+
+          <p class="form-error" id="setError" role="alert" hidden></p>
+          <button class="btn btn-primary btn-lg" type="submit" id="setSave">Guardar ajustes</button>
+        </form>
+      </section>
     </main>
   </div>
 
-  <!-- ===== PRODUCT FORM MODAL ===== -->
-  <div class="admin-modal-overlay" id="productFormModal">
-    <div class="admin-modal">
-      <div class="admin-modal-header">
-        <h2 id="productFormTitle">Agregar producto</h2>
-        <button class="modal-close" id="productFormClose" aria-label="Cerrar">✕</button>
+  <div class="overlay" id="overlay"></div>
+
+  <!-- ===== FORMULARIO DE PRODUCTO ===== -->
+  <section class="sheet sheet-form" id="productSheet" role="dialog" aria-modal="true" aria-labelledby="pfTitle" tabindex="-1" inert>
+    <header class="sheet-head">
+      <h2 id="pfTitle">Agregar producto</h2>
+      <button class="icon-btn" type="button" id="pfClose" aria-label="Cerrar">
+        <svg class="icon"><use href="#i-close"/></svg>
+      </button>
+    </header>
+
+    <form class="sheet-scroll form-body" id="productForm" novalidate>
+      <div class="field">
+        <span class="field-title">Fotos</span>
+        <div class="photos" id="pfPhotos"></div>
+        <input type="file" id="pfFile" accept="image/*" multiple hidden />
+        <div class="photo-actions" id="pfPhotoActions" hidden>
+          <button class="btn btn-soft" type="button" data-photo="main"><svg class="icon"><use href="#i-star"/></svg> Principal</button>
+          <button class="icon-btn" type="button" data-photo="left" aria-label="Mover la foto a la izquierda"><svg class="icon"><use href="#i-left"/></svg></button>
+          <button class="icon-btn" type="button" data-photo="right" aria-label="Mover la foto a la derecha"><svg class="icon"><use href="#i-right"/></svg></button>
+          <button class="btn btn-danger-soft" type="button" data-photo="remove"><svg class="icon"><use href="#i-trash"/></svg> Quitar</button>
+        </div>
+        <p class="field-hint">La primera foto es la que se ve en el catálogo. Tocá una foto para moverla o quitarla.</p>
       </div>
-      <div class="admin-modal-body">
-        <div class="form-group">
-          <label>Fotos del producto</label>
-          <div id="imgUploadArea" class="img-upload-area">
-            <input type="file" id="imgFileInput" accept="image/*" multiple aria-label="Subir imágenes" />
-            <div id="imgPlaceholder">
-              <div class="img-upload-icon">📷</div>
-              <p class="img-upload-text">Hacé clic o arrastrá imágenes aquí<br><small>JPG, PNG, WEBP – máx. 5 MB por imagen</small></p>
-            </div>
-          </div>
-          <div id="imgPreviewGrid" class="img-preview-grid"></div>
-        </div>
-        <div class="form-group">
-          <label for="productName">Nombre del producto *</label>
-          <input type="text" id="productName" placeholder="Ej: Shampoo Argan 400ml" />
-        </div>
-        <div class="form-group">
-          <label>Categorias</label>
-          <div class="product-categories-select" id="productCategoriesSelect">
-            <!-- Checkboxes rendered by JS -->
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="productPrice">Precio *</label>
-          <input type="number" id="productPrice" placeholder="Ej: 3500" min="0" step="1" inputmode="numeric" />
-        </div>
-        <div class="form-group">
-          <label for="productDesc">Descripcion (opcional)</label>
-          <textarea id="productDesc" placeholder="Describe brevemente el producto..."></textarea>
-        </div>
-        <div class="form-group">
-          <label>Variantes (opcional)</label>
-          <div class="variants-admin-section">
-            <div class="variants-admin-header">
-              <span class="variants-admin-label">Opciones / tonos / tallas</span>
-              <button type="button" class="btn-add-variant" id="btnAddVariant">＋ Agregar variante</button>
-            </div>
-            <div class="variants-list-admin" id="variantsListAdmin">
-              <p class="variants-empty-hint" id="variantsEmptyHint">Sin variantes — el producto se vende sin opciones.</p>
-            </div>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Disponibilidad</label>
-          <div class="toggle-wrap">
-            <label class="toggle">
-              <input type="checkbox" id="productAvailable" checked />
-              <span class="toggle-slider"></span>
-            </label>
-            <span class="toggle-label" id="availableLabel">Disponible</span>
-          </div>
+
+      <div class="field">
+        <label for="pfName">Nombre</label>
+        <input type="text" id="pfName" maxlength="120" placeholder="Ej: Shampoo de argán 400 ml" />
+      </div>
+
+      <div class="field">
+        <label for="pfPrice">Precio</label>
+        <div class="prefix-wrap">
+          <span>₡</span>
+          <input type="text" id="pfPrice" inputmode="numeric" placeholder="3500" maxlength="9" />
         </div>
       </div>
-      <div class="admin-modal-footer">
-        <button class="btn-cancel" id="productFormCancel">Cancelar</button>
-        <button class="btn-save" id="productFormSave">💾 Guardar</button>
+
+      <div class="field">
+        <label for="pfDesc">Descripción <span class="optional">(opcional)</span></label>
+        <textarea id="pfDesc" rows="4" placeholder="Contá para qué sirve, el aroma, el tamaño…"></textarea>
       </div>
+
+      <div class="field">
+        <span class="field-title">Categorías</span>
+        <div class="pill-group" id="pfCategories"></div>
+        <div class="inline-add">
+          <input type="text" id="pfNewCategory" placeholder="Nueva categoría" maxlength="40" aria-label="Nueva categoría" />
+          <button class="btn btn-soft" type="button" id="pfAddCategory">Agregar</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-title">Opciones <span class="optional">(tonos, tamaños… opcional)</span></span>
+        <div class="variant-list-admin" id="pfVariants"></div>
+        <button class="btn btn-soft btn-start" type="button" id="pfAddVariant">
+          <svg class="icon"><use href="#i-plus"/></svg> Agregar opción
+        </button>
+      </div>
+
+      <label class="switch-row">
+        <span>
+          <strong>Disponible</strong>
+          <small id="pfAvailableHint"></small>
+        </span>
+        <span class="switch"><input type="checkbox" id="pfAvailable" /><span></span></span>
+      </label>
+
+      <p class="form-error" id="pfError" role="alert" hidden></p>
+
+      <div class="form-extra" id="pfExtra" hidden>
+        <button class="btn btn-soft" type="button" id="pfDuplicate"><svg class="icon"><use href="#i-copy"/></svg> Duplicar</button>
+        <button class="btn btn-danger-soft" type="button" id="pfDelete"><svg class="icon"><use href="#i-trash"/></svg> Eliminar producto</button>
+      </div>
+    </form>
+
+    <footer class="sheet-foot">
+      <button class="btn btn-ghost" type="button" id="pfCancel">Cancelar</button>
+      <button class="btn btn-primary btn-lg btn-grow" type="submit" form="productForm" id="pfSave">Guardar</button>
+    </footer>
+  </section>
+
+  <!-- ===== CONFIRMACIONES ===== -->
+  <section class="sheet sheet-dialog" id="dialogSheet" role="alertdialog" aria-modal="true" aria-labelledby="dlgTitle" tabindex="-1" inert>
+    <div class="dialog-body">
+      <h2 id="dlgTitle"></h2>
+      <p id="dlgText"></p>
+      <input type="text" id="dlgInput" maxlength="40" hidden />
     </div>
-  </div>
+    <footer class="sheet-foot">
+      <button class="btn btn-ghost btn-grow" type="button" id="dlgCancel">Cancelar</button>
+      <button class="btn btn-primary btn-grow" type="button" id="dlgOk">Aceptar</button>
+    </footer>
+  </section>
 
-  <!-- ===== CONFIRM DELETE MODAL ===== -->
-  <div class="admin-modal-overlay" id="deleteModal">
-    <div class="admin-modal" style="max-width:380px">
-      <div class="admin-modal-header">
-        <h2>🗑 Eliminar producto</h2>
-        <button class="modal-close" id="deleteModalClose">✕</button>
-      </div>
-      <div class="admin-modal-body">
-        <p style="font-size:0.92rem;color:var(--text)">
-          Confirmas que queres eliminar <strong id="deleteProductName"></strong>?
-          Esta accion no se puede deshacer.
-        </p>
-      </div>
-      <div class="admin-modal-footer">
-        <button class="btn-cancel" id="deleteCancelBtn">Cancelar</button>
-        <button class="btn-delete-card" id="deleteConfirmBtn" style="flex:2;border-radius:6px;padding:0.7rem">🗑 Eliminar</button>
-      </div>
-    </div>
-  </div>
+  <div class="toast-container" id="toastContainer" role="status" aria-live="polite"></div>
 
-  <!-- ===== CATEGORY EDIT MODAL ===== -->
-  <div class="admin-modal-overlay" id="editCategoryModal">
-    <div class="admin-modal" style="max-width:400px">
-      <div class="admin-modal-header">
-        <h2>✏️ Editar categoría</h2>
-        <button class="modal-close" id="editCatModalClose" aria-label="Cerrar">✕</button>
-      </div>
-      <div class="admin-modal-body">
-        <div class="form-group">
-          <label for="editCategoryInput">Nombre de la categoría *</label>
-          <input type="text" id="editCategoryInput" placeholder="Ej: Shampoo" maxlength="40" />
-        </div>
-        <p style="font-size:0.82rem;color:var(--text-light);line-height:1.5;">
-          Al cambiar el nombre, los productos con esta categoría se actualizarán automáticamente.
-        </p>
-      </div>
-      <div class="admin-modal-footer">
-        <button class="btn-cancel" id="editCatCancelBtn">Cancelar</button>
-        <button class="btn-save" id="editCatConfirmBtn">💾 Guardar</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="toast-container" id="toastContainer"></div>
-
+  <script src="js/config.js"></script>
   <script src="js/shared.js"></script>
+  <script src="js/api.js"></script>
   <script src="js/admin.js"></script>
 </body>
 </html>

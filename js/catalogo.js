@@ -118,17 +118,9 @@ var coBack         = document.getElementById('coBack');
 var SHEETS = { product: productSheet, cart: cartSheet, checkout: checkoutSheet };
 
 // ===== HELPERS =====
-function icon(name) {
-  return '<svg class="icon" aria-hidden="true"><use href="#i-' + name + '"/></svg>';
-}
-
 function isNewProduct(product) {
   return product.created_at &&
     (Date.now() - new Date(product.created_at).getTime() < NEW_PRODUCT_MS);
-}
-
-function hasVariants(product) {
-  return Array.isArray(product.variants) && product.variants.length > 0;
 }
 
 function findProduct(id) {
@@ -138,10 +130,6 @@ function findProduct(id) {
 function findVariant(product, name) {
   if (!hasVariants(product)) return null;
   return product.variants.find(function (v) { return v.name === name; }) || null;
-}
-
-function cleanName(name) {
-  return String(name).replace(/\s+/g, ' ').trim();
 }
 
 function productUrl(id) {
@@ -349,12 +337,11 @@ function cardActionHtml(product) {
 function cardHtml(product, index) {
   var images  = getProductImages(product);
   var name    = escapeHtml(cleanName(product.name));
-  var src     = images.length > 0 ? escapeHtml(imageUrl(images[0])) : '';
   var loading = index < 4 ? 'eager' : 'lazy';
 
-  var media = src
-    ? '<img class="media-bg" src="' + src + '" alt="" loading="' + loading + '" aria-hidden="true" />' +
-      '<img class="media-img" src="' + src + '" alt="' + name + '" loading="' + loading + '" decoding="async" />'
+  var media = images.length > 0
+    ? thumbImg(images[0], 'media-bg', '', loading) +
+      thumbImg(images[0], 'media-img', cleanName(product.name), loading)
     : '';
 
   var badge = '';
@@ -366,7 +353,7 @@ function cardHtml(product, index) {
     : '';
 
   return '<article class="card' + (product.available ? '' : ' is-out') + '" data-id="' + escapeHtml(product.id) + '">' +
-    '<button class="card-media' + (src ? '' : ' no-img') + '" type="button" aria-label="Ver ' + name + '">' +
+    '<button class="card-media' + (media ? '' : ' no-img') + '" type="button" aria-label="Ver ' + name + '">' +
       media +
       '<span class="media-fallback">' + icon('bag') + '</span>' +
       badge + photoCount +
@@ -517,7 +504,7 @@ function cartItemHtml(line, index) {
   var images  = getProductImages(product);
 
   var thumb = images.length > 0
-    ? '<img class="cart-thumb" src="' + escapeHtml(imageUrl(images[0])) + '" alt="" loading="lazy" />'
+    ? thumbImg(images[0], 'cart-thumb', '')
     : '<span class="cart-thumb"></span>';
 
   var variantLine = line.item.variant
@@ -817,14 +804,8 @@ function shareProduct() {
 }
 
 // ===== CHECKOUT =====
-// Options may come as plain text from older settings; an option asks for an address when it is a delivery.
 function deliveryOptions() {
-  return getSetting(settings, 'delivery_options').map(function (option) {
-    if (typeof option === 'string') {
-      return { label: option, address: /env[ií]o|domicilio|correo|encomienda/i.test(option) };
-    }
-    return { label: String(option.label || ''), address: !!option.address };
-  }).filter(function (option) { return option.label; });
+  return getDeliveryOptions(settings);
 }
 
 function checkedValue(group) {
@@ -1021,13 +1002,6 @@ productGrid.addEventListener('click', function (e) {
   if (e.target.closest('.card-action')) return;   // e.g. the disabled "Agotado" button
   pushLayer('product', card.dataset.id);
 });
-
-// A photo that fails to load is replaced by the placeholder icon
-document.addEventListener('error', function (e) {
-  if (!e.target || e.target.tagName !== 'IMG') return;
-  var frame = e.target.closest('.card-media, .slide');
-  if (frame) frame.classList.add('no-img');
-}, true);
 
 // Cart
 cartOpenBtn.addEventListener('click', function () { pushLayer('cart'); });
