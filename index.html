@@ -2,123 +2,259 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Dazu Beauty Shop - Tu tienda de belleza. Catálogo de cremas, shampoos y productos de cuidado personal. Envío a todo el país." />
-  <meta property="og:title" content="Dazu Beauty Shop" />
-  <meta property="og:description" content="Los mejores productos de belleza. Catálogo, pedidos por WhatsApp y envío a todo el país 🇨🇷" />
-  <meta property="og:image" content="assets/logo2.jpeg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Dazu Beauty Shop – Catálogo</title>
+  <meta name="description" content="Catálogo de Dazu Beauty Shop: maquillaje, skincare y cuidado del cabello. Armá tu pedido y envialo por WhatsApp. Envío a todo el país." />
+  <link rel="canonical" href="https://dangel77.github.io/dazu_beauty_shop/" />
+
+  <!-- Vista previa al compartir el link (WhatsApp, Facebook, etc.). Las URLs deben ser absolutas. -->
   <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Dazu Beauty Shop" />
+  <meta property="og:title" content="Dazu Beauty Shop – Catálogo" />
+  <meta property="og:description" content="Maquillaje, skincare y cuidado del cabello. Pedí por WhatsApp, envío a todo el país 🇨🇷" />
+  <meta property="og:url" content="https://dangel77.github.io/dazu_beauty_shop/" />
+  <meta property="og:image" content="https://dangel77.github.io/dazu_beauty_shop/assets/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Dazu Beauty Shop" />
-  <meta name="twitter:description" content="Productos de belleza con envío a todo el país" />
-  <meta name="twitter:image" content="assets/logo2.jpeg" />
-  <title>Dazu Beauty Shop</title>
-  <link rel="icon" type="image/jpeg" href="assets/logo2.jpeg" />
-  <meta name="theme-color" content="#c2185b" />
+
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+  <link rel="apple-touch-icon" href="assets/icon-192.png" />
   <link rel="manifest" href="manifest.json" />
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" as="style" />
+  <meta name="theme-color" content="#ff0092" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
-  <style>
-    .landing-flowers {
-      position: absolute;
-      font-size: 2rem;
-      opacity: 0.12;
-      pointer-events: none;
-      animation: float 4s ease-in-out infinite;
-    }
-    .f1 { top: 8%; left: 6%; --rot: -15deg; transform: rotate(-15deg); animation-delay: 0s; }
-    .f2 { top: 15%; right: 8%; --rot: 20deg; transform: rotate(20deg); font-size: 1.6rem; animation-delay: 0.7s; }
-    .f3 { bottom: 20%; left: 4%; --rot: 10deg; font-size: 1.5rem; transform: rotate(10deg); animation-delay: 1.4s; }
-    .f4 { bottom: 10%; right: 10%; --rot: -20deg; transform: rotate(-20deg); animation-delay: 2.1s; }
-    .f5 { top: 45%; left: 2%; --rot: 0deg; font-size: 1.2rem; animation-delay: 0.5s; }
-    .f6 { top: 55%; right: 3%; --rot: 30deg; font-size: 1.3rem; transform: rotate(30deg); animation-delay: 1.8s; }
-
-    /* Landing feature chips */
-    .landing-features {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      justify-content: center;
-      margin: 1.6rem 0 2rem;
-    }
-    .landing-feature-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      background: rgba(255,255,255,0.75);
-      border: 1px solid rgba(233,30,140,0.18);
-      border-radius: 50px;
-      padding: 0.4rem 0.9rem;
-      font-size: 0.82rem;
-      font-weight: 500;
-      color: var(--primary-dark);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      box-shadow: 0 2px 8px rgba(233,30,140,0.08);
-    }
-
-    /* Landing tagline */
-    .landing-tagline {
-      font-size: clamp(1.5rem, 5vw, 2.2rem);
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 0.5rem;
-      line-height: 1.25;
-      letter-spacing: -0.5px;
-    }
-  </style>
+  <!-- Aplica el modo oscuro antes de pintar, para que no parpadee en claro. -->
+  <script>
+    try {
+      var d = localStorage.getItem('dazu_dark_mode');
+      if (d === 'true' || (d === null && matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    } catch (e) {}
+  </script>
 </head>
 <body>
-  <main class="landing">
-    <!-- Decorative elements -->
-    <div class="landing-flowers f1">🌸</div>
-    <div class="landing-flowers f2">✨</div>
-    <div class="landing-flowers f3">💫</div>
-    <div class="landing-flowers f4">🌺</div>
-    <div class="landing-flowers f5">🌹</div>
-    <div class="landing-flowers f6">💎</div>
 
-    <div class="landing-content">
-      <!-- Logo -->
-      <div class="landing-hero-logo">
-        <img src="assets/logo2.jpeg" alt="Dazu Beauty Shop" class="landing-logo-img"
-             onerror="this.src='assets/logo-rosadofondo.jpeg'" />
-      </div>
+  <!-- ===== ICONOS (se usan con <svg><use href="#i-nombre"/></svg>) ===== -->
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon-sprite" aria-hidden="true">
+    <symbol id="i-bag" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M10 11v6"/><path d="M14 11v6"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.59 13.51 6.83 3.98"/><path d="m15.41 6.51-6.82 3.98"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+    <symbol id="i-images" viewBox="0 0 24 24"><path d="M18 22H4a2 2 0 0 1-2-2V6"/><path d="m22 13-1.3-1.3a2.4 2.4 0 0 0-3.4 0L11 18"/><circle cx="12" cy="8" r="2"/><rect width="16" height="16" x="6" y="2" rx="2"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-whatsapp" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></symbol>
+  </svg>
 
-      <!-- Tagline -->
-      <p class="landing-tagline">Belleza que enamora ✨</p>
-
-      <!-- CTA button (moved up for quick access) -->
-      <a href="catalogo.html" class="btn-catalog">
-        <span>🛍️</span>
-        Ver catálogo
+  <!-- ===== ENCABEZADO ===== -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a href="./" class="brand">
+        <img src="assets/icon-192.png" alt="" class="brand-logo" width="40" height="40" />
+        <span class="brand-name">Dazu Beauty Shop</span>
       </a>
-
-      <p class="landing-subtitle">Los mejores productos de cuidado personal, directo a tu puerta</p>
-
-      <!-- Feature chips -->
-      <div class="landing-features">
-        <span class="landing-feature-chip">🚚 Envío a todo el país</span>
-        <span class="landing-feature-chip">💄 Maquillaje & skincare</span>
-        <span class="landing-feature-chip">📲 Pedí por WhatsApp</span>
-        <span class="landing-feature-chip">💸 Precios increíbles</span>
+      <div class="topbar-actions">
+        <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Cambiar entre modo claro y oscuro">
+          <svg class="icon i-moon"><use href="#i-moon"/></svg>
+          <svg class="icon i-sun"><use href="#i-sun"/></svg>
+        </button>
+        <button class="icon-btn cart-open" type="button" id="cartOpenBtn" aria-label="Ver carrito">
+          <svg class="icon"><use href="#i-bag"/></svg>
+          <span class="cart-count" id="cartCount" hidden>0</span>
+        </button>
       </div>
     </div>
+    <div class="hero">
+      <h1>Belleza que enamora</h1>
+      <p id="bannerText"></p>
+    </div>
+  </header>
 
-    <!-- Discrete admin link (bottom-right corner) -->
-    <a href="admin.html" class="landing-admin-link" title="Panel de administración">
-      ⚙️ <span>Admin</span>
-    </a>
+  <!-- ===== BUSCADOR Y CATEGORÍAS (queda fijo al bajar) ===== -->
+  <div class="toolbar" id="toolbar">
+    <div class="toolbar-inner">
+      <div class="search">
+        <svg class="icon search-icon"><use href="#i-search"/></svg>
+        <input type="search" id="searchInput" placeholder="Buscar producto…" autocomplete="off" enterkeyhint="search" aria-label="Buscar producto" />
+        <button class="search-clear" type="button" id="searchClearBtn" aria-label="Limpiar búsqueda" hidden>
+          <svg class="icon"><use href="#i-close"/></svg>
+        </button>
+      </div>
+      <div class="chips" id="chips" aria-label="Categorías"></div>
+    </div>
+  </div>
 
-    <!-- Dark mode toggle (bottom-left corner) -->
-    <button id="darkModeToggleLanding" class="dark-mode-btn" aria-label="Cambiar modo oscuro/claro">🌙</button>
+  <!-- ===== PRODUCTOS ===== -->
+  <main class="catalog" id="catalog">
+    <p class="result-info" id="resultInfo" aria-live="polite" hidden></p>
+    <div class="grid" id="productGrid"></div>
   </main>
+
+  <footer class="site-footer">
+    <p>¿Tenés alguna duda?</p>
+    <a class="btn btn-wa" id="contactLink" href="#" target="_blank" rel="noopener">
+      <svg class="icon"><use href="#i-whatsapp"/></svg> Escribinos por WhatsApp
+    </a>
+    <p class="site-footer-small">Dazu Beauty Shop</p>
+  </footer>
+
+  <!-- ===== BARRA DEL CARRITO (aparece cuando hay productos) ===== -->
+  <div class="cart-bar" id="cartBar">
+    <button class="cart-bar-btn" type="button" id="cartBarBtn">
+      <span class="cart-bar-count"><svg class="icon"><use href="#i-bag"/></svg><span id="cartBarCount">0</span></span>
+      <span class="cart-bar-label">Ver pedido</span>
+      <strong class="cart-bar-total" id="cartBarTotal">₡0</strong>
+    </button>
+  </div>
+
+  <div class="overlay" id="overlay"></div>
+
+  <!-- ===== DETALLE DE PRODUCTO ===== -->
+  <section class="sheet sheet-product" id="productSheet" role="dialog" aria-modal="true" aria-labelledby="pdName" tabindex="-1" inert>
+    <div class="sheet-float">
+      <button class="icon-btn icon-btn-float" type="button" id="pdShare" aria-label="Compartir producto">
+        <svg class="icon"><use href="#i-share"/></svg>
+      </button>
+      <button class="icon-btn icon-btn-float" type="button" data-close aria-label="Cerrar">
+        <svg class="icon"><use href="#i-close"/></svg>
+      </button>
+    </div>
+    <div class="sheet-scroll pd-layout">
+      <div class="pd-media" id="pdMedia">
+        <div class="gallery-wrap">
+          <div class="gallery" id="pdGallery"></div>
+          <button class="gallery-nav gallery-prev" type="button" id="pdPrev" aria-label="Foto anterior"><svg class="icon"><use href="#i-left"/></svg></button>
+          <button class="gallery-nav gallery-next" type="button" id="pdNext" aria-label="Foto siguiente"><svg class="icon"><use href="#i-right"/></svg></button>
+          <span class="gallery-caption" id="pdCaption" hidden></span>
+        </div>
+        <div class="gallery-dots" id="pdDots"></div>
+      </div>
+      <div class="pd-info">
+        <p class="pd-cats" id="pdCats"></p>
+        <h2 class="pd-name" id="pdName"></h2>
+        <p class="pd-price" id="pdPrice"></p>
+        <div class="pd-variants" id="pdVariants" hidden>
+          <p class="field-label">Elegí una opción</p>
+          <div class="variant-list" id="pdVariantList"></div>
+        </div>
+        <p class="pd-desc" id="pdDesc"></p>
+        <a class="link-wa" id="pdAsk" href="#" target="_blank" rel="noopener">
+          <svg class="icon"><use href="#i-whatsapp"/></svg> Consultar por este producto
+        </a>
+      </div>
+    </div>
+    <div class="sheet-foot">
+      <div class="stepper stepper-lg" id="pdStepper">
+        <button type="button" data-qty="-1" aria-label="Una unidad menos"><svg class="icon"><use href="#i-minus"/></svg></button>
+        <span id="pdQty" aria-live="polite">1</span>
+        <button type="button" data-qty="1" aria-label="Una unidad más"><svg class="icon"><use href="#i-plus"/></svg></button>
+      </div>
+      <button class="btn btn-primary btn-lg btn-grow" type="button" id="pdAdd">Agregar</button>
+    </div>
+  </section>
+
+  <!-- ===== CARRITO ===== -->
+  <aside class="sheet sheet-cart" id="cartSheet" role="dialog" aria-modal="true" aria-labelledby="cartTitle" tabindex="-1" inert>
+    <header class="sheet-head">
+      <h2 id="cartTitle">Tu carrito</h2>
+      <button class="icon-btn" type="button" data-close aria-label="Cerrar carrito">
+        <svg class="icon"><use href="#i-close"/></svg>
+      </button>
+    </header>
+    <div class="sheet-scroll">
+      <ul class="cart-list" id="cartList"></ul>
+      <div class="cart-empty" id="cartEmpty" hidden>
+        <svg class="icon"><use href="#i-bag"/></svg>
+        <p>Tu carrito está vacío</p>
+        <button class="btn btn-soft" type="button" data-close>Ver productos</button>
+      </div>
+    </div>
+    <footer class="sheet-foot sheet-foot-col" id="cartFoot">
+      <div class="total-row">
+        <span>Total</span>
+        <strong id="cartTotal">₡0</strong>
+      </div>
+      <button class="btn btn-primary btn-lg btn-block" type="button" id="cartContinue">
+        Continuar con el pedido <svg class="icon"><use href="#i-arrow"/></svg>
+      </button>
+    </footer>
+  </aside>
+
+  <!-- ===== DATOS DEL PEDIDO ===== -->
+  <section class="sheet sheet-checkout" id="checkoutSheet" role="dialog" aria-modal="true" aria-labelledby="coTitle" tabindex="-1" inert>
+    <header class="sheet-head">
+      <h2 id="coTitle">Datos del pedido</h2>
+      <button class="icon-btn" type="button" data-close aria-label="Cerrar">
+        <svg class="icon"><use href="#i-close"/></svg>
+      </button>
+    </header>
+
+    <form class="sheet-scroll co-form" id="checkoutForm" novalidate>
+      <p class="co-summary" id="coSummary"></p>
+
+      <div class="field">
+        <label for="coName">Tu nombre</label>
+        <input type="text" id="coName" autocomplete="name" placeholder="Ej: María Rodríguez" />
+      </div>
+
+      <fieldset class="field">
+        <legend>¿Cómo querés recibirlo?</legend>
+        <div class="pill-group" id="coDelivery"></div>
+      </fieldset>
+
+      <div class="field" id="coAddressField" hidden>
+        <label for="coAddress">Dirección de envío</label>
+        <textarea id="coAddress" rows="2" autocomplete="street-address" placeholder="Provincia, cantón, distrito y señas"></textarea>
+      </div>
+
+      <fieldset class="field">
+        <legend>Forma de pago</legend>
+        <div class="pill-group" id="coPayment"></div>
+      </fieldset>
+
+      <div class="field">
+        <label for="coNote">Nota <span class="optional">(opcional)</span></label>
+        <textarea id="coNote" rows="2" placeholder="Algo que debamos saber sobre tu pedido"></textarea>
+      </div>
+
+      <p class="notice" id="coNotice" hidden></p>
+      <p class="form-error" id="coError" role="alert" hidden></p>
+    </form>
+    <footer class="sheet-foot co-foot">
+      <button class="btn btn-wa btn-lg btn-block" type="submit" form="checkoutForm">
+        <svg class="icon"><use href="#i-whatsapp"/></svg> Enviar pedido por WhatsApp
+      </button>
+    </footer>
+
+    <!-- Se muestra después de abrir WhatsApp -->
+    <div class="co-sent" id="coSent">
+      <span class="co-sent-icon"><svg class="icon"><use href="#i-whatsapp"/></svg></span>
+      <h3>¿Ya enviaste tu pedido?</h3>
+      <p>Se abrió WhatsApp con tu pedido escrito. Tocá <strong>Enviar</strong> en el chat para que nos llegue.</p>
+      <button class="btn btn-primary btn-lg btn-block" type="button" id="coDone">
+        <svg class="icon"><use href="#i-check"/></svg> Sí, ya lo envié
+      </button>
+      <a class="btn btn-soft btn-block" id="coReopen" href="#" target="_blank" rel="noopener">Abrir WhatsApp otra vez</a>
+      <button class="btn btn-ghost btn-block" type="button" id="coBack">Seguir editando el pedido</button>
+    </div>
+  </section>
+
+  <div class="toast-container" id="toastContainer" role="status" aria-live="polite"></div>
+
+  <script src="js/config.js"></script>
   <script src="js/shared.js"></script>
+  <script src="js/catalogo.js"></script>
 </body>
 </html>

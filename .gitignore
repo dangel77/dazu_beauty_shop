@@ -1,0 +1,7 @@
+# Secretos locales del Worker (nunca se suben)
+.dev.vars
+.env
+
+# Dependencias y archivos temporales
+node_modules/
+.wrangler/

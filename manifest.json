@@ -2,15 +2,21 @@
   "name": "Dazu Beauty Shop",
   "short_name": "Dazu Beauty",
   "description": "Tu tienda de belleza - Catálogo y pedidos por WhatsApp",
-  "start_url": "/catalogo.html",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#fff9fb",
-  "theme_color": "#c2185b",
+  "background_color": "#fff8fb",
+  "theme_color": "#ff0092",
   "icons": [
     {
-      "src": "assets/logo2.jpeg",
+      "src": "assets/icon-192.png",
       "sizes": "192x192",
-      "type": "image/jpeg"
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
   ]
 }

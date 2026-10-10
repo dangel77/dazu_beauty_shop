@@ -15,7 +15,7 @@ function escapeHtml(str) {
 }
 
 function escapeAttr(str) {
-  return String(str).replace(/"/g, '&quot;');
+  return escapeHtml(str);
 }
 
 function getCategoryEmoji(category) {
@@ -43,14 +43,67 @@ function formatPrice(n) {
   });
 }
 
+// Lowercase and strip accents so "jabon" matches "Jabón"
+function normalizeText(str) {
+  return String(str || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '');
+}
+
+// ===== PRODUCT HELPERS =====
+// Older products stored a single `category` / `image`; newer ones use arrays.
+function getProductCategories(product) {
+  if (Array.isArray(product.categories)) return product.categories;
+  if (product.category) return [product.category];
+  return [];
+}
+
+function getProductImages(product) {
+  if (Array.isArray(product.images) && product.images.length > 0) return product.images;
+  if (product.image) return [product.image];
+  return [];
+}
+
+function imageUrl(name) {
+  return 'data/images/' + encodeURIComponent(name);
+}
+
+// ===== STORE SETTINGS =====
+// Used whenever data/products.json does not define the setting yet.
+var DEFAULT_SETTINGS = {
+  payment_methods: ['SINPE Móvil', 'Transferencia bancaria', 'Efectivo', 'Otro'],
+  delivery_options: [
+    { label: 'Envío', address: true },
+    { label: 'Retiro / entrega personal', address: false }
+  ],
+  payment_notice: 'El pago se realiza antes de recibir los productos. Al confirmar tu pedido te enviamos los datos para pagar.',
+  banner_text: 'Envío a todo el país · Pedí fácil y rápido por WhatsApp'
+};
+
+function getSetting(settings, key) {
+  var value = settings ? settings[key] : undefined;
+  var fallback = DEFAULT_SETTINGS[key];
+  if (Array.isArray(fallback)) {
+    return Array.isArray(value) && value.length > 0 ? value : fallback;
+  }
+  return typeof value === 'string' ? value : fallback;
+}
+
+// ===== TOAST =====
+// Only one toast at a time: a new message replaces the previous one.
+var _toastTimer = null;
+
 function showToast(message, type) {
   const container = document.getElementById('toastContainer');
   if (!container) return;
+  clearTimeout(_toastTimer);
+  container.innerHTML = '';
   const toast = document.createElement('div');
   toast.className = 'toast' + (type ? ' ' + type : '');
   toast.textContent = message;
   container.appendChild(toast);
-  setTimeout(() => toast.remove(), 2600);
+  _toastTimer = setTimeout(() => toast.remove(), 2600);
 }
 
 // ===== IMAGE COMPRESSION (client-side) =====
@@ -112,20 +165,23 @@ function generateId() {
 // ===== DARK MODE =====
 var DARK_MODE_KEY = 'dazu_dark_mode';
 
-function initDarkMode() {
-  var stored = localStorage.getItem(DARK_MODE_KEY);
-  var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-  var isDark = stored !== null ? stored === 'true' : prefersDark;
-  if (isDark) {
-    document.body.classList.add('dark-mode');
-  }
+// `html.dark` drives the catalog theme; `body.dark-mode` is what the admin stylesheet expects.
+function _applyDarkMode(isDark) {
+  document.documentElement.classList.toggle('dark', isDark);
+  document.body.classList.toggle('dark-mode', isDark);
   _updateDarkModeIcons(isDark);
 }
 
+function initDarkMode() {
+  var stored = localStorage.getItem(DARK_MODE_KEY);
+  var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  _applyDarkMode(stored !== null ? stored === 'true' : prefersDark);
+}
+
 function toggleDarkMode() {
-  var isDark = document.body.classList.toggle('dark-mode');
+  var isDark = !document.documentElement.classList.contains('dark');
   localStorage.setItem(DARK_MODE_KEY, isDark ? 'true' : 'false');
-  _updateDarkModeIcons(isDark);
+  _applyDarkMode(isDark);
 }
 
 function _updateDarkModeIcons(isDark) {
@@ -142,10 +198,9 @@ initDarkMode();
 // Attach toggle listeners once DOM is ready
 (function () {
   function _attachDarkModeListeners() {
-    var ids = ['darkModeToggle', 'darkModeToggleLanding', 'darkModeToggleAdmin'];
-    for (var i = 0; i < ids.length; i++) {
-      var btn = document.getElementById(ids[i]);
-      if (btn) btn.addEventListener('click', toggleDarkMode);
+    var btns = document.querySelectorAll('.dark-mode-btn, [data-theme-toggle]');
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].addEventListener('click', toggleDarkMode);
     }
   }
   if (document.readyState === 'loading') {
