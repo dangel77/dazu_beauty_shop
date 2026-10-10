@@ -5,3 +5,6 @@
 # Dependencias y archivos temporales
 node_modules/
 .wrangler/
+
+# Documentos para enviar (por ejemplo, la guía del panel en Word); la fuente es GUIA.md
+*.docx
