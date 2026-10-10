@@ -1,0 +1,7 @@
+# Copiar como ".dev.vars" (ese archivo no se sube a git) para probar con
+# "npx wrangler dev" contra GitHub real. Usar SIEMPRE una rama de prueba.
+GH_TOKEN=github_pat_pegar_aqui
+ADMIN_PASSWORD=una-contrasena-de-prueba
+SESSION_SECRET=cualquier-texto-largo-al-azar
+GH_BRANCH=prueba
+ALLOW_LOCALHOST=true

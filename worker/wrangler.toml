@@ -1,0 +1,18 @@
+# Worker del panel de administración de Dazu Beauty Shop.
+# Desplegar desde esta carpeta con:  npx wrangler deploy
+name = "dazu-admin"
+main = "src/index.js"
+compatibility_date = "2025-06-01"
+workers_dev = true
+
+[vars]
+GH_OWNER = "dangel77"
+GH_REPO = "dazu_beauty_shop"
+GH_BRANCH = "main"
+# Direcciones desde las que el navegador puede llamar al Worker, separadas por coma.
+ALLOWED_ORIGINS = "https://dangel77.github.io"
+
+# Los secretos NO van en este archivo. Se cargan una sola vez con:
+#   npx wrangler secret put GH_TOKEN
+#   npx wrangler secret put ADMIN_PASSWORD
+#   npx wrangler secret put SESSION_SECRET
