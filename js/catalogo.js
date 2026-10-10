@@ -705,7 +705,12 @@ function goToSlide(index) {
   var count = detail.images.length;
   if (count === 0) return;
   index = (index + count) % count;   // wraps around at both ends
-  pdGallery.scrollTo({ left: index * pdGallery.clientWidth, behavior: 'smooth' });
+
+  // Jumps instead of gliding when the reader asked for less motion, or when
+  // the page is in the background and animations are paused.
+  var animate = !document.hidden && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  pdGallery.scrollTo({ left: index * pdGallery.clientWidth, behavior: animate ? 'smooth' : 'auto' });
+  setActiveSlide(index);
 }
 
 function setActiveSlide(index) {
@@ -1028,10 +1033,8 @@ pdDots.addEventListener('click', function (e) {
   if (dot) goToSlide(Number(dot.dataset.slide));
 });
 
-var galleryFrame = 0;
 pdGallery.addEventListener('scroll', function () {
-  cancelAnimationFrame(galleryFrame);
-  galleryFrame = requestAnimationFrame(function () { setActiveSlide(currentSlide()); });
+  setActiveSlide(currentSlide());
 }, { passive: true });
 
 pdVariantList.addEventListener('click', function (e) {
@@ -1068,12 +1071,8 @@ document.addEventListener('keydown', function (e) {
 });
 
 // Shadow under the toolbar once it sticks to the top
-var stuckFrame = 0;
 window.addEventListener('scroll', function () {
-  cancelAnimationFrame(stuckFrame);
-  stuckFrame = requestAnimationFrame(function () {
-    toolbar.classList.toggle('is-stuck', window.scrollY >= toolbar.offsetTop && window.scrollY > 0);
-  });
+  toolbar.classList.toggle('is-stuck', window.scrollY >= toolbar.offsetTop && window.scrollY > 0);
 }, { passive: true });
 
 // ===== INIT =====
