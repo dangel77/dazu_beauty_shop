@@ -18,6 +18,8 @@ Después de esto, **revocar el token clásico** que usaba el panel anterior (`da
 
 Hace falta una cuenta gratuita de Cloudflare (no pide tarjeta) y Node.js.
 
+En PowerShell de Windows, si `npx` responde que "la ejecución de scripts está deshabilitada", escribí `npx.cmd` en lugar de `npx` en todos los comandos de esta guía.
+
 ```bash
 cd worker
 ```
