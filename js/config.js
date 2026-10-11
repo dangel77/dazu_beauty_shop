@@ -11,8 +11,8 @@ var DAZU_CONFIG = {
   SITE_URL: new URL('.', window.location.href).href,
 
   // Address of the Cloudflare Worker that the admin panel talks to, without
-  // a trailing "/". Leave empty until the Worker is deployed (see SETUP.md).
-  WORKER_URL: '',
+  // a trailing "/" (see SETUP.md).
+  WORKER_URL: 'https://dazu-admin.dazubeauty.workers.dev',
 
   IS_LOCAL: /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname)
 };
