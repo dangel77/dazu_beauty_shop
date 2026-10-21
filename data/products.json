@@ -1,5 +1,5 @@
 {
-  "version": 1792564679177,
+  "version": 1792564897187,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -32,10 +32,30 @@
       "Piel con acné",
       "Piel grasa",
       "Piel normal",
-      "Kits faciales"
+      "Kits faciales",
+      "Protector solar"
     ]
   },
   "products": [
+    {
+      "id": "mvhqqp10b4pz5x",
+      "name": "Protector solar tea trica 50 ml skin1004 💚",
+      "categories": [
+        "Cuidado facial",
+        "Skin Care Koreano",
+        "Skin1004",
+        "Piel con acné",
+        "Piel grasa",
+        "Protector solar"
+      ],
+      "price": 12900,
+      "description": "es un protector solar ideal para pieles sensibles y propensas al acné, con protección de SPF50+ y PA++++. Su fórmula tipo leche se absorbe rápidamente, proporcionando una protección solar sin dejar residuos blancos 💚",
+      "available": true,
+      "images": [
+        "mvhqqp10b4pz5x_mvhqut0shjktlq.jpg"
+      ],
+      "created_at": "2026-10-21T06:41:37.186Z"
+    },
     {
       "id": "mvhqn26g4raluh",
       "name": "Protector solar probio-cica 50 ml skin1004 🤎",
