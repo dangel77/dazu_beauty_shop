@@ -1,5 +1,5 @@
 {
-  "version": 1792563415466,
+  "version": 1792563619551,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -30,10 +30,29 @@
       "Piel seca",
       "Piel madura",
       "Piel con acné",
-      "Piel grasa"
+      "Piel grasa",
+      "Piel normal"
     ]
   },
   "products": [
+    {
+      "id": "mvhpzlaa73qgks",
+      "name": "Tónico Tonificante skin1004 210 ml",
+      "categories": [
+        "Cuidado facial",
+        "Skin Care Koreano",
+        "Tónicos Faciales",
+        "Piel madura",
+        "Piel normal"
+      ],
+      "price": 12950,
+      "description": "Tónico tonificante skin1004 🤎 \nElimina las impurezas y las células muertas de la piel sin irritación. Mejora la luminosidad y elasticidad de la piel, con efectos antienvejecimiento, no comedogénico. Ideal para el uso diario sin riesgo de irritación 🤎",
+      "available": true,
+      "images": [
+        "mvhpzlaa73qgks_mvhq3fq32821r6.jpg"
+      ],
+      "created_at": "2026-10-21T06:20:19.550Z"
+    },
     {
       "id": "mvhpw4qisribo5",
       "name": "Crema calmante Skin 1004 75 ml",
