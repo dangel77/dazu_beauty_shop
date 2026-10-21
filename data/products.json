@@ -1,5 +1,5 @@
 {
-  "version": 1792562284349,
+  "version": 1792562450854,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -27,6 +27,22 @@
     ]
   },
   "products": [
+    {
+      "id": "mvhpbaxzdyjobc",
+      "name": "Espuma limpiadora poremizante 125 ml Skin1004",
+      "categories": [
+        "Espumas líquidas Faciales",
+        "Skin Care Koreano",
+        "Poros Abiertos"
+      ],
+      "price": 10950,
+      "description": "Espuma limpiadora poremizante 🩷 \nUn limpiador facial en espuma cremosa y rica que elimina eficazmente protector solar, impurezas, células muertas y exceso de sebo, dejando la piel limpia, suave y revitalizada, Su formula infundida con Sal Rosa del Himalaya y Centella Asiática de Madagascar purifica mientras calma y fortalece la barrera cutánea 🩷",
+      "available": true,
+      "images": [
+        "mvhpbaxzdyjobc_mvhpee26r5x1a9.jpg"
+      ],
+      "created_at": "2026-10-21T06:00:50.853Z"
+    },
     {
       "id": "mvhp79ioqtwa93",
       "name": "Tónico poremizante 200ml Skin1004",
