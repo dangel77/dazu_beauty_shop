@@ -1,5 +1,5 @@
 {
-  "version": 1792563205185,
+  "version": 1792563245165,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -26,7 +26,9 @@
       "Tónicos Faciales",
       "Aclarador Facial/ piel con manchas",
       "Skin1004",
-      "Crema Facial"
+      "Crema Facial",
+      "Piel seca",
+      "Piel madura"
     ]
   },
   "products": [
@@ -35,7 +37,10 @@
       "name": "Crema hyalu-cica skin 1004. 75ml",
       "categories": [
         "Cuidado facial",
-        "Crema Facial"
+        "Skin Care Koreano",
+        "Crema Facial",
+        "Piel seca",
+        "Piel madura"
       ],
       "price": 12500,
       "description": "Crema hyalu-cica skin1004 🩵 para aliviar la irritación, proteger la barrera cutánea y reparar la piel dañada con potentes antioxidantes. La textura ligera tipo crema acuosa se absorbe rápidamente en la piel, dejándola suave y elástica 🩵",
