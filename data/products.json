@@ -1,5 +1,5 @@
 {
-  "version": 1792562719111,
+  "version": 1792562956507,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -29,6 +29,18 @@
     ]
   },
   "products": [
+    {
+      "id": "mvhpknqqdmcsx2",
+      "name": "Protector solar El Hyalu-Cica Water-Fit. 50grs 150",
+      "categories": [],
+      "price": 11500,
+      "description": "El Hyalu-Cica Water-Fit Sun 🩵 Serum de SKIN1004 es un protector solar híbrido de textura tipo sérum, diseñado para brindar una alta protección UV (SPF50+ PA++++) mientras hidrata y calma la piel gracias a su fórmula con Centella Asiática de Madagascar y ácido hialurónico 🩵",
+      "available": true,
+      "images": [
+        "mvhpknqqdmcsx2_mvhpp83l7vgkqj.jpg"
+      ],
+      "created_at": "2026-10-21T06:09:16.507Z"
+    },
     {
       "id": "mvhpfn7ebh0d2a",
       "name": "Ampolla iluminadora 100ml skin1004",
