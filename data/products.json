@@ -1,5 +1,5 @@
 {
-  "version": 1792563619551,
+  "version": 1792563765779,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -35,6 +35,23 @@
     ]
   },
   "products": [
+    {
+      "id": "mvhq3x0qwwsv4n",
+      "name": "Aceite Limpiador skin1004 200 ml",
+      "categories": [
+        "Cuidado facial",
+        "Skin Care Koreano",
+        "Piel madura",
+        "Piel normal"
+      ],
+      "price": 12000,
+      "description": "Aceite limpiador skin1004 🤎 Centella y 6 aceites derivados de plantas disuelven suavemente el maquillaje, el protector solar y el exceso de sebo en la piel, dejando un acabado refrescante y sin grasa 🤎",
+      "available": true,
+      "images": [
+        "mvhq3x0qwwsv4n_mvhq6knpm9t3he.jpg"
+      ],
+      "created_at": "2026-10-21T06:22:45.778Z"
+    },
     {
       "id": "mvhpzlaa73qgks",
       "name": "Tónico Tonificante skin1004 210 ml",
