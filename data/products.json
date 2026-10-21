@@ -1,5 +1,5 @@
 {
-  "version": 1792564362804,
+  "version": 1792564515337,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -36,6 +36,24 @@
     ]
   },
   "products": [
+    {
+      "id": "mvhqjnd5zwvetc",
+      "name": "Serum centella matrixyl 10% skin1004 30 ml ✨",
+      "categories": [
+        "Cuidado facial",
+        "Serum Faciales",
+        "Skin Care Koreano",
+        "Skin1004",
+        "Piel madura"
+      ],
+      "price": 12900,
+      "description": "Serum centella matrixyl 10% skin1004 30 ml ✨ con el poder de Matrixyl y el ácido hialurónico, el Boosting Shot aporta ingredientes concentrados a las capas profundas de la piel para una hidratación y firmeza visibles ✨",
+      "available": true,
+      "images": [
+        "mvhqjnd5zwvetc_mvhqmmcmgm4ot8.jpg"
+      ],
+      "created_at": "2026-10-21T06:35:15.336Z"
+    },
     {
       "id": "mvhqdpj875jioh",
       "name": "Kit viajero hyalu-cica skin1004",
