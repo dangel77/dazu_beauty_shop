@@ -1,5 +1,5 @@
 {
-  "version": 1792562478715,
+  "version": 1792562693338,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -23,10 +23,29 @@
       "Gelatina para cabello",
       "Skin Care Koreano",
       "Poros Abiertos",
-      "Tónicos Faciales"
+      "Tónicos Faciales",
+      "Aclarador Facial/ piel con manchas",
+      "Skin1004"
     ]
   },
   "products": [
+    {
+      "id": "mvhpfn7ebh0d2a",
+      "name": "Ampolla iluminadora 100ml skin1004",
+      "categories": [
+        "Serum Faciales",
+        "Skin Care Koreano",
+        "Aclarador Facial/ piel con manchas",
+        "Skin1004"
+      ],
+      "price": 13500,
+      "description": "* Ampolla iluminadora 00 ml skin1004 ✨ para un tono más uniforme y luminoso. Ayuda a mejorar la apariencia de manchas y tono desigual, aporta luminosidad natural sin sensación pesada,mantiene la piel hidratada mientras fortalece la barrera cutánea ✨",
+      "available": true,
+      "images": [
+        "mvhpfn7ebh0d2a_mvhpjl07qpmtwh.jpg"
+      ],
+      "created_at": "2026-10-21T06:04:53.337Z"
+    },
     {
       "id": "mvhpbaxzdyjobc",
       "name": "Espuma limpiadora poremizante 125 ml Skin1004",
