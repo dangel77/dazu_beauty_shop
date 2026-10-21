@@ -1,5 +1,5 @@
 {
-  "version": 1792563026783,
+  "version": 1792563178822,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -25,10 +25,26 @@
       "Poros Abiertos",
       "Tónicos Faciales",
       "Aclarador Facial/ piel con manchas",
-      "Skin1004"
+      "Skin1004",
+      "Crema Facial"
     ]
   },
   "products": [
+    {
+      "id": "mvhpr99pdhjqul",
+      "name": "Crema hyalu-cica skin 1004. 75ml",
+      "categories": [
+        "Cuidado facial",
+        "Crema Facial"
+      ],
+      "price": 12500,
+      "description": "Crema hyalu-cica skin1004 🩵 para aliviar la irritación, proteger la barrera cutánea y reparar la piel dañada con potentes antioxidantes. La textura ligera tipo crema acuosa se absorbe rápidamente en la piel, dejándola suave y elástica 🩵",
+      "available": true,
+      "images": [
+        "mvhpr99pdhjqul_mvhptzmwuctf79.jpg"
+      ],
+      "created_at": "2026-10-21T06:12:58.821Z"
+    },
     {
       "id": "mvhpknqqdmcsx2",
       "name": "Protector solar El Hyalu-Cica Water-Fit. 50grs 50 ml Skin1004",
