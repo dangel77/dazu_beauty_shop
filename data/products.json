@@ -1,5 +1,5 @@
 {
-  "version": 1792564897187,
+  "version": 1792565055396,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -33,10 +33,30 @@
       "Piel grasa",
       "Piel normal",
       "Kits faciales",
-      "Protector solar"
+      "Protector solar",
+      "Mascarillas Faciales"
     ]
   },
   "products": [
+    {
+      "id": "mvhqv9r4ycoyy1",
+      "name": "Mascarilla de arcilla poremizante skin1004",
+      "categories": [
+        "Cuidado facial",
+        "Skin Care Koreano",
+        "Poros Abiertos",
+        "Skin1004",
+        "Piel grasa",
+        "Mascarillas Faciales"
+      ],
+      "price": 12500,
+      "description": "Mascarilla de arcilla poremizante 🩷Contiene polvo de frijol rojo y 5 tipos de arcilla, que ayudan a eliminar el exceso de sebo y las células muertas para una textura más suave. La centella asiática, el aloe y la calamina calman la piel irritada y fortalecen la barrera cutánea para dejar la piel revitalizada 🩷",
+      "available": true,
+      "images": [
+        "mvhqv9r4ycoyy1_mvhqy7ikdpab8b.jpg"
+      ],
+      "created_at": "2026-10-21T06:44:15.395Z"
+    },
     {
       "id": "mvhqqp10b4pz5x",
       "name": "Protector solar tea trica 50 ml skin1004 💚",
