@@ -1,5 +1,5 @@
 {
-  "version": 1792563986032,
+  "version": 1792564073376,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -31,7 +31,8 @@
       "Piel madura",
       "Piel con acné",
       "Piel grasa",
-      "Piel normal"
+      "Piel normal",
+      "Kits faciales"
     ]
   },
   "products": [
@@ -40,9 +41,11 @@
       "name": "Kit viajero tés-trica skin1004",
       "categories": [
         "Cuidado facial",
+        "Skin Care Koreano",
         "Skin1004",
         "Piel con acné",
-        "Piel grasa"
+        "Piel grasa",
+        "Kits faciales"
       ],
       "price": 13500,
       "description": "💚 Set de 4 pasos en tamaños de viaje diseñado especialmente para piel con tendencia a imperfecciones, exceso de grasa y poros congestionados",
