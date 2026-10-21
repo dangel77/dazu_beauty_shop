@@ -1,5 +1,5 @@
 {
-  "version": 1792563765779,
+  "version": 1792563986032,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -35,6 +35,23 @@
     ]
   },
   "products": [
+    {
+      "id": "mvhq7po7fmfk9h",
+      "name": "Kit viajero tés-trica skin1004",
+      "categories": [
+        "Cuidado facial",
+        "Skin1004",
+        "Piel con acné",
+        "Piel grasa"
+      ],
+      "price": 13500,
+      "description": "💚 Set de 4 pasos en tamaños de viaje diseñado especialmente para piel con tendencia a imperfecciones, exceso de grasa y poros congestionados",
+      "available": true,
+      "images": [
+        "mvhq7po7fmfk9h_mvhqbalgahhatj.jpg"
+      ],
+      "created_at": "2026-10-21T06:26:26.031Z"
+    },
     {
       "id": "mvhq3x0qwwsv4n",
       "name": "Aceite Limpiador skin1004 200 ml",
