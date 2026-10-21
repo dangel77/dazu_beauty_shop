@@ -1,4 +1,5 @@
 {
+  "version": 1792560290921,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -19,10 +20,27 @@
       "Polvos y bases compactas",
       "Base líquida de maquillaje",
       "Espumas líquidas Faciales",
-      "Gelatina para cabello"
+      "Gelatina para cabello",
+      "Skin Care Koreano"
     ]
   },
   "products": [
+    {
+      "id": "mvhnz9r5dtb27z",
+      "name": "Ampolla poremizante 100ml",
+      "categories": [
+        "Cuidado facial",
+        "Serum Faciales",
+        "Skin Care Koreano"
+      ],
+      "price": 11500,
+      "description": "* Ampolla poremizante 100 ml 🩷está formulado para brindar hidratación mientras ayuda a mejorar la apariencia de los poros y mantener la piel con un aspecto fresco y saludable 🩷",
+      "available": true,
+      "images": [
+        "mvhnz9r5dtb27z_mvho43gnfjfx1p.jpg"
+      ],
+      "created_at": "2026-10-21T05:24:50.921Z"
+    },
     {
       "id": "mn7vqhxambhv5e",
       "name": "Shampo y  acondicionador de Uva Salón Line",
