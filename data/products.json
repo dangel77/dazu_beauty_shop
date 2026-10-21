@@ -1,5 +1,5 @@
 {
-  "version": 1792563245165,
+  "version": 1792563415466,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -28,10 +28,31 @@
       "Skin1004",
       "Crema Facial",
       "Piel seca",
-      "Piel madura"
+      "Piel madura",
+      "Piel con acné",
+      "Piel grasa"
     ]
   },
   "products": [
+    {
+      "id": "mvhpw4qisribo5",
+      "name": "Crema calmante Skin 1004 75 ml",
+      "categories": [
+        "Cuidado facial",
+        "Skin Care Koreano",
+        "Skin1004",
+        "Crema Facial",
+        "Piel con acné",
+        "Piel grasa"
+      ],
+      "price": 6500,
+      "description": "Crema calmante 30 ml skin1004 🤎 esta crema hidratante está específicamente diseñada para calmar la irritación cutánea al tiempo que mejora los niveles de hidratación de la piel. La textura gelatinosa de esta fórmula se desliza suavemente sobre la piel, ideal para todo tipo de pieles 🤎",
+      "available": true,
+      "images": [
+        "mvhpw4qisribo5_mvhpz25893q3cd.jpg"
+      ],
+      "created_at": "2026-10-21T06:16:55.465Z"
+    },
     {
       "id": "mvhpr99pdhjqul",
       "name": "Crema hyalu-cica skin 1004. 75ml",
