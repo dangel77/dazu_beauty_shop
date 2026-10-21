@@ -1,5 +1,5 @@
 {
-  "version": 1792560290921,
+  "version": 1792562284349,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -21,10 +21,28 @@
       "Base líquida de maquillaje",
       "Espumas líquidas Faciales",
       "Gelatina para cabello",
-      "Skin Care Koreano"
+      "Skin Care Koreano",
+      "Poros Abiertos",
+      "Tónicos Faciales"
     ]
   },
   "products": [
+    {
+      "id": "mvhp79ioqtwa93",
+      "name": "Tónico poremizante 200ml Skin1004",
+      "categories": [
+        "Skin Care Koreano",
+        "Poros Abiertos",
+        "Tónicos Faciales"
+      ],
+      "price": 13950,
+      "description": "Tonico poremizante 210 ml skin1004 🩷 actúa eficazmente sobre los poros dilatados y el exceso de grasa, dejando tu piel fresca y lista para los siguientes pasos en tu rutina de cuidado de la piel",
+      "available": true,
+      "images": [
+        "mvhp79ioqtwa93_mvhpat4xqd1m13.jpg"
+      ],
+      "created_at": "2026-10-21T05:58:04.349Z"
+    },
     {
       "id": "mvhnz9r5dtb27z",
       "name": "Ampolla poremizante 100ml",
