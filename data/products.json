@@ -1,5 +1,5 @@
 {
-  "version": 1792562956507,
+  "version": 1792563010171,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -31,8 +31,12 @@
   "products": [
     {
       "id": "mvhpknqqdmcsx2",
-      "name": "Protector solar El Hyalu-Cica Water-Fit. 50grs 150",
-      "categories": [],
+      "name": "Protector solar El Hyalu-Cica Water-Fit. 50grs 50 ml Skin1004",
+      "categories": [
+        "Cuidado facial",
+        "Skin Care Koreano",
+        "Skin1004"
+      ],
       "price": 11500,
       "description": "El Hyalu-Cica Water-Fit Sun 🩵 Serum de SKIN1004 es un protector solar híbrido de textura tipo sérum, diseñado para brindar una alta protección UV (SPF50+ PA++++) mientras hidrata y calma la piel gracias a su fórmula con Centella Asiática de Madagascar y ácido hialurónico 🩵",
       "available": true,
