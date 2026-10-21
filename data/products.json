@@ -1,5 +1,5 @@
 {
-  "version": 1792564073376,
+  "version": 1792564300198,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -36,6 +36,25 @@
     ]
   },
   "products": [
+    {
+      "id": "mvhqdpj875jioh",
+      "name": "Kit viajero hyalu-cica skin1004",
+      "categories": [
+        "Cuidado facial",
+        "Skin Care Koreano",
+        "Skin1004",
+        "Piel seca",
+        "Piel madura",
+        "Kits faciales"
+      ],
+      "price": 15600,
+      "description": "🩵 Es para calmar, fortalecer, hidratar y equilibrar los niveles de agua-aceite de la piel. La línea Hyalu-Cica ofrece hidratación hasta por 100 horas, fortalece la barrera cutánea, calma pieles sensibles e ilumina el tono 🩵",
+      "available": true,
+      "images": [
+        "mvhqdpj875jioh_mvhqi0tww7jnjh.jpg"
+      ],
+      "created_at": "2026-10-21T06:31:40.197Z"
+    },
     {
       "id": "mvhq7po7fmfk9h",
       "name": "Kit viajero tés-trica skin1004",
