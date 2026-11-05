@@ -1,5 +1,5 @@
 {
-  "version": 1793922492976,
+  "version": 1793922680883,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -39,6 +39,38 @@
     ]
   },
   "products": [
+    {
+      "id": "mw476kei385qw2",
+      "name": "Aretes navideños pequeños",
+      "categories": [
+        "Bisuteria en acero"
+      ],
+      "price": 2500,
+      "description": "Aretes en acero",
+      "available": true,
+      "images": [
+        "mw476kei385qw2_mw478cijwrj38g.jpg",
+        "mw476kei385qw2_mw478dwqsc0rsz.jpg",
+        "mw476kei385qw2_mw478euqcpm4l1.jpg",
+        "mw476kei385qw2_mw478fvohlt86q.jpg",
+        "mw476kei385qw2_mw478gu6qybdt4.jpg",
+        "mw476kei385qw2_mw478hs04v90dm.jpg",
+        "mw476kei385qw2_mw478isy1joaqw.jpg",
+        "mw476kei385qw2_mw478jr2y0vmge.jpg",
+        "mw476kei385qw2_mw478kp7zj452r.jpg",
+        "mw476kei385qw2_mw478lq7v2xq68.jpg",
+        "mw476kei385qw2_mw478mk9np5gro.jpg",
+        "mw476kei385qw2_mw478ngt5uqqtb.jpg",
+        "mw476kei385qw2_mw478oewc7a8mo.jpg",
+        "mw476kei385qw2_mw478pd1z57cz2.jpg",
+        "mw476kei385qw2_mw478qb63j2p5d.jpg",
+        "mw476kei385qw2_mw478r9bwlbq2j.jpg",
+        "mw476kei385qw2_mw478s7fssmol4.jpg",
+        "mw476kei385qw2_mw478t5luzezs1.jpg",
+        "mw476kei385qw2_mw478u9dmbs6de.jpg"
+      ],
+      "created_at": "2026-11-05T23:51:20.883Z"
+    },
     {
       "id": "mw4736tub7akfe",
       "name": "Pulseras elásticas en Trío Navideño",
