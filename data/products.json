@@ -1,5 +1,5 @@
 {
-  "version": 1793922385377,
+  "version": 1793922492976,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -39,6 +39,23 @@
     ]
   },
   "products": [
+    {
+      "id": "mw4736tub7akfe",
+      "name": "Pulseras elásticas en Trío Navideño",
+      "categories": [
+        "Bisuteria en acero"
+      ],
+      "price": 4900,
+      "description": "Tres pulseras , se estiran , no jalan pelitos",
+      "available": true,
+      "images": [
+        "mw4736tub7akfe_mw474q7w0gp945.jpg",
+        "mw4736tub7akfe_mw474r7syzqqfc.jpg",
+        "mw4736tub7akfe_mw474sbofzwih3.jpg",
+        "mw4736tub7akfe_mw474ti9cdkvdq.jpg"
+      ],
+      "created_at": "2026-11-05T23:48:12.976Z"
+    },
     {
       "id": "mw46zzzxoy5opr",
       "name": "Pulseras navideñas dijes acero",
