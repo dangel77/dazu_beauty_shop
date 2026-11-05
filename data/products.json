@@ -1,5 +1,5 @@
 {
-  "version": 1792565055396,
+  "version": 1793922385377,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -34,10 +34,27 @@
       "Piel normal",
       "Kits faciales",
       "Protector solar",
-      "Mascarillas Faciales"
+      "Mascarillas Faciales",
+      "Bisuteria en acero"
     ]
   },
   "products": [
+    {
+      "id": "mw46zzzxoy5opr",
+      "name": "Pulseras navideñas dijes acero",
+      "categories": [
+        "Bisuteria en acero"
+      ],
+      "price": 4500,
+      "description": "Hermosos diseños de temporada !!!en acero inoxidable",
+      "available": true,
+      "images": [
+        "mw46zzzxoy5opr_mw472doedl26p4.jpg",
+        "mw46zzzxoy5opr_mw472g1box3awr.jpg",
+        "mw46zzzxoy5opr_mw472hruft00wt.jpg"
+      ],
+      "created_at": "2026-11-05T23:46:25.376Z"
+    },
     {
       "id": "mvhqv9r4ycoyy1",
       "name": "Mascarilla de arcilla poremizante skin1004",
