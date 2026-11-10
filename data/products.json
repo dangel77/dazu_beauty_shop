@@ -1,5 +1,5 @@
 {
-  "version": 1794338677386,
+  "version": 1794342952238,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -36,10 +36,30 @@
       "Protector solar",
       "Mascarillas Faciales",
       "Bisuteria en acero",
-      "Termoprotector"
+      "Termoprotector",
+      "Tocobo"
     ]
   },
   "products": [
+    {
+      "id": "mwb5ejyj57ougu",
+      "name": "Espuma limpiadora de arcilla de coco Tocobo",
+      "categories": [
+        "Cuidado facial",
+        "Espumas líquidas Faciales",
+        "Skin Care Koreano",
+        "Piel con acné",
+        "Piel grasa",
+        "Tocobo"
+      ],
+      "price": 9500,
+      "description": "Espuma limpiadora de arcilla de coco tocobo 🩵 Su textura de arcilla rosa se transforma en una espuma abundante al entrar en contacto con el agua, permitiendo limpiar el rostro sin necesidad de una fricción intensa. Está especialmente indicada para pieles mixtas y grasas que buscan una limpieza profunda y una apariencia de poros más limpia 🩵",
+      "available": true,
+      "images": [
+        "mwb5ejyj57ougu_mwb5gptzsxkrls.jpg"
+      ],
+      "created_at": "2026-11-10T20:35:52.237Z"
+    },
     {
       "id": "mwb27rz787zn80",
       "name": "*Precio 6.950 xm 9.500 detalle* Spray termoprotector para el cabello lowkey famous tocobo 🩷",
