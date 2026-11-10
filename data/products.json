@@ -1,5 +1,5 @@
 {
-  "version": 1793922885679,
+  "version": 1794337381948,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -39,6 +39,23 @@
     ]
   },
   "products": [
+    {
+      "id": "mwb22vm6lvwubk",
+      "name": "Set duo mini de proteccion solar tocobo 🩵 8809835060201 🩵 Bio Watery Sun Cream (10ml)",
+      "categories": [
+        "Cuidado facial",
+        "Skin Care Koreano",
+        "Piel normal",
+        "Protector solar"
+      ],
+      "price": 5950,
+      "description": "Set duo mini de proteccion solar tocobo 🩵 \n\n🩵 Bio Watery Sun Cream (10ml)\n🩵 Protector solar vegano con textura tipo sérum \n🩵 Súper ligero e hidratante\n🩵 Se absorbe rápidamente\n🩵 Deja la piel fresca y sin sensación grasosa\n\n🩷 Vita Tone-Up Sun Cream (10ml)\n🩷 Protector solar vegano con efecto tono uniforme \n🩷 Suave e hidratante\n🩷 Ayuda a iluminar la piel\n🩷 Mejora el aspecto del tono",
+      "available": true,
+      "images": [
+        "mwb22vm6lvwubk_mwb25bf0omer4g.jpg"
+      ],
+      "created_at": "2026-11-10T19:03:01.948Z"
+    },
     {
       "id": "mw476kei385qw2",
       "name": "Aretes navideños pequeños",
