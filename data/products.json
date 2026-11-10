@@ -1,5 +1,5 @@
 {
-  "version": 1794342952238,
+  "version": 1794343100312,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -41,6 +41,23 @@
     ]
   },
   "products": [
+    {
+      "id": "mwb5hjw1qqx7ln",
+      "name": "Aceite limpiador control de poros Tocobo",
+      "categories": [
+        "Skin Care Koreano",
+        "Piel grasa",
+        "Piel normal",
+        "Tocobo"
+      ],
+      "price": 11950,
+      "description": "Aceite limpiador control de poros con calamina tocobo 🩵 un aceite limpiador vegano y no graso que purifica, hidrata y calma en un solo paso 🩵",
+      "available": true,
+      "images": [
+        "mwb5hjw1qqx7ln_mwb5jw30i40uq4.jpg"
+      ],
+      "created_at": "2026-11-10T20:38:20.311Z"
+    },
     {
       "id": "mwb5ejyj57ougu",
       "name": "Espuma limpiadora de arcilla de coco Tocobo",
