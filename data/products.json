@@ -1,5 +1,5 @@
 {
-  "version": 1794337381948,
+  "version": 1794338677386,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -35,10 +35,26 @@
       "Kits faciales",
       "Protector solar",
       "Mascarillas Faciales",
-      "Bisuteria en acero"
+      "Bisuteria en acero",
+      "Termoprotector"
     ]
   },
   "products": [
+    {
+      "id": "mwb27rz787zn80",
+      "name": "*Precio 6.950 xm 9.500 detalle* Spray termoprotector para el cabello lowkey famous tocobo 🩷",
+      "categories": [
+        "Skin Care Koreano",
+        "Termoprotector"
+      ],
+      "price": 9500,
+      "description": "Spray termoprotector para el cabello lowkey famous tocobo 🩷 Es una bruma capilar termoprotectora y perfume para el cabello. Cuenta con una fórmula híbrida bifásica diseñada para blindar el cabello sin dejarlo pesado o pegajoso 🩷 Soporta y aísla la fibra capilar de temperaturas de hasta 230 °C 🩷",
+      "available": true,
+      "images": [
+        "mwb27rz787zn80_mwb2x38hhybp4d.jpg"
+      ],
+      "created_at": "2026-11-10T19:24:37.385Z"
+    },
     {
       "id": "mwb22vm6lvwubk",
       "name": "Set duo mini de proteccion solar tocobo 🩵 8809835060201 🩵 Bio Watery Sun Cream (10ml)",
