@@ -1,5 +1,5 @@
 {
-  "version": 1794343100312,
+  "version": 1794343232749,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -41,6 +41,24 @@
     ]
   },
   "products": [
+    {
+      "id": "mwb5letc8qusua",
+      "name": "Tonico humedo calmante cica tocobo",
+      "categories": [
+        "Skin Care Koreano",
+        "Tónicos Faciales",
+        "Piel con acné",
+        "Piel grasa",
+        "Tocobo"
+      ],
+      "price": 10950,
+      "description": "Tonico humedo calmante cica tocobo 💚 Calme, hidrate y refresque su piel con TOCOBO Cica Calming Aqua Toner - un tónico vegano perfecto para calmar la piel sensible, seca o irritada 💚",
+      "available": true,
+      "images": [
+        "mwb5letc8qusua_mwb5mq8yoiy7lk.jpg"
+      ],
+      "created_at": "2026-11-10T20:40:32.748Z"
+    },
     {
       "id": "mwb5hjw1qqx7ln",
       "name": "Aceite limpiador control de poros Tocobo",
