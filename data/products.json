@@ -1,5 +1,5 @@
 {
-  "version": 1794429627670,
+  "version": 1794429733857,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -41,6 +41,25 @@
     ]
   },
   "products": [
+    {
+      "id": "mwcl30c7vfx4x3",
+      "name": "Stick solar refrescante cica mini tocobo",
+      "categories": [
+        "Cuidado facial",
+        "Skin Care Koreano",
+        "Piel con acné",
+        "Piel grasa",
+        "Protector solar",
+        "Tocobo"
+      ],
+      "price": 7650,
+      "description": "Stick solar refrescante cica mini tocobo 💚 Calma e hidrata gracias a la centella asiática y al complejo de ácido hialurónico, proporcionando un alivio refrescante inmediato al tiempo que reduce el enrojecimiento y previene la flacidez de la piel 💚",
+      "available": true,
+      "images": [
+        "mwcl30c7vfx4x3_mwcl4pqisriqvk.jpg"
+      ],
+      "created_at": "2026-11-11T20:42:13.857Z"
+    },
     {
       "id": "mwcl0gcdksqphc",
       "name": "Stick barra solar cortina soft mini Tocobo",
