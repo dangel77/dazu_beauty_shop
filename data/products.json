@@ -1,5 +1,5 @@
 {
-  "version": 1794343232749,
+  "version": 1794429504441,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -41,6 +41,23 @@
     ]
   },
   "products": [
+    {
+      "id": "mwckvcvxvd4pnh",
+      "name": "Barra híbrida rosada hidratante con protección solar 50g Tocobo",
+      "categories": [
+        "Piel seca",
+        "Piel normal",
+        "Protector solar",
+        "Tocobo"
+      ],
+      "price": 10950,
+      "description": "Una crema solar híbrida hidratante que aporta a la piel un ligero tono rosado y la protege del daño solar con SPF 50+ PA++++ 🩷 Textura lechosa similar a una loción, formulada con la tecnología «Water Holder Gel Network», que favorece la hidratación y mejora la fijación, con un acabado fresco 🩷",
+      "available": true,
+      "images": [
+        "mwckvcvxvd4pnh_mwckztoxl8pofo.jpg"
+      ],
+      "created_at": "2026-11-11T20:38:24.440Z"
+    },
     {
       "id": "mwb5letc8qusua",
       "name": "Tonico humedo calmante cica tocobo",
