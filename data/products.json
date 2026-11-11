@@ -1,5 +1,5 @@
 {
-  "version": 1794429504441,
+  "version": 1794429627670,
   "settings": {
     "wa_number": "50661000133",
     "categories": [
@@ -41,6 +41,24 @@
     ]
   },
   "products": [
+    {
+      "id": "mwcl0gcdksqphc",
+      "name": "Stick barra solar cortina soft mini Tocobo",
+      "categories": [
+        "Cuidado facial",
+        "Skin Care Koreano",
+        "Piel seca",
+        "Protector solar",
+        "Tocobo"
+      ],
+      "price": 7650,
+      "description": "* Stick solar cotton soft mini tocobo 🩵 ofrece un alivio suave para la piel sensible, ayudando a calmar el enrojecimiento y promover la comodidad de la piel 🩵",
+      "available": true,
+      "images": [
+        "mwcl0gcdksqphc_mwcl2gedg6u9l1.jpg"
+      ],
+      "created_at": "2026-11-11T20:40:27.669Z"
+    },
     {
       "id": "mwckvcvxvd4pnh",
       "name": "Barra híbrida rosada hidratante con protección solar 50g Tocobo",
